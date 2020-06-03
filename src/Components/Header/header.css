@@ -1,0 +1,163 @@
+.btnHeader{
+    margin-left: 1.5em;
+    padding: 5px;
+    border-radius: 2em;
+    border: 1px solid #737373;
+    font-weight: bold;
+    background: transparent;
+    color: white;
+}
+
+.btnHeaderScroll{
+    margin-left: 1.5em;
+    padding: 10px;
+    border-radius: 2em;
+    border: 1px solid #333333;
+    font-weight: bold;
+    background: transparent;
+    color: #333333;
+}
+.btnHeader:hover{
+    background: rgb(237, 20, 17);
+    color: white;
+}
+.pvw-join:after {
+    content: "Join";
+  }
+.pvw-host:after {
+    content: "Host";
+}
+
+.profileSec{
+    margin-left: 9px;
+    border-radius: 1em;
+}
+.profileSec:hover{
+    cursor: pointer;
+    background-color: rgba(181, 181, 181, 0.5);
+}
+
+/* Desktop */
+@media screen and (min-width: 1432px) {
+    .profileSec{
+        padding-left: 1em;
+        padding-right: 1em;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+    }
+    .avatar{
+        margin-left: 1.5em;
+    }
+    .btnJoinB{
+        visibility: hidden;
+        display: none; 
+    }
+    .btnHostB{
+        visibility: hidden;
+        display: none; 
+    }
+}
+/* Desktop lebih kecil */
+@media screen and (max-width: 1431px) {
+    .profileSec {
+        padding: 0px;
+        margin-left: 10px;
+        margin-right: 200px;
+    }
+    .btnLoginheader{
+        margin-right: 200px;
+    }
+    .btnHost{
+        visibility: hidden;
+        display: none;  
+    }
+    .btnJoin{
+        visibility: hidden;
+        display: none;  
+    }
+    .btnHostB{
+        visibility: visible; 
+    }
+    .btnJoinB{
+        visibility: visible; 
+    }
+
+    .avatarName {
+        visibility: hidden;
+        display: none;
+    }
+}
+/* Mobile */
+@media screen and (max-width: 375px) {
+    .btnHeader{
+        margin-left: 20px;
+        padding: 3px;
+    }
+    .profileSec{
+        padding: 0px;
+        margin-left: 10px;
+    }
+    .avatar{
+        margin-left: 1px;
+    }
+    .btnHostB{
+        visibility: visible; 
+    }
+    .btnJoinB{
+        visibility: visible; 
+    }
+    
+    .btnHost{
+        visibility: hidden;
+        display: none; 
+    }
+    .btnJoin{
+        visibility: hidden;
+        display: none;
+    }
+
+    .avatarName {
+        visibility: hidden;
+        display: none;
+    }
+}
+
+.avatar{
+    
+    width: 2.5em;
+    border-radius: 3em;
+}
+.avatarName{
+    font-size: 1em;
+    margin-top: 7.5px;
+    padding: 0;
+    color: white;
+}
+.avatarNameScroll{
+    font-size: 1em;
+    margin-top: 7.5px;
+    padding: 0;
+    color: black;
+}
+
+
+.statusUser{
+    padding: 0.5;
+    font-size: 0.7em;
+    text-align: center;
+    border-radius: 1em;
+    font-weight: bold;
+    background-color: #0acc48;
+}
+.statusUserScroll{
+    padding: 1;
+    background-color: white;
+    color: #0acc48;
+}
+
+
+
+
+
+    
+
