@@ -1,6 +1,6 @@
 .btnHeader{
     margin-left: 1.5em;
-    padding: 10px;
+    padding: 5px;
     border-radius: 2em;
     border: 1px solid #737373;
     font-weight: bold;
@@ -37,7 +37,6 @@
     background-color: rgba(181, 181, 181, 0.5);
 }
 
-
 /* Desktop */
 @media screen and (min-width: 1432px) {
     .profileSec{
@@ -57,14 +56,9 @@
         visibility: hidden;
         display: none; 
     }
-    .dd-header{
-        margin-left: 2em;
-        margin-right: 50px;
-    }
 }
 /* Desktop lebih kecil */
 @media screen and (max-width: 1431px) {
-    
     .profileSec {
         padding: 0px;
         margin-left: 10px;
@@ -91,10 +85,6 @@
     .avatarName {
         visibility: hidden;
         display: none;
-    }
-    .dd-header{
-        margin-left: 2em;
-        margin-right: 70px;
     }
 }
 /* Mobile */
@@ -130,10 +120,6 @@
         visibility: hidden;
         display: none;
     }
-    .dd-header{
-        margin-left: 20px;
-        margin-right: 70px;
-    }
 }
 
 .avatar{
@@ -168,91 +154,12 @@
     background-color: white;
     color: #0acc48;
 }
+.header-style{
+    background: rgba(82, 82, 82, 0.5);
+}
 
 
 
-  .dd-header-btn {
-    background: none;
-    border-radius: 2em;
-    font-size: 16px;
-    border: none;
-    outline:none;
-    border: solid 1px transparent;
-    border-radius: 4px; 
-  }
-  .dd-header-btn::-moz-focus-inner {
-    border: 0;
-  }
- 
-  /* The container <div> - needed to position the dropdown content */
-  .dd-header {
-    border-radius: 2em;
-    background-color: rgba(181, 181, 181, 0.2);
-    padding-left: 1em;
-    padding-right: 1em;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    position: relative;
-    display: inline-block;
-  }
-  
-  /* Dropdown Content (Hidden by Default) */
-  .dd-content {
-    margin-top: 5px;
-    left: -10;
-    display: none;
-    padding: 12px 16px;
-    position: absolute;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius:1em;
-    min-width: 300px;
-    z-index: 1;
-  }
-  
-  /* Links inside the dropdown */
-  .dd-content a {
-    color: black;
-    background: transparent;
-    padding: 12px 16px;
-    border-radius:1em;
-    text-decoration: none;
-    display: block;
-  }
-  .dd-content-header{
-      padding: 5px;
-      padding-left: 10px;
-  }
-  .dd-content-header:hover{
-    background-color: #ddd; 
-    cursor: pointer;
-  }
-  /* Change color of dropdown links on hover */
-  .dd-content a:hover {background-color: #ddd;}
-  
-  /* Show the dropdown menu on hover */
-  .dd-header:hover  .dd-content {
-      display: block;
-      right: 0;}
 
-  .dd-header-btn:focus .dd-content{display: block;}
-
-  .dd-header:hover  .df-avatar{
-    visibility: hidden;
-    display: none;  
-    }
-  .dd-header-btn:focus .df-avatar{
-    visibility: hidden;
-    display: none;  
-    }
-    .dd-header:hover  .avatarName{
-        visibility: hidden;
-        display: none;  
-        }
-    .dd-header-btn:focus .avatarName{
-    visibility: hidden;
-    display: none;  
-    }
-  
-  /* Change the background color of the dropdown button when the dropdown content is shown */
-  .dd-header:hover {background-color: rgba(237, 20, 17,0.4);}
+    
 

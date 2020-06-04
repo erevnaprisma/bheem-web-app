@@ -15,6 +15,8 @@ export default {
   authTokenType: 'Bearer',
   publicToken: 'publicToken',
   sessionToken: 'st',
+  sessionUserData: 'userData',
   loginFlag: 'il',
-  sessionData: 'ssst'
+  sessionData: 'ssst',
+  
 }

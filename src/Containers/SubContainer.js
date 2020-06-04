@@ -10,58 +10,7 @@ import Header from  './Header'
 // import Lottie from 'react-lottie'
 // import * as Anim from '../Components/Loader/Loader_asset/Loader-merah.json'
 class SubContainer extends React.PureComponent {
-  state={
-    isLoading:false
-  }
-  static propTypes = {
-    onLogout: PropTypes.func
-  }
-
-  static defaultProps = {
-    onLogout: () => {}
-  }
-
-  constructor (props) {
-    super(props)
-    this.state = { isLoggedIn: this.props.isLoggedIn }
-    this.renderLoggedIn = this.renderLoggedIn.bind(this)
-    this.renderUnLoggedIn = this.renderUnLoggedIn.bind(this)
-  }
-  componentWillMount()
-  {
-    const login=AppConfig.basePath+'/login'
-    if(localStorage.getItem(AppConfig.sessionToken))
-    {
-      this.props.resetfetchProfile()
-      window.location.replace(`${AppConfig.basePath}/`)
-    }
-  }
-  renderLoggedIn (children) {
-    return (
-      <body style={{background:'black'}}>
-        {/* {(isLoggedIn(this.props.isLoggedIn) === true) && <Header/>} */}
-        {children}
-      </body>
-    )
-  }
-  componentDidMount()
-  {
-    if(localStorage.getItem(AppConfig.sessionToken))
-    {
-      const merchant_id=getSession('merchant_id')
-      this.props.fetchProfile({merchant_id:getSession('merchant_id')})
-      this.props.getRelated({merchant_id})
-    }
-  }
-  renderUnLoggedIn (children) {
-
-    return (
-      <div> 
-        <div style={{ minHeight: window.innerHeight - 200 }}>{children}</div>
-      </div>
-    )
-  }
-
+  
   render () {
     console.log('render window.location ', window.location.pathname)
     const loc = window.location.pathname

@@ -10,12 +10,14 @@ import AppConfig from '../Config/AppConfig'
 // Types /* ------------- Types ------------- */
 
 
-// import { LoginTypes } from '../Containers/Login/redux'
+import { SignUpTypes } from '../Containers/Signup/redux'
+import { LoginTypes } from '../Containers/Login/redux'
 
 
 
 
-// import { loginDoLogin,doLogout } from '../Containers/Login/sagas'
+import { doSignUp } from '../Containers/Signup/sagas'
+import { doLogin,doLogout} from '../Containers/Login/sagas'
 
 /* ------------- API ------------- */
 
@@ -30,6 +32,8 @@ const apiDashboardPy = DebugConfig.useFixtures ? FixtureAPI : API.create(hostBac
 export default function * root () {
   
   yield all([
-   
+    takeLatest(SignUpTypes.DO_SIGN_UP, doSignUp, apiDashboard),
+    takeLatest(LoginTypes.DO_LOGIN, doLogin, apiDashboard),
+    takeLatest(LoginTypes.DO_LOGOUT, doLogout, apiDashboard),
   ])
 }

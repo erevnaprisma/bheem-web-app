@@ -75,8 +75,6 @@ const create = (baseURL = 'https://jsonplaceholder.typicode.com/') => {
   }
 
   let server = ''
-  // let neDBDataPath = ''
-
   if (window.require) {
     
     ipcRenderer = window.require('electron').ipcRenderer
@@ -87,9 +85,8 @@ const create = (baseURL = 'https://jsonplaceholder.typicode.com/') => {
   let apiMerged = {}
   // merge api
   // paymentpage
-  // apiMerged = merge(apiMerged, require('../Containers/Paymentpage/api').create(api))
-  // apiMerged = merge(apiMerged, require('../Containers/Qrcode/api').create(api))
-  // begin Ignite-Entity-Login
+  apiMerged = merge(apiMerged, require('../Containers/Signup/api').create(api))
+  apiMerged = merge(apiMerged, require('../Containers/Login/api').create(api))
   apiMerged = merge(apiMerged, {})
   return {
     ...apiMerged

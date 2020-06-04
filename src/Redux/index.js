@@ -9,6 +9,8 @@ export default () => {
   /* ------------- Assemble The Reducers ------------- */
   const rootReducer = combineReducers({
     app: require('./AppRedux').reducer,
+    signUp: require('../Containers/Signup/redux').reducer,
+    login: require('../Containers/Login/redux').reducer,
   })
   let finalReducers = rootReducer
 

@@ -11,41 +11,67 @@ import {Images,Colors} from '../../Themes'
 // Components
 import Header from '../../Containers/Header'
 import Footer from '../../Containers/Footer'
+import Loader from '../../Components/Loader'
+import LoginAction from '../../Containers/Login/redux'
 import './menu.css'
 // Components
 // import HorizontalScroll from 'react-scroll-horizontal'
 
 
 class PageLogin extends PureComponent {
-
   
+  _onSubmitForm(e)
+  {
+    if (e) e.preventDefault()
+    const email = this.refs.email.value
+    const password = this.refs.password.value
+    this.props.doLogin({email,password})
+  }
+  componentDidMount()
+  {
+    this.props.doReset()
+  }
+  componentWillUnmount()
+  {
+    this.props.doReset()
+  } 
   render() {  
-   
+    const {status,error,isRequesting} = this.props
     return (
-       <div>
+       <div style={{background:`url(${Images.HomeIllus}) center`,backgroundSize:'contain'}}>
       <Header/>
+      <Helmet>Login</Helmet>
         <div id="main">
-        <section id="contact" style={{minWidth:window.innerWidth,minHeight:window.innerHeight,background:Colors.primaryGray}}>
+        <section id="contact" style={{minWidth:window.innerWidth,minHeight:window.innerHeight}}>
             <div class="container mx-auto" style={{marginTop:'10%'}}>
-                <div className="mx-auto ">
+                <div className="mx-auto" style={{background:`rgba(82, 82, 82, 0.8)`,paddingTop:20,paddingBottom:20}}>
                   <div className="section-title mx-auto ">
                     <h3 style={{color:'white'}}>Login</h3>
                     <span style={{color:'white'}}>for the future you can use your social media account</span>
                   </div>
                   <div className="row mt-1 mx-auto">
                     <div className="col-lg-8 mt-5 mt-lg-0 mx-auto">
-                      <form action="forms/contact.php" method="post" role="form" className="php-email-form">
+                      <form onSubmit={(e)=>this._onSubmitForm(e)}>
                         
                         <div className="form-group">
-                          <input type="email" className="form-control mx-auto" name="Email" placeholder="Email" ref="email" required />
+                          <input type="email" className="InputText form-control mx-auto" name="Email" placeholder="Email" ref="email" required />
                           <div className="validate" />
                         </div>
                         <div className="form-group">
-                          <input type="password" className="form-control mx-auto" name="Password" placeholder="password" ref="password" required/>
-                          <div className="validate" />
+                          <input type="password" className="InputText form-control mx-auto" name="Password" placeholder="Password" ref="password" required/>
+                          <div className="validate"/>
                         </div>
                         <br/>
-                        <div className="text-center"><button type="submit" className="btn">Login</button></div>
+                        <div className="text-center">
+                          {!isRequesting && <button type="submit" className="btn" required>Login</button>}
+                          {(isRequesting && <center>
+                            <Loader className="mx-auto"/>
+                          </center>)}
+                        </div>
+                        <br/>
+                        <center>
+                          <span style={{color:Colors.primaryWhite}}>Or if you don't have acoount?</span> <a href="/signup" style={{color:'red'}}> <strong style={{color:'white'}}>Sign Up</strong></a>
+                        </center>
                       </form>
                     </div>
                   </div>
@@ -59,13 +85,18 @@ class PageLogin extends PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  
   return {
+    isRequesting: state.login.isRequesting,
+    error :state.login.error,
+    status: state.login.status
   }
 }
 const mapDispatchToProps = dispatch => {
   
-  return null
+  return {
+    doLogin:data => dispatch(LoginAction.doLogin(data)),
+    doReset:data => dispatch(LoginAction.doLoginReset(null))
+  }
 }
 export default connect(
   mapStateToProps,
