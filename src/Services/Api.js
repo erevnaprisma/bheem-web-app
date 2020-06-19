@@ -13,16 +13,11 @@ const create = (baseURL = 'https://jsonplaceholder.typicode.com/') => {
   // Create and configure an apisauce-based api object.
   //
   const API_REMOTE = apisauce.create({
-    // base URL is read from the "constructor"
     baseURL,
-    // here are some default headers
     headers: {
-      // 'Cache-Control': 'no-cache',
-      // 'Accept': '*/*',
       'Content-Type': 'application/json',
-      // 'Auth': 'Bearer ' + getAccessToken()
-      // 'Content-Type': 'application/x-www-form-urlencoded'
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Expose-Headers': '*, Authorization'
       // 'tesss': 'ok'
       // 'Access-Control-Request-Method': 'POST'
       // 'Access-Control-Allow-Credentials': 'true',
@@ -32,8 +27,6 @@ const create = (baseURL = 'https://jsonplaceholder.typicode.com/') => {
       // 'Access-Control-Expose-Headers': 'X-My-Custom-Header, X-Another-Custom-Header'
     },
     xsrfCookieName: 'myCatx',
-    // credentials: 'include',
-    // 10 second timeout...
     timeout: 10000
   })
 
@@ -87,6 +80,8 @@ const create = (baseURL = 'https://jsonplaceholder.typicode.com/') => {
   // paymentpage
   apiMerged = merge(apiMerged, require('../Containers/Signup/api').create(api))
   apiMerged = merge(apiMerged, require('../Containers/Login/api').create(api))
+  apiMerged = merge(apiMerged, require('../Containers/HostMeeting/api').create(api))
+  apiMerged = merge(apiMerged, require('../Containers/JoinMeeting/api').create(api))
   apiMerged = merge(apiMerged, {})
   return {
     ...apiMerged

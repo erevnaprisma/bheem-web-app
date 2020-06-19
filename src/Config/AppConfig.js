@@ -16,7 +16,8 @@ export default {
   publicToken: 'publicToken',
   sessionToken: 'st',
   sessionUserData: 'userData',
+  sessionExp: 'exp_date',
   loginFlag: 'il',
   sessionData: 'ssst',
-  
+  concalUrl:'https://meet.jit.si/'
 }

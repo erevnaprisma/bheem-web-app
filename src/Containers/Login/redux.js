@@ -11,7 +11,7 @@ const { Types, Creators } = createActions({
   doLoginFailed:['data'],
   doLogout:['data'],
   doLogoutDone:['data'],
-  doLogoutFailed:['data'],
+  doLogoutFailed:['d ata'],
   doLoginReset:null,
 })
 
@@ -31,7 +31,8 @@ export const done_in = (state,{data}) => state.merge({ isRequesting:false, ...da
 export const failed_in = (state,{data}) => state.merge({ isRequesting:false, ...data })
 
 export const doOut = state  => state.merge({ isRequesting: true })
-export const done_out = (state,{data}) => state.merge({ isRequesting:false, ...data })
+// export const done_out = (state,{data}) => state.merge({ isRequesting:false, ...data })
+export const done_out = (state,{data}) => state.merge({ isRequesting:false})
 export const failed_out = (state,{data}) => state.merge({ isRequesting:false, ...data })
 
 export const reset = state=> state.merge(INITIAL_STATE)

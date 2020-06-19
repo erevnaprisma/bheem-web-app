@@ -227,31 +227,31 @@
     cursor: pointer;
   }
   /* Change color of dropdown links on hover */
-  .dd-content a:hover {background-color: #ddd;}
+  .dd-content a:hover {background-color: #ddd;cursor: pointer;}
   
   /* Show the dropdown menu on hover */
   .dd-header:hover  .dd-content {
       display: block;
       right: 0;}
 
-  .dd-header-btn:focus .dd-content{display: block;}
+  /* .dd-header-btn:focus .dd-content{display: block;}
 
   .dd-header:hover  .df-avatar{
     visibility: hidden;
     display: none;  
-    }
+    } */
   .dd-header-btn:focus .df-avatar{
     visibility: hidden;
     display: none;  
     }
-    .dd-header:hover  .avatarName{
+    /* .dd-header:hover  .avatarName{
         visibility: hidden;
         display: none;  
-        }
-    .dd-header-btn:focus .avatarName{
+        } */
+    /* .dd-header-btn:focus .avatarName{
     visibility: hidden;
     display: none;  
-    }
+    } */
   
   /* Change the background color of the dropdown button when the dropdown content is shown */
   .dd-header:hover {background-color: rgba(237, 20, 17,0.4);}

@@ -14,12 +14,12 @@ export default class Team extends Component {
                 <div className="col-lg-3 col-md-6 d-flex align-items-stretch">
                     <div className="member">
                     <div className="member-img">
-                        <img src="assets/img/team/team-1.jpg" className="img-fluid" alt />
+                        <img src="assets/img/team/team-1.jpg" className="img-fluid" alt="#"/>
                         <div className="social">
-                        <a href><i className="icofont-twitter" /></a>
-                        <a href><i className="icofont-facebook" /></a>
-                        <a href><i className="icofont-instagram" /></a>
-                        <a href><i className="icofont-linkedin" /></a>
+                        <a href="#"><i className="icofont-twitter" /></a>
+                        <a href="#"><i className="icofont-facebook" /></a>
+                        <a href="#"><i className="icofont-instagram" /></a>
+                        <a href="#"><i className="icofont-linkedin" /></a>
                         </div>
                     </div>
                     <div className="member-info">
@@ -31,12 +31,12 @@ export default class Team extends Component {
                 <div className="col-lg-3 col-md-6 d-flex align-items-stretch">
                     <div className="member">
                     <div className="member-img">
-                        <img src="assets/img/team/team-2.jpg" className="img-fluid" alt />
+                        <img src="assets/img/team/team-2.jpg" className="img-fluid" alt ="#"/>
                         <div className="social">
-                        <a href><i className="icofont-twitter" /></a>
-                        <a href><i className="icofont-facebook" /></a>
-                        <a href><i className="icofont-instagram" /></a>
-                        <a href><i className="icofont-linkedin" /></a>
+                        <a href="#"><i className="icofont-twitter" /></a>
+                        <a href="#"><i className="icofont-facebook" /></a>
+                        <a href="#"><i className="icofont-instagram" /></a>
+                        <a href="#"><i className="icofont-linkedin" /></a>
                         </div>
                     </div>
                     <div className="member-info">
@@ -48,12 +48,12 @@ export default class Team extends Component {
                 <div className="col-lg-3 col-md-6 d-flex align-items-stretch">
                     <div className="member">
                     <div className="member-img">
-                        <img src="assets/img/team/team-3.jpg" className="img-fluid" alt />
+                        <img src="assets/img/team/team-3.jpg" className="img-fluid" alt ="#"/>
                         <div className="social">
-                        <a href><i className="icofont-twitter" /></a>
-                        <a href><i className="icofont-facebook" /></a>
-                        <a href><i className="icofont-instagram" /></a>
-                        <a href><i className="icofont-linkedin" /></a>
+                        <a href="#"><i className="icofont-twitter" /></a>
+                        <a href="#"><i className="icofont-facebook" /></a>
+                        <a href="#"><i className="icofont-instagram" /></a>
+                        <a href="#"><i className="icofont-linkedin" /></a>
                         </div>
                     </div>
                     <div className="member-info">
@@ -65,12 +65,12 @@ export default class Team extends Component {
                 <div className="col-lg-3 col-md-6 d-flex align-items-stretch">
                     <div className="member">
                     <div className="member-img">
-                        <img src="assets/img/team/team-4.jpg" className="img-fluid" alt />
+                        <img src="assets/img/team/team-4.jpg" className="img-fluid" alt ="#"/>
                         <div className="social">
-                        <a href><i className="icofont-twitter" /></a>
-                        <a href><i className="icofont-facebook" /></a>
-                        <a href><i className="icofont-instagram" /></a>
-                        <a href><i className="icofont-linkedin" /></a>
+                        <a href="#"><i className="icofont-twitter" /></a>
+                        <a href="#"><i className="icofont-facebook" /></a>
+                        <a href="#"><i className="icofont-instagram" /></a>
+                        <a href="#"><i className="icofont-linkedin" /></a>
                         </div>
                     </div>
                     <div className="member-info">

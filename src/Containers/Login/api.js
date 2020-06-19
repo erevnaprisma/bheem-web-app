@@ -10,7 +10,7 @@ export const create = api => ({
         status
         error
         user{ 
-          userId,
+          id,
           username,
           fullName,
           email,
@@ -28,20 +28,5 @@ export const create = api => ({
     api.setHeader('hmac', generateHmac(JSON.stringify(query)))
     const resp = api.post('/graphql', query)
     return resp
-  },
-  // doLogout: ({acess_token}) => {
-  //   const body = `query{
-  //     login(email:"${acccesss_token}")
-  //     {
-  //       status
-  //       error
-  //       user
-  //     }
-  //   }`
-  //   const query= { query:body }
-  //   api.setHeader('hmac', generateHmac(JSON.stringify(query)))
-  //   const resp = api.post('/graphql', query)
-  //   return resp
-  // }
-  
+  }
 })

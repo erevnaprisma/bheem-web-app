@@ -9,15 +9,17 @@ import AppConfig from '../Config/AppConfig'
 
 // Types /* ------------- Types ------------- */
 
-
 import { SignUpTypes } from '../Containers/Signup/redux'
 import { LoginTypes } from '../Containers/Login/redux'
-
+import { CreateMeetingTypes } from '../Containers/HostMeeting/redux'
+import { JoinMeetingTypes } from '../Containers/JoinMeeting/redux'
 
 
 
 import { doSignUp } from '../Containers/Signup/sagas'
 import { doLogin,doLogout} from '../Containers/Login/sagas'
+import { doCreateMeeting} from '../Containers/HostMeeting/sagas'
+import { doJoinMeeting,checkIsexistMeeting } from '../Containers/JoinMeeting/sagas'
 
 /* ------------- API ------------- */
 
@@ -30,10 +32,12 @@ const apiDashboardPy = DebugConfig.useFixtures ? FixtureAPI : API.create(hostBac
 /* ------------- Connect Types To Sagas ------------- */
 
 export default function * root () {
-  
   yield all([
     takeLatest(SignUpTypes.DO_SIGN_UP, doSignUp, apiDashboard),
     takeLatest(LoginTypes.DO_LOGIN, doLogin, apiDashboard),
     takeLatest(LoginTypes.DO_LOGOUT, doLogout, apiDashboard),
+    takeLatest(CreateMeetingTypes.CREATE_MEETING, doCreateMeeting, apiDashboard),
+    takeLatest(JoinMeetingTypes.JOIN_MEETING, doJoinMeeting, apiDashboard),
+    takeLatest(JoinMeetingTypes.CHECK_ISEXIST_MEETING, checkIsexistMeeting, apiDashboard)
   ])
 }

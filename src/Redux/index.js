@@ -11,6 +11,8 @@ export default () => {
     app: require('./AppRedux').reducer,
     signUp: require('../Containers/Signup/redux').reducer,
     login: require('../Containers/Login/redux').reducer,
+    createmeeting: require('../Containers/HostMeeting/redux').reducer,
+    joinmeeting: require('../Containers/JoinMeeting/redux').reducer,
   })
   let finalReducers = rootReducer
 

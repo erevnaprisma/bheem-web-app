@@ -51,8 +51,8 @@ class PageSignUp extends PureComponent {
       <Header/>
       <Helmet>Signup</Helmet>
         <div id="main">
-        <section id="contact" style={{minWidth:window.innerWidth,minHeight:window.innerHeight}}>
-            <div className="container mx-auto" style={{marginTop:'10%'}}>
+            <section id="contact" style={{minWidth:window.innerWidth,minHeight:window.innerHeight}}>
+              <div className="container mx-auto" style={{marginTop:'10%'}}>
                 <div className="mx-auto " style={{background:`rgba(82, 82, 82, 0.8)`,paddingTop:20,paddingBottom:20}}>
                   <div className="section-title mx-auto ">
                     <h3 style={{color:'white'}}>SignUp</h3>

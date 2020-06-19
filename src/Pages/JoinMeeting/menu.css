@@ -1,0 +1,20 @@
+.btn{
+    margin-left: 1.5em;
+    padding: 5px;
+    border-radius: 2em;
+    border: 1px solid white;
+    font-weight: bold;
+    background: transparent;
+    color: white;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+.btn:hover{
+    background: rgb(237, 20, 17);
+    color: white;
+}
+.dt-picker{
+    align-self: center;
+    align-content: center;
+    background-color: white;
+}

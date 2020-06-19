@@ -42,12 +42,12 @@ class PageLogin extends PureComponent {
       <Header/>
       <Helmet>Login</Helmet>
         <div id="main">
-        <section id="contact" style={{minWidth:window.innerWidth,minHeight:window.innerHeight}}>
+        <section id="contact" style={{marginTop:30,minWidth:window.innerWidth,minHeight:window.innerHeight}}>
             <div class="container mx-auto" style={{marginTop:'10%'}}>
                 <div className="mx-auto" style={{background:`rgba(82, 82, 82, 0.8)`,paddingTop:20,paddingBottom:20}}>
                   <div className="section-title mx-auto ">
                     <h3 style={{color:'white'}}>Login</h3>
-                    <span style={{color:'white'}}>for the future you can use your social media account</span>
+                    <span style={{color:'white'}}>In our future features. you can use your social media account</span>
                   </div>
                   <div className="row mt-1 mx-auto">
                     <div className="col-lg-8 mt-5 mt-lg-0 mx-auto">

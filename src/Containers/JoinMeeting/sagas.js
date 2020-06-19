@@ -1,0 +1,71 @@
+import { call, put, select } from 'redux-saga/effects'
+import DashboardActions from './redux'
+import AppConfig from '../../Config/AppConfig'
+import {isLogin} from '../../Utils/Utils'
+import _ from 'lodash'
+import {path,merge} from 'ramda'
+import {isNullOrUndefined} from 'util'
+import JoinActions from './redux'
+import Swal from 'sweetalert2'
+
+export function * doJoinMeeting (api, action) {
+    const { data } = action
+    const response = yield call(api.doJoinMeeting,data)
+    console.log("response fetch join meeting>>>>",response)
+    const err = path(['data','errors'], response)||[]
+    
+    if (!_.isEmpty(response.problem)) err.push({ message: response.problem })
+
+    const status = parseInt(path(['data', 'data', 'requestTojoinMeeting', 'status'], response) || 0)
+    const errorbody = path(['data', 'data', 'requestTojoinMeeting', 'error'], response)||[]
+    if (!_.isEmpty(errorbody)) err.push({ message: errorbody })
+    if (_.isEmpty(err)&& status==200) {
+      const errors=''
+      yield put(JoinActions.joinMeetingDone({status,errors}))
+      window.location=`${AppConfig.concalUrl}/${data.meetingId}`
+    }
+    else{
+      let errors=''
+      if(_.has(err[0],'message')){ errors=err[0].message||"Something error" }
+      else{ errors=err[0] }
+      yield put(JoinActions.joinMeetingFailed({errors,status}))
+      Swal.fire({
+        title: 'Error!',
+        text: 'Can\'t join meeting or invalid meeting or meeting has been ended',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      })
+    }
+}
+export function * checkIsexistMeeting (api, action) {
+  const { data } = action
+  const response = yield call(api.isMeetingExist,data)
+  console.log("response isExist check meeting>>>>",response)
+  const err = path(['data','errors'], response)||[]
+  
+  if (!_.isEmpty(response.problem)) err.push({ message: response.problem })
+
+  const status = parseInt(path(['data', 'data', 'isMeetingExist', 'status'], response) || 0)
+  const errorbody = path(['data', 'data', 'isMeetingExist', 'error'], response)||[]
+
+
+  if (!_.isEmpty(errorbody)) err.push({ message: errorbody })
+
+  if (_.isEmpty(err) && status==200) {
+    console.log("Meeting exist")
+  }
+  else{
+    let errors=''
+    
+    if(_.has(err[0],'message')){ errors=err[0].message||"Something error" }
+    else{ errors=err[0] }
+    
+    Swal.fire({
+      title: 'Error!',
+      text:'Meeting doens\'t exist or has been ended',
+      icon: 'error',
+      confirmButtonText: 'Ok',
+      onClose:()=>window.location="/join-meeting"
+    })
+  }
+}

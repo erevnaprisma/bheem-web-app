@@ -28,6 +28,9 @@ export default class PageHome extends PureComponent {
    
     return (
      <div className="navbar-header visible-xs">
+       <Helmet>
+         <title>Bheem | Connect us all</title>
+       </Helmet>
       <Header/>
       <Hero/>
         <div id="main">

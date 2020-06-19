@@ -7,12 +7,14 @@ import {path,merge} from 'ramda'
 import {isNullOrUndefined} from 'util'
 import Swal from 'sweetalert2'
 import LoginActions from './redux'
+import jwtDecode from 'jwt-decode'
 
 export function * doLogin (api, action) {
   console.log('loginDoLogin')
   const { data } = action
   const response = yield call(api.doLogin, data)
   console.log("Response>>>>>>>>>>>>",response) 
+  
   let errors=[]
   if (!_.isEmpty(response.problem)) errors.push({ message: response.problem })
 
@@ -21,8 +23,9 @@ export function * doLogin (api, action) {
   const errorbody = path(['data', 'data', 'login', 'error','message'], response)||[]
   const errorbody2 = path(['data', 'data', 'login', 'error'], response)||[]
   const errorBackend = path(['data', 'errors'], response)||[]
-  const token = path(['data', 'data', 'login', 'access_token'], response)
+  const token = path(['headers','authorization'], response)||null 
   const userdata = path(['data', 'data', 'login', 'user'], response)
+  
   
   if (!_.isEmpty(errorbody)) errors.push({ message: errorbody })
   if (!_.isEmpty(errorbody2)) errors.push({ message: errorbody2 })
@@ -30,10 +33,12 @@ export function * doLogin (api, action) {
 
   // success?
   if (_.isEmpty(errors) && status) {
-    setSession({[AppConfig.loginFlag]: true, [AppConfig.sessionUserData]:userdata, [AppConfig.sessionToken]: token})
+    const exp=jwtDecode(token).expireTime//milliseconds
+    const now=new Date().getTime()
+    const exp_end=now+exp
+    setSession({[AppConfig.loginFlag]: true, [AppConfig.sessionUserData]:userdata,[AppConfig.sessionToken]:token, [AppConfig.sessionExp]:exp_end})
     
     yield put(
-
       LoginActions.doLoginDone({
         status,
         errors,
@@ -42,12 +47,11 @@ export function * doLogin (api, action) {
     )
     window.location="/"
      
-  } else {
-    
+  } else {    
     let error=''
     let err=errors[0]
+
     if(_.has(err,'message')){ error=err.message }
-    
     else{ error=err }
 
     Swal.fire({
@@ -57,8 +61,21 @@ export function * doLogin (api, action) {
       confirmButtonText: 'Ok'
     }) 
     return yield put(LoginActions.doLoginFailed({  status, error }))
-  }
+  } 
 }
 export function * doLogout (api, action) {
-    destroySession()
+  setTimeout(()=>{
+      function * done()
+      {
+        yield put(LoginActions.doLogoutDone())
+      }
+      done()
+    logout()  
+    },2000)
+  
+}
+function logout()
+{
+  destroySession()
+  window.location="/"
 }

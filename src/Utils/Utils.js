@@ -3,6 +3,8 @@ import namor from 'namor'
 import AppConfig from '../Config/AppConfig'
 import Moment from 'moment'
 import { merge, path } from 'ramda'
+import Swal from 'sweetalert2'
+import _ from 'lodash'
 // import AES from 'crypto-js/aes'
 // import EncUtf8 from 'crypto-js/enc-utf8'
 // import Chance from 'chance'
@@ -29,13 +31,13 @@ export const decryptAt = (msg, key) => {
   var plaintext = str.toString(EncUtf8)
   return plaintext
 }
-export const isLoggedIn = (isLoggedInState) => {
-  const loginFlag = getSession(AppConfig.loginFlag)
-  isLoggedInState = loginFlag || false
-  if ((isLoggedInState === 'true' || isLoggedInState === true)) isLoggedInState = true
-  else isLoggedInState = false
-  return isLoggedInState
-}
+// export const isLoggedIn = (isLoggedInState) => {
+//   const loginFlag = getSession(AppConfig.loginFlag)
+//   isLoggedInState = loginFlag || false
+//   if ((isLoggedInState === 'true' || isLoggedInState === true)) isLoggedInState = true
+//   else isLoggedInState = false
+//   return isLoggedInState
+// }
 export const generateHmac = (msg) => {
   return hmacSha256(msg, 'r4y4P4y2020').toString()
 }
@@ -91,4 +93,27 @@ export const updateURLParameter = (url, param, paramVal) => {
 
   var rowsTxt = temp + '' + param + '=' + paramVal
   return baseURL + '?' + newAdditionalURL + rowsTxt
+}
+export const expDateFormat=(timestamp) =>{
+  const datetime=new Date(timestamp)
+  
+  return datetime.getFullYear()+'/'+datetime.getMonth()+'/'+datetime.getDay()+' > '+datetime.getHours()+':'+datetime.getMinutes()+':'+datetime.getSeconds()+':'+datetime.getMilliseconds()
+}
+export const isLogin = (route)=>{
+    
+  console.log("Session Exp >>",expDateFormat(getSession(AppConfig.sessionExp)))
+
+  if(!_.isEmpty(getSession(AppConfig.sessionUserData))&&new Date().getTime()>=getSession(AppConfig.sessionExp)){
+      destroySession()
+      Swal.fire({
+          title: 'Expire',
+          text: 'Session expired or your not logged in please relogin to your account',
+          icon: 'error',
+          confirmButtonText: 'Ok',
+          onClose:()=>window.location="/"
+        })
+  }
+  else{
+      console.log("still valid")
+  }
 }
