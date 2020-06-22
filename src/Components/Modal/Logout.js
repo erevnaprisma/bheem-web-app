@@ -20,7 +20,7 @@ class Logout extends Component {
                 </center>
             )}
             
-            {( !this.props.isRequesting &&
+            {(!this.props.isRequesting &&
                 <div className="modal-dialog modal-dialog-centered" role="document">
                     
                     <div className="modal-content">

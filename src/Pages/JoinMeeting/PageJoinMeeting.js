@@ -30,15 +30,26 @@ class HostMeeting extends PureComponent {
     this.state={
       s_date:new Date(),
       e_date:new Date(),
-      endless:false
+      endless:false,
+      isLogin:getSession(AppConfig.loginFlag)||false
     }
   }
 
   _onSubmitForm(e)
   {
     if (e) e.preventDefault()
+    const isLogin=this.state.isLogin
     const meetingId = this.refs.meeting_id.value
-    this.props.doJoinMeeting({meetingId})
+    if(isLogin)
+    {
+      this.props.doJoinMeeting({meetingId})
+    }
+    else
+    {
+      const name = this.refs.u_name.value
+      this.props.doJoinMeeting({meetingId,name})
+    }
+
   }
   componentDidMount()
   {
@@ -51,6 +62,7 @@ class HostMeeting extends PureComponent {
   onChange = date => console.log("datetime>>>",date)
 
   render() {
+    const {isLogin} = this.state
     const {isRequesting,errors,status,title,host,createdBy,startDate,endDate,createdAt,meetingId} = this.props
     return (
       <div style={{background:`linear-gradient(to right bottom, #bdc3c7, #2c3e50)`,backgroundSize:'contain'}}>
@@ -68,10 +80,25 @@ class HostMeeting extends PureComponent {
                     <div className="row mt-1 mx-auto">
                       <div className="col-lg-8 mt-5 mt-lg-0 mx-auto" >
                         <form onSubmit={(e)=>this._onSubmitForm(e)}>
-                          <div className="form-group">
-                            <input type="text" className="InputText form-control mx-auto"  placeholder="Meeting Id" ref="meeting_id" required style={{textAlign:'center'}}/>
-                            <div className="validate"/>
-                          </div>
+                          {(!isLogin &&
+                            <div>
+                              <div className="form-group">
+                                <input type="text" className="InputText form-control mx-auto"  placeholder="Meeting Id" ref="meeting_id" required style={{textAlign:'center'}}/>
+                                <div className="validate"/>
+                              </div>
+                              
+                              <div className="form-group">
+                                <input type="text" className="InputText form-control mx-auto"  placeholder="Your name" ref="u_name" required style={{textAlign:'center'}}/>
+                                <div className="validate"/>
+                              </div>
+                            </div>
+                          )}
+                           {(isLogin &&
+                            <div className="form-group">
+                              <input type="text" className="InputText form-control mx-auto"  placeholder="Meeting Id" ref="meeting_id" required style={{textAlign:'center'}}/>
+                              <div className="validate"/>
+                            </div>
+                          )}
                           <br/>
                           <br/>
                           {(!isRequesting &&

@@ -19,5 +19,5 @@ export default {
   sessionExp: 'exp_date',
   loginFlag: 'il',
   sessionData: 'ssst',
-  concalUrl:'https://meet.jit.si/'
+  concalUrl:'https://bheem.erevnaraya.com/'
 }

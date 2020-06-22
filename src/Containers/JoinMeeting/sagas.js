@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects'
 import DashboardActions from './redux'
 import AppConfig from '../../Config/AppConfig'
-import {isLogin} from '../../Utils/Utils'
+import {isLogin,getSession} from '../../Utils/Utils'
 import _ from 'lodash'
 import {path,merge} from 'ramda'
 import {isNullOrUndefined} from 'util'
@@ -15,14 +15,18 @@ export function * doJoinMeeting (api, action) {
     const err = path(['data','errors'], response)||[]
     
     if (!_.isEmpty(response.problem)) err.push({ message: response.problem })
+    const loginStatus=getSession(AppConfig.loginFlag)||false
+    let root=''
+    if(loginStatus){ root='requestTojoinMeeting'; }
+    else{ root='anonymousRequestTojoinMeeting' ;}
 
-    const status = parseInt(path(['data', 'data', 'requestTojoinMeeting', 'status'], response) || 0)
-    const errorbody = path(['data', 'data', 'requestTojoinMeeting', 'error'], response)||[]
+    const status = parseInt(path(['data', 'data', root, 'status'], response) || 0)
+    const errorbody = path(['data', 'data', root, 'error'], response)||[]
     if (!_.isEmpty(errorbody)) err.push({ message: errorbody })
     if (_.isEmpty(err)&& status==200) {
       const errors=''
       yield put(JoinActions.joinMeetingDone({status,errors}))
-      window.location=`${AppConfig.concalUrl}/${data.meetingId}`
+      window.location=`/concal/${data.meetingId}`
     }
     else{
       let errors=''
