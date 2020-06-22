@@ -43,7 +43,8 @@ class HostMeeting extends PureComponent {
     const start_date=new Date(this.state.s_date).getTime()
     const end_date=this.state.endless ? '' : new Date(this.state.e_date).getTime()
     const host=created_by
-    const permissionTojoin=this.state.ask ?'Yes' : 'No' 
+    const permissionTojoin=this.state.ask ?'Yes' : 'No'
+
     // console.log("data>>>>",{title,host,created_by,start_date,end_date})
     this.props.doHostMeeting({title,host,created_by,start_date,end_date,permissionTojoin})
   }

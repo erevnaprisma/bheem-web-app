@@ -35,8 +35,9 @@ export function * doSignUp (api, action) {
     }
     else{
       let errors=''
-      if(_.has(err[0].message)){ errors=err[0].message||"Something error" }
+      if(_.has(err[0],'message')){ errors=err[0].message||"Something error" }
       else{ errors=err[0] }
+      console.log("errors>>>>",errors)
       yield put(SignupActions.doSignUpFailed({errors,status}))
       Swal.fire({
         title: 'Error!',

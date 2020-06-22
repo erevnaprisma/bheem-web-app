@@ -117,3 +117,50 @@ export const isLogin = (route)=>{
       console.log("still valid")
   }
 }
+export const formValidation=(str,input_name=null,rules)=>
+{
+  
+    let err=[]
+    if(_.isEmpty(str))
+    {
+      if(!input_name || _.isEmpty(input_name)){ err.push("Sorry input can't be empty") }
+      else{ err.push(`Sorry input <strong>${input_name}</strong> can't be empty</li>`) }
+    }
+    else
+    {
+      if(_.has(rules,'email')) //Email required
+      {
+        
+        if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(str))){ err.push(`<li>Email not valid for input <strong>${input_name}</strong></li>`); }
+      }
+      if(_.has(rules,'max_length')) //Max length
+      {
+        if((str.length<=rules.max_length)){ err.push(`<li>Sorry character length not longer than ${rules.max_length} for input <strong>${input_name}</strong></li>`) }
+      } 
+      if(_.has(rules,'min_length')) //Min length
+      {
+        if((str.length<rules.min_length)){ err.push(`<li>Sorry character length not shorter than ${rules.min_length} for input <strong>${input_name}</strong></li>`) } 
+      }
+      if(_.has(rules,'special_character')) //Min length
+      {
+        if(!/\W/.test(str)){ err.push(`<li>Special character not allowed for input ${rules.max_length} for input <strong>${input_name}</strong></li>`) } 
+      }  
+    }
+  
+  let isValidate=false
+  let value=null
+  if(err.length>0){ isValidate=true }
+  else( value = str )
+  return { isValidate,value,err }
+}
+export const errorPopup= (errs)=>{
+  console.log("Errors>>>",errs)
+  const htmlerrs="<div style='color:red'>"+_.flatten(errs).join("").toString()+"</div>"
+  Swal.fire({
+    title: '<strong>Input error</strong>',
+    icon: 'error',
+    html:htmlerrs,
+    showCloseButton: true,
+    confirmButtonText:"Ok"
+  })
+} 

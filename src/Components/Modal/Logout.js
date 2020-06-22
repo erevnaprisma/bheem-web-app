@@ -12,7 +12,7 @@ class Logout extends Component {
     render() {
         console.log("isRequesting>>",this.props.isRequesting)
         return (
-           <div className="modal fade" id="modal-logout" tabIndex={-1} role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+           <div className="modal fade" id="modal-logout" tabIndex={1000} role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             {(this.props.isRequesting &&
                 <center style={{marginTop:'50%'}}>
                 <Loader className="col"/>

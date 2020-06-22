@@ -2,7 +2,7 @@ import React, { Component,useEffect, PureComponent } from 'react'
 import Helmet from 'react-helmet'
 import Shimmer from "react-shimmer-effect";
 import { connect } from 'react-redux'
-import {getSession} from '../../Utils/Utils'
+import {getSession,formValidation,errorPopup} from '../../Utils/Utils'
 import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router-dom'
 import { isEmpty } from 'ramda'
@@ -28,13 +28,35 @@ class PageSignUp extends PureComponent {
     super(props)
     this._onSubmitForm=this._onSubmitForm.bind(this)
   }
+  // _onSubmitForm(e)
+  // {
+  //   if (e) e.preventDefault()
+  //   const email = this.refs.email.value
+  //   const first_name = this.refs.first_name.value
+  //   const last_name = this.refs.last_name.value
+  //   this.props.doSignup({email,first_name,last_name})
+  // }
   _onSubmitForm(e)
   {
     if (e) e.preventDefault()
-    const email = this.refs.email.value
-    const first_name = this.refs.first_name.value
-    const last_name = this.refs.last_name.value
-    this.props.doSignup({email,first_name,last_name})
+    let errs=[]
+    let email = formValidation(this.refs.email.value,"email",{email:true})
+    let first_name = formValidation(this.refs.first_name.value,"first name",{min_length:2})
+    let last_name = formValidation(this.refs.last_name.value,"last name",{min_length:2})
+    
+    if(email.err.length>0){ errs.push(email.err) }
+    if(first_name.err.length>0){ errs.push(first_name.err) }
+    if(last_name.err.length>0){ errs.push(last_name.err) }
+
+    if(errs.length>0){ 
+      console.log("errs e>>>>>>>>",errs)
+      errorPopup(errs)}
+    else{ 
+      email=email.value
+      first_name=first_name.value
+      last_name=last_name.value
+      this.props.doSignup({email,first_name,last_name})
+    }
   }
   componentDidMount()
   {

@@ -9,7 +9,6 @@ import { element } from 'prop-types';
 import Sidebar from "react-sidebar";
 import './buttonConcal.css'
 import _ from 'lodash'
-import Jitsi from 'react-jitsi'
 import Swal from 'sweetalert2'
 import AppConfig from '../../Config/AppConfig'
 import { data } from '../../Redux/HomeRedux'

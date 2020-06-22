@@ -2,7 +2,7 @@ import React, { Component,useEffect, PureComponent } from 'react'
 import Helmet from 'react-helmet'
 import Shimmer from "react-shimmer-effect";
 import { connect } from 'react-redux'
-import {getSession} from '../../Utils/Utils'
+import {getSession,formValidation,errorPopup} from '../../Utils/Utils'
 import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router-dom'
 import { isEmpty } from 'ramda'
@@ -23,9 +23,16 @@ class PageLogin extends PureComponent {
   _onSubmitForm(e)
   {
     if (e) e.preventDefault()
-    const email = this.refs.email.value
-    const password = this.refs.password.value
-    this.props.doLogin({email,password})
+    let errs=[]
+    let email = formValidation(this.refs.email.value,"email",{email:true})
+    let password = formValidation(this.refs.password.value,"password",{})
+    if(email.err.length>0){ _.merge(errs,email.err) }
+    if(errs.length>0){ errorPopup(errs)}
+    else{ 
+      email=email.value
+      password=password.value
+      this.props.doLogin({email,password,})
+    }
   }
   componentDidMount()
   {
