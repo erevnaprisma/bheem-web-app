@@ -17,6 +17,7 @@ import Services from '../../Containers/Sections/Services'
 import Pricing from '../../Containers/Sections/Pricing'
 import Team from '../../Containers/Sections/Team'
 import Hero from '../../Containers/Sections/Hero'
+import Client from '../../Containers/Sections/Clients'
 // Components
 // import HorizontalScroll from 'react-scroll-horizontal'
 
@@ -35,8 +36,9 @@ export default class PageHome extends PureComponent {
       <Hero/>
         <div id="main">
           <About/>
-          <Team/>
-          <Services/>
+          {/* <Team/> */}
+          {/* <Services/> */}
+          <Client/>
           <Pricing/>
         </div>
       <Footer/>

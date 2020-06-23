@@ -47,7 +47,7 @@ class index extends Component {
                 
                 <div className="d-flex align-items-center" style={{marginLeft:'5%',marginRight:'5%'}}>
                     <a href="/" className="logo mr-auto"><img src={Images.LogoPutih} alt="" className="img-fluid"/></a>
-                    {(window.location.pathname == '/home' || window.location.pathname == '/'&&  
+                    {(window.location.pathname == '/home' || window.location.pathname == '/' &&  
                         <nav className="nav-menu d-none d-lg-block mr-5">
                             <ul>
                                 <li className="active"><a href="/">Home</a></li>
@@ -59,11 +59,7 @@ class index extends Component {
                         </nav>
                     )}
                     {(this._get(window.location.pathname) &&  
-                        <nav className="nav-menu d-none d-lg-block mr-5">
-                            <ul>
-                                <li className="active"><a href="/">Home</a></li>
-                            </ul>
-                        </nav>
+                        <a href="/" className=" btnHeader" id="header-host">Home</a>
                     )}
                     {/* button */}
 

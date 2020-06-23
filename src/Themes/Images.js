@@ -5,5 +5,7 @@ const images = {
   HomeIllus:require('../Images/Illustrations/HomeAbout.jpg'),
   People:require('../Images/Illustrations/People.jpg'),
   Avatar:require('../Images/avatar.jpg'),
+  UnivPrisma:require('../Images/Clients/UnivPrisma.png'),
+  SKP:require('../Images/Clients/SKP.png'),
 }
 export default images
