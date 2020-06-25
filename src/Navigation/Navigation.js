@@ -46,7 +46,7 @@ class NavigationRouter extends Component {
         <AppContainer>
           <ResponsiveContainer>
             {pageList.map(r =>(
-            <Route key={r.path} exact path={`${basePath}${r.path}`} component={r.component}/>
+              <Route key={r.path} exact path={`${basePath}${r.path}`} component={r.component}/>
             ))}
           </ResponsiveContainer>
         </AppContainer>

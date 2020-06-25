@@ -103,7 +103,7 @@ class index extends Component {
                                         {/* <img className="avatar" src={userData.profilePicture||Images.Avatar}/>&nbsp;&nbsp;&nbsp;{`  Hii . `}<strong>{userData.nickName||userData.firstName}</strong> */}
                                         <strong>{'Hii!! '+userData.firstName+' click here to go to your profile'}</strong>
                                     </a>
-                                    <a href="#">Setting&nbsp;&nbsp;<span className="fas fa-cog"/></a>
+                                    <a href="#">Manage&nbsp;&nbsp;<span className="fas fa-cog"/></a>
                                     <a  data-toggle="modal" data-target="#modal-logout">Logout &nbsp;&nbsp;<span className="fas fa-sign-out-alt" /></a>
                                 </div>
                         </div>

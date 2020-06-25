@@ -100,8 +100,9 @@ export const expDateFormat=(timestamp) =>{
   return datetime.getFullYear()+'/'+datetime.getMonth()+'/'+datetime.getDay()+' > '+datetime.getHours()+':'+datetime.getMinutes()+':'+datetime.getSeconds()+':'+datetime.getMilliseconds()
 }
 export const isLogin = (route)=>{
-    
-  console.log("Session Exp >>",expDateFormat(getSession(AppConfig.sessionExp)))
+  console.log("Check Login Now >>",new Date().getTime())  
+  console.log("Check Login Exp >>",getSession(AppConfig.sessionExp))
+  console.log("Check Login Exped duration >>",new Date().getTime()-getSession(AppConfig.sessionExp))
 
   if(!_.isEmpty(getSession(AppConfig.sessionUserData))&&new Date().getTime()>=getSession(AppConfig.sessionExp)){
       destroySession()
@@ -129,8 +130,7 @@ export const formValidation=(str,input_name=null,rules)=>
     else
     {
       if(_.has(rules,'email')) //Email required
-      {
-        
+      { 
         if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(str))){ err.push(`<li>Email not valid for input <strong>${input_name}</strong></li>`); }
       }
       if(_.has(rules,'max_length')) //Max length
@@ -151,6 +151,7 @@ export const formValidation=(str,input_name=null,rules)=>
   let value=null
   if(err.length>0){ isValidate=true }
   else( value = str )
+  
   return { isValidate,value,err }
 }
 export const errorPopup= (errs)=>{

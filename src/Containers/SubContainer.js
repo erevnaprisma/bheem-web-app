@@ -11,11 +11,11 @@ import ModalLogout from '../Components/Modal/Logout'
 
 class SubContainer extends React.PureComponent {
   componentWillMount(){
-    console.log("window===>>",window.location.pathname)
-    //  if(window.location.pathname != '/join-meeting')
-    //  {
-    //   isLogin()
-    //  }
+    
+     if(window.location.pathname != '/join-meeting')
+     {
+      isLogin()
+     }
   }  
   render () {
     console.log('render window.location ', window.location.pathname)

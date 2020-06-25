@@ -14,9 +14,9 @@ const lp = {
   '/login': { route: '/login', path: '/login', component: Login },
   '/signup': { route: '/signup', path: '/signup', component: Signup },
   '/concal': { route: '/concal', path: '/concal/:room', component: Concal },
-  '/concal': { route: '/concal', path: '/concal/', component: PageHome },
   '/host-meeting': { route: '/host-meeting', path: '/host-meeting', component: HostMeeting },
   '/join-meeting': { route: '/join-meeting', path: '/join-meeting', component: JoinMeeting },
+  '/manage-meeting': { route: '/manage-meeting', path: '/manage-meeting', component: JoinMeeting },
   // '/': {path: '*', component: PageHome }
 }
 export const pageList = _.map(lp, (v) => v)
