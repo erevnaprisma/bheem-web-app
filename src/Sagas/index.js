@@ -13,6 +13,7 @@ import { SignUpTypes } from '../Containers/Signup/redux'
 import { LoginTypes } from '../Containers/Login/redux'
 import { CreateMeetingTypes } from '../Containers/HostMeeting/redux'
 import { JoinMeetingTypes } from '../Containers/JoinMeeting/redux'
+import { ScheduleMeetingsTypes } from '../Containers/Management/SceduleMeeting/redux'
 
 
 
@@ -20,6 +21,8 @@ import { doSignUp } from '../Containers/Signup/sagas'
 import { doLogin,doLogout} from '../Containers/Login/sagas'
 import { doCreateMeeting} from '../Containers/HostMeeting/sagas'
 import { doJoinMeeting,checkIsexistMeeting } from '../Containers/JoinMeeting/sagas'
+import { fetchMeetings,createScheduleMeeting,cancelScheduleMeeting,startScheduleMeeting,editScheduleMeeting } from '../Containers/Management/SceduleMeeting/sagas'
+
 
 /* ------------- API ------------- */
 
@@ -38,6 +41,11 @@ export default function * root () {
     takeLatest(LoginTypes.DO_LOGOUT, doLogout, apiDashboard),
     takeLatest(CreateMeetingTypes.CREATE_MEETING, doCreateMeeting, apiDashboard),
     takeLatest(JoinMeetingTypes.JOIN_MEETING, doJoinMeeting, apiDashboard),
-    takeLatest(JoinMeetingTypes.CHECK_ISEXIST_MEETING, checkIsexistMeeting, apiDashboard)
+    takeLatest(JoinMeetingTypes.CHECK_ISEXIST_MEETING, checkIsexistMeeting, apiDashboard),
+    takeLatest(ScheduleMeetingsTypes.GET_LIST_MEETING, fetchMeetings, apiDashboard),
+    takeLatest(ScheduleMeetingsTypes.CREATE_SCHEDULE_MEETING, createScheduleMeeting, apiDashboard),
+    takeLatest(ScheduleMeetingsTypes.CANCEL_SCHEDULE_MEETING, cancelScheduleMeeting, apiDashboard),
+    takeLatest(ScheduleMeetingsTypes.START_SCHEDULE_MEETING, startScheduleMeeting, apiDashboard),
+    takeLatest(ScheduleMeetingsTypes.EDIT_SCHEDULE_MEETING, editScheduleMeeting, apiDashboard)
   ])
 }

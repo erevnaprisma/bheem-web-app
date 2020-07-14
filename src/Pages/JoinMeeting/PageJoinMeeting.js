@@ -15,18 +15,18 @@ import Footer from '../../Containers/Footer'
 import Loader from '../../Components/Loader'
 import Swal from 'sweetalert2'
 import DateTimePicker from 'react-datetime-picker';
-import './menu.css'
-
 //Actions
 import JoinMeetingActions from '../../Containers/JoinMeeting/redux'
+import io from 'socket.io-client'
+const socketIo=io(AppConfig.socketUrl)
 
-
-
-class HostMeeting extends PureComponent {
+class JoinMeeting extends PureComponent {
   constructor(props)
   {
     super(props)
     this._onSubmitForm=this._onSubmitForm.bind(this)
+    this._onJoin=this._onJoin.bind(this)
+    this._waitingRoom=this._waitingRoom.bind(this)
     this.state={
       s_date:new Date(),
       e_date:new Date(),
@@ -34,7 +34,13 @@ class HostMeeting extends PureComponent {
       isLogin:getSession(AppConfig.loginFlag)||false
     }
   }
-
+  static  _emit()
+  {
+    const userId=getSession(AppConfig.sessionUserData).id
+    const nickname=getSession(AppConfig.sessionUserData).nickname
+    console.log("isi yang dikirim",{userId,socketId:socketIo.id})
+    socketIo.emit('requestToJoinUser',{userId,socketId:socketIo.id})    
+  }
   _onSubmitForm(e)
   {
     if (e) e.preventDefault()
@@ -53,6 +59,9 @@ class HostMeeting extends PureComponent {
   }
   componentDidMount()
   {
+    socketIo.on('userAllow',e=>
+      alert("Success Join data>>>\n",e)
+    )  
     this.props.doReset()
   }
   componentWillUnmount()
@@ -60,80 +69,82 @@ class HostMeeting extends PureComponent {
     this.props.doReset()
   } 
   onChange = date => console.log("datetime>>>",date)
-
+  _waitingRoom()
+  {
+    const userId=getSession(AppConfig.sessionUserData).id
+    const nickname=getSession(AppConfig.sessionUserData).nickname    
+    return (
+      <div className="page-header" style={{backgroundImage: `url("${Images.JoinIllus}")`, backgroundSize: 'cover', backgroundPosition: 'top center'}}>
+        <div className="page-header" style={{background:'#fff' ,backgroundSize: 'cover', backgroundPosition: 'top center'}}>
+            <div className="container">
+              <div className="row">
+                <div className="col-lg-4 col-md-6 ml-auto mr-auto">
+                  <div className="card card-login" style={{background:Colors.primaryRed}}>    
+                    <center>
+                        <Loader className="mx-auto" color="#fff"/>
+                        <p style={{color:'#fff'}}><b>Joining the room..</b></p>
+                        <p style={{color:'#fff'}}>Waiting for host to accept your request</p>
+                    </center>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  _onJoin()
+  {
+    const {isLogin} = this.state
+    const {isRequesting,errors,status,title,host,createdBy,startDate,endDate,createdAt,meetingId} = this.props
+    return(
+      <div className="page-header" style={{backgroundImage: `url("${Images.JoinIllus}")`, backgroundSize: 'cover', backgroundPosition: 'top center'}}>
+            <div className="container">
+              <div className="row">
+                <div className="col-lg-4 col-md-6 ml-auto mr-auto">
+                  <div className="card card-login" >
+                    <form className="form" onSubmit={(e)=>this._onSubmitForm(e)} style={{minHeight:0,paddingBottom:20}}>
+                      <div className="card-header card-header-primary text-center">
+                        <h4 className="card-title">Join Meeting</h4>
+                      </div>
+                      <br/>
+                      {(!isLogin &&
+                        <div className="card-body " style={{margin:0,padding:0}}>
+                          <div className="input-group mt-9">
+                            <input type="text" className="form-control" placeholder="Meeting ID" ref="meeting_id" required style={{textAlign:'center', marginLeft:10,marginRight:10}}/>
+                          </div>
+                          <div className="input-group mt-9">
+                            <input type="text" className="form-control" placeholder="Your name" ref="u_name" required style={{textAlign:'center', marginLeft:10,marginRight:10}}/>
+                          </div>
+                        </div>
+                      )}
+                      {(isLogin &&
+                        <div className="card-body " style={{margin:0,padding:0}}>
+                          <div className="input-group mt-9">
+                            <input type="text" className="form-control" placeholder="Meeting ID" ref="meeting_id" required style={{textAlign:'center', marginLeft:10,marginRight:10}}/>
+                          </div>
+                        </div>
+                      )}
+                      <div className="footer text-center mt-5">
+                      <button type="submit" className="btn btn-primary btn-link btn-wd btn-lg">Join Meeting</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    )
+  }
   render() {
     const {isLogin} = this.state
     const {isRequesting,errors,status,title,host,createdBy,startDate,endDate,createdAt,meetingId} = this.props
     return (
-      <div style={{background:`linear-gradient(to right bottom, #bdc3c7, #2c3e50)`,backgroundSize:'contain'}}>
+      <div>
       <Header/>
       <Helmet><title>Join Meeting</title></Helmet>
-        {(!isRequesting&&
-          <div id="main">
-            <section id="contact" style={{marginTop:'5%',minWidth:window.innerWidth,minHeight:window.innerHeight}}>
-              <div className="container mx-auto" style={{marginTop:'10%'}}>
-                  <div className="mx-auto " style={{background:`rgba(82, 82, 82, 0.8)`,paddingTop:20,paddingBottom:20}}>
-                    <div className="section-title mx-auto ">
-                      <h3 style={{color:'white'}}>Join Meeting</h3>
-                      {/* <span style={{color:'white'}}>for the future you can use your social media account</span> */}
-                    </div>
-                    <div className="row mt-1 mx-auto">
-                      <div className="col-lg-8 mt-5 mt-lg-0 mx-auto" >
-                        <form onSubmit={(e)=>this._onSubmitForm(e)}>
-                          {(!isLogin &&
-                            <div>
-                              <div className="form-group">
-                                <input type="text" className="InputText form-control mx-auto"  placeholder="Meeting Id" ref="meeting_id" required style={{textAlign:'center'}}/>
-                                <div className="validate"/>
-                              </div>
-                              
-                              <div className="form-group">
-                                <input type="text" className="InputText form-control mx-auto"  placeholder="Your name" ref="u_name" required style={{textAlign:'center'}}/>
-                                <div className="validate"/>
-                              </div>
-                            </div>
-                          )}
-                           {(isLogin &&
-                            <div className="form-group">
-                              <input type="text" className="InputText form-control mx-auto"  placeholder="Meeting Id" ref="meeting_id" required style={{textAlign:'center'}}/>
-                              <div className="validate"/>
-                            </div>
-                          )}
-                          <br/>
-                          <br/>
-                          {(!isRequesting &&
-                          <div className="text-center">
-                            <button type="submit" className="btn" required style={{marginLeft:0}}>Join</button>
-                          </div>
-                          )}
-                          {(isRequesting && <center>
-                              <Loader className="mx-auto"/>
-                            </center>)}
-                          <br/>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-          </div>
-          )}
-          {(isRequesting&&
-           <div id="main" >
-            <section id="contact" style={{borderRadius:'10%',marginTop:'5%',minWidth:window.innerWidth,minHeight:window.innerHeight}}>
-              <div className="container mx-auto" style={{marginTop:'10%'}}>
-                  <div className="mx-auto " style={{background:`rgba(82, 82, 82, 0.8)`,paddingTop:20,paddingBottom:20}}>
-                    <div className="col">
-                    <center> <Loader className="mx-auto"/>
-                    <h1 style={{color:Colors.primaryWhite}}>Creating meeting...</h1>
-                    </center>
-                    
-                    </div>
-                  </div>
-                </div>
-              </section>
-          </div> 
-            )}  
+      {status == 200 && this._waitingRoom() }
+      {status != 200 && this._onJoin() }
       </div>
     )
   }
@@ -156,5 +167,5 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(
-  injectIntl(withRouter(HostMeeting))
+  injectIntl(withRouter(JoinMeeting))
 )

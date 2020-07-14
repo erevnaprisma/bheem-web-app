@@ -14,10 +14,16 @@ class Logout extends Component {
         return (
            <div className="modal fade" id="modal-logout" tabIndex={1000} role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             {(this.props.isRequesting &&
-                <center style={{marginTop:'50%'}}>
-                <Loader className="col"/>
-                <p style={{textAlign:'center',color:Colors.primaryWhite}}>Logging out..</p>
-                </center>
+                <div className="modal-dialog modal-dialog-centered" role="document">                    
+                    {/* <div className="modal-content"> */}
+                        {/* <div className="modal-body" st> */}
+                            <center style={{marginTop:'50%'}}>
+                                <Loader/>
+                                <p style={{textAlign:'center',color:Colors.primaryWhite}}>Logging out..</p>
+                            </center>
+                        {/* </div> */}
+                    {/* </div> */}
+                </div>
             )}
             
             {(!this.props.isRequesting &&

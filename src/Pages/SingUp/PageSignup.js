@@ -14,7 +14,6 @@ import Footer from '../../Containers/Footer'
 import Loader from '../../Components/Loader'
 import Swal from 'sweetalert2'
 
-import './menu.css'
 // Components
 // import HorizontalScroll from 'react-scroll-horizontal'
 
@@ -72,47 +71,72 @@ class PageSignUp extends PureComponent {
       <div style={{background:`url(${Images.HomeIllus}) center`,backgroundSize:'contain'}}>
       <Header/>
       <Helmet>Signup</Helmet>
-        <div id="main">
-            <section id="contact" style={{minWidth:window.innerWidth,minHeight:window.innerHeight}}>
-              <div className="container mx-auto" style={{marginTop:'10%'}}>
-                <div className="mx-auto " style={{background:`rgba(82, 82, 82, 0.8)`,paddingTop:20,paddingBottom:20}}>
-                  <div className="section-title mx-auto ">
-                    <h3 style={{color:'white'}}>SignUp</h3>
-                    {/* <span style={{color:'white'}}>for the future you can use your social media account</span> */}
-                  </div>
-                  <div className="row mt-1 mx-auto">
-                    <div className="col-lg-8 mt-5 mt-lg-0 mx-auto" >
-                      <form onSubmit={(e)=>this._onSubmitForm(e)}>
-                        <div className="form-group">
-                          <input type="text" className="InputText form-control mx-auto" name="First name" placeholder="First name" ref="first_name" required/>
-                          <div className="validate"/>
+      <div className="page-header" style={{backgroundImage:`url("${Images.SignUpIllus}")`, backgroundSize: 'cover', backgroundPosition: 'top center'}}>
+            <div className="container">
+              <div className="row">
+                <div className="col-lg-4 col-md-6 ml-auto mr-auto">
+                  <div className="card card-login">
+                    <form className="form" onSubmit={(e)=>this._onSubmitForm(e)}>
+                      <div className="card-header card-header-primary text-center">
+                        <h4 className="card-title">Signup</h4>
+                        {/* <div className="social-line">
+                          <a href="#pablo" className="btn btn-just-icon btn-link">
+                            <i className="fa fa-facebook-square" />
+                          </a>
+                          <a href="#pablo" className="btn btn-just-icon btn-link">
+                            <i className="fa fa-twitter" />
+                          </a>
+                          <a href="#pablo" className="btn btn-just-icon btn-link">
+                            <i className="fa fa-google-plus" />
+                          </a>
+                        </div> */}
+                      </div>
+                      <div className="card-body">
+                        <div className="input-group">
+                          <div className="input-group-prepend">
+                            <span className="input-group-text">
+                              <i className="material-icons">emoji_emotions</i>
+                            </span>
+                          </div>
+                          <input type="text" className="form-control" placeholder="First Name..." ref="first_name" required/>
                         </div>
-                        <div className="form-group">
-                          <input type="text" className="InputText form-control mx-auto" name="Last name" placeholder="Last name" ref="last_name" required/>
-                          <div className="validate"/>
+                        <div className="input-group">
+                          <div className="input-group-prepend">
+                            <span className="input-group-text">
+                              <i className="material-icons">mood</i>
+                            </span>
+                          </div>
+                          <input type="text" className="form-control" placeholder="Last Name..." ref="last_name" required/>
                         </div>
-                        <div className="form-group">
-                          <input type="email" className="InputText form-control mx-auto" name="Email" placeholder="Email" ref="email" required />
-                          <div className="validate" />
+                        <div className="input-group">
+                          <div className="input-group-prepend">
+                            <span className="input-group-text">
+                              <i className="material-icons">mail</i>
+                            </span>
+                          </div>
+                          <input type="email" className="form-control" placeholder="Email..." ref="email" required/>
                         </div>
-                        <br/>
-                        <div className="text-center">
-                          {!isRequesting && <button type="submit" className="btn" required>Signup</button>}
-                          {(isRequesting && <center>
-                            <Loader className="mx-auto"/>
-                          </center>)}
+                      </div>
+                      {(!isRequesting &&
+                        <div className="footer text-center">
+                          <button type="submit" className="btn btn-primary btn-link btn-wd btn-lg" required>Signup</button>
                         </div>
-                        <br/>
+                       )}
+                      {(isRequesting &&
                         <center>
-                          <span style={{color:Colors.primaryWhite}}>Already have an account?</span> <a href="/Login" style={{color:'red'}}> <strong style={{color:'white'}}>Login</strong></a>
-                        </center> 
-                      </form>
-                    </div>
+                            <Loader className="mx-auto" color="#000"/>
+                            <p><strong>Registering.....</strong></p>
+                        </center>
+                      )}
+                      <center>
+                      <p>Already have an account? <a href="/login" className="btn-link"><strong>Login</strong></a></p>
+                      </center>
+                    </form>
                   </div>
                 </div>
               </div>
-            </section>
-        </div>
+            </div>
+          </div>
        </div>
     )
   }

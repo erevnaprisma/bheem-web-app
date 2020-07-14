@@ -38,16 +38,26 @@ class App extends Component {
     return <div>{this.props.children}</div>
   }
 }
+
 const AppContainer = withRouter(App)
 class NavigationRouter extends Component {
+_routeList(pageList)
+{
+  let rt=[]
+  pageList.map(r =>(
+    r.exact ?
+    rt.push(<Route key={r.path} exact path={`${basePath}${r.path}`} component={r.component}/>)
+    :
+    rt.push(<Route key={r.path} path={`${basePath}${r.path}`} component={r.component}/>) 
+  ))
+  return rt
+}
   render () {
     return (
       <Router>
         <AppContainer>
           <ResponsiveContainer>
-            {pageList.map(r =>(
-              <Route key={r.path} exact path={`${basePath}${r.path}`} component={r.component}/>
-            ))}
+            {this._routeList(pageList)}
           </ResponsiveContainer>
         </AppContainer>
       </Router>

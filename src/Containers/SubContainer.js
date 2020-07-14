@@ -8,23 +8,32 @@ import AppConfig from '../Config/AppConfig'
 import Header from  './Header'
 import {isLogin} from '../Utils/Utils'
 import ModalLogout from '../Components/Modal/Logout'
+import Footer from '../Components/Footer'
 
 class SubContainer extends React.PureComponent {
+  _exclude(pg)
+  {
+    if(pg.includes(window.location.pathname)) return true
+    else  return false
+  }
   componentWillMount(){
-    
-     if(window.location.pathname != '/join-meeting')
+    const pg=['/','/home','/login','/waiting-room','/join-meeting','/signup']
+     if(!this._exclude(pg))
      {
       isLogin()
+      if(window.location.pathname == '/manage-meeting') isLogin(true) 
      }
   }  
   render () {
     console.log('render window.location ', window.location.pathname)
+    const pg=['/','/home','/manage-meeting']
     const loc = window.location.pathname
     const { children } = this.props
     return (
       <div>
         <ModalLogout/>
-        {children} 
+        {children}
+        {this._exclude(pg) && <Footer/>}
       </div>
     )
   }
@@ -34,8 +43,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
   }
 }
-
-// wraps dispatch to create nicer functions to call within our component
 const mapDispatchToProps = dispatch => ({
 
 })

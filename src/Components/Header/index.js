@@ -9,108 +9,127 @@ import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router-dom'
 import LoginAction from '../../Containers/Login/redux'
 import Loader from '../../Components/Loader'
+import images from '../../Themes/Images'
 
 
 
 class index extends Component {
     _get(){
-        const filter=['/login','/signup','/host-meeting','/join-meeting']
+        const filter=['/','/login','/signup','/host-meeting','/join-meeting']
         if(_.find(filter,function(o){ return o == window.location.pathname.toString().toLowerCase();}))
         {
             return true
         }
        return false
      }
-    componentWillMount()
-    {
-       const isExist=this._get()
-
-        if(!isExist) require('./header.css')
-        else require('./header-light.css')
-    }
     _Logout()
     {
         this.props.doLogout()
     }
     render() {
         const userData=getSession(AppConfig.sessionUserData)
+        
+        const nav=!this._get() ? 'navbar navbar-inverse navbar-expand-lg bg-dark' : 'navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg'
         console.log("userdata session>>>",userData)
-        // const token=jwtDecode(getSession(AppConfig.sessionToken))
-        // const now=new Date()
-        // const ml=now.getMilliseconds()
-        // console.log("Token",token)
-        // console.log("Now date",new Date())
-        // console.log("Exp date",new Date(new Date().getTime()+jwtDecode(token).exp*1000))
-    
         return (
-            <header id="header" className="header-style fixed-top">
-                
-                <div className="d-flex align-items-center" style={{marginLeft:'5%',marginRight:'5%'}}>
-                    <a href="/" className="logo mr-auto"><img src={Images.LogoPutih} alt="" className="img-fluid"/></a>
-                    {(window.location.pathname == '/home' || window.location.pathname == '/' &&  
-                        <nav className="nav-menu d-none d-lg-block mr-5">
-                            <ul>
-                                <li className="active"><a href="/">Home</a></li>
-                                <li><a href="#about">About</a></li>
-                                <li><a href="#portfolio">Clients</a></li>
-                                <li><a href="#team">Features</a></li>
-                                <li><a href="#contact">Contact</a></li>
-                            </ul>
-                        </nav>
-                    )}
-                    {(this._get(window.location.pathname) &&  
-                        <a href="/" className=" btnHeader" id="header-host">Home</a>
-                    )}
-                    {/* button */}
+            <nav className='navbar navbar-inverse navbar-expand-lg bg-dark' id="sectionsNav" style={{padding:0, marginBottom:0}}>
+                <div className="container">
+                    <div className="navbar-translate">
+                        <a className="navbar-brand mb-3" href="/">
+                            <div className="logo-image">
+                                <img src={Images.LogoPutih} className="navbar-brand" />
+                            </div>
+                        </a>
 
-                    {/* Mobile */}
-                    <a href="/host-meeting" className="btnHostB btnHeader" id="header-host">Host</a>
-                    <a href="/join-meeting" className="btnJoinB btnHeader" id="header-join">Join</a>
-                    {/* Mobile */}
+                        <button className="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="sr-only">Toggle navigation</span>
+                             <div>
+                              <span className="navbar-toggler-icon" />
+                              <span className="navbar-toggler-icon" />
+                              <span className="navbar-toggler-icon" />
+                            </div>
+                            {/* {(_.isEmpty(userData) &&
 
-                    {/* Desktop */}
-                    <a href="/host-meeting" className="btnHost btnHeader" id="header-host">Host a meeting</a>
-                    <a href="/join-meeting" className="btnJoin btnHeader" id="header-host">Join a meeting</a>
-                    {/* Desktop */}
+                            )}
+                            {(!_.isEmpty(userData)&&_.has(userData,'id') &&
+                            <div className="pr-gambar2 profile-photo-small" style={{width:50}}>
+                               <img src={Images.Avatar} alt="Circle Image" className="rounded-circle img-fluid" />
+                            </div>)} */}
+                        </button>
+                    </div>
+                    
+                    <div className="collapse navbar-collapse">
 
-                    {/* button */}
-                    {(_.isEmpty(userData) && !_.has(userData,'id') &&
-                        <div>
-                            <a href="/Login" className="btnLoginheader btnHeader" id="btnLoginheader">Login</a>
-                        </div>
-                    )}
-                   {/* {(!_.isEmpty(userData)&&_.has(userData,'userId') && 
-                    <div className="row profileSec" id="avatar-sec"> 
-                        <strong className="avatarName" id="avatar-sec-name">{userData.firstName}</strong>
-                            <div>
-                                <img className="avatar" src={userData.profilePicture||Images.Avatar}/>
-                            </div>                        
-                        </div>
-                   )} */}
-                   {(!_.isEmpty(userData)&&_.has(userData,'id') && 
-                        <div className="dd-header">
-                                <button className="dd-header-btn">
-                                    <div className="row" id="avatar-sec"> 
-                                        <strong className="avatarName" id="avatar-sec-name">{userData.firstName}</strong>
-                                        <div>
-                                            <img className="avatar df-avatar" src={userData.profilePicture||Images.Avatar}/>
-                                        </div>                        
-                                    </div>
-
-                                </button>
-                                <div className="dd-content">
-                                    <a href="" className="row dd-content-header">
-                                        {/* <img className="avatar" src={userData.profilePicture||Images.Avatar}/>&nbsp;&nbsp;&nbsp;{`  Hii . `}<strong>{userData.nickName||userData.firstName}</strong> */}
-                                        <strong>{'Hii!! '+userData.firstName+' click here to go to your profile'}</strong>
-                                    </a>
-                                    <a href="#">Manage&nbsp;&nbsp;<span className="fas fa-cog"/></a>
-                                    <a  data-toggle="modal" data-target="#modal-logout">Logout &nbsp;&nbsp;<span className="fas fa-sign-out-alt" /></a>
+                        <ul className="navbar-nav ml-auto">
+                        {(!_.isEmpty(userData)&&_.has(userData,'id') && 
+                          <li className="pr-gambar3 dropdown nav-item">
+                                <div className="dropdown-toggle snav-link" data-toggle="dropdown">
+                                  <a href="#" className="dropdown-item">Me ({userData.firstName})</a>
                                 </div>
-                        </div>
-                        
-                   )}
+                                <div className="dropdown-menu dropdown-menu-right">
+                                    {/* <h6 className="dropdown-header">Dropdown header</h6> */}
+                                    <a href="#" className="dropdown-item">Me ({userData.firstName})</a>
+                                      <a href="/manage-meeting" className="dropdown-item">My meetings</a>
+                                      <a href="#" className="dropdown-item">Settings</a>
+                                      <a  className="dropdown-item" data-toggle="modal"  data-target="#modal-logout">Logout</a>
+                                </div>
+                            </li>
+                        )}
+                        {/* {(!this._get() && */}
+                            <li className="nav-item">
+                                <a className="nav-link" href="/" target="_parent">
+                                <i className="material-icons">home</i>
+                                  <strong>Home</strong>
+                                </a>
+                            </li> 
+                        {/* )} */}
+                            <li className="nav-item">
+                                <a className="nav-link" href="/host-meeting" target="_parent">
+                                  <strong>Host Meeting</strong>
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="/join-meeting" target="_parent">
+                                  <strong>Join Meeting</strong>
+                                </a>
+                            </li>
+                            {(_.isEmpty(userData) && !_.has(userData,'id') &&
+                            <li className="nav-item">
+                                <a className="nav-link" href="/login" target="_parent">
+                                  <strong>Login</strong>
+                                </a>
+                            </li> 
+                            )}
+                            {(_.isEmpty(userData) && !_.has(userData,'id') &&
+                            <li className="nav-item">
+                                <a className="btn btn-rose btn-raised btn-round" href="/signup" target="_parent">
+                                  <strong>Get started</strong>
+                                </a>
+                            </li>
+                            )}
+                            {(!_.isEmpty(userData)&&_.has(userData,'id') && 
+                            <div>
+                                <li className="pr-gambar dropdown nav-item">
+                                <div className=" profile-photo dropdown-toggle nav-link" data-toggle="dropdown">
+                                      <div className="profile-photo-small">
+                                      <img src={Images.Avatar} alt="Circle Image" className="rounded-circle img-fluid" />
+                                      </div>
+                                  </div>
+                                  <div className="dropdown-menu dropdown-menu-right">
+                                      {/* <h6 className="dropdown-header">Dropdown header</h6> */}
+                                      <a href="#" className="dropdown-item">Me ({userData.firstName})</a>
+                                      <a href="/manage-meeting" className="dropdown-item">My meetings</a>
+                                      <a href="#" className="dropdown-item">Settings</a>
+                                      <a  className="dropdown-item" data-toggle="modal"  data-target="#modal-logout">Logout</a>
+                                  </div>
+                              </li>
+                            </div>
+                            )}
+
+                        </ul>
+                    </div>
                 </div>
-            </header>
+                </nav>
 
         )
     }

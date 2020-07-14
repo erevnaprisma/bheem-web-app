@@ -7,10 +7,14 @@ import {path,merge} from 'ramda'
 import {isNullOrUndefined} from 'util'
 import JoinActions from './redux'
 import Swal from 'sweetalert2'
+import io from 'socket.io-client'
+import JoinUI from '../../Pages/JoinMeeting/PageJoinMeeting'
+const socketIo=io(AppConfig.socketUrl)
 
 export function * doJoinMeeting (api, action) {
     const { data } = action
     const response = yield call(api.doJoinMeeting,data)
+    
     console.log("response fetch join meeting>>>>",response)
     const err = path(['data','errors'], response)||[]
     
@@ -26,7 +30,7 @@ export function * doJoinMeeting (api, action) {
     if (_.isEmpty(err)&& status==200) {
       const errors=''
       yield put(JoinActions.joinMeetingDone({status,errors}))
-      window.location=`/concal/${data.meetingId}`
+      JoinUI._emit()
     }
     else{
       let errors=''

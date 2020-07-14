@@ -23,7 +23,6 @@ export const getAccessToken = (accessTokenState) => {
   return accessTokenState
 }
 export const decryptAt = (msg, key) => {
-  console.log('decryptAt')
   const publicToken = window.sessionStorage.getItem(AppConfig.publicToken)
   const sessionToken = window.sessionStorage.getItem(AppConfig.sessionToken)
   if (!publicToken || !sessionToken) return ''
@@ -31,13 +30,6 @@ export const decryptAt = (msg, key) => {
   var plaintext = str.toString(EncUtf8)
   return plaintext
 }
-// export const isLoggedIn = (isLoggedInState) => {
-//   const loginFlag = getSession(AppConfig.loginFlag)
-//   isLoggedInState = loginFlag || false
-//   if ((isLoggedInState === 'true' || isLoggedInState === true)) isLoggedInState = true
-//   else isLoggedInState = false
-//   return isLoggedInState
-// }
 export const generateHmac = (msg) => {
   return hmacSha256(msg, 'r4y4P4y2020').toString()
 }
@@ -96,27 +88,34 @@ export const updateURLParameter = (url, param, paramVal) => {
 }
 export const expDateFormat=(timestamp) =>{
   const datetime=new Date(timestamp)
-  
   return datetime.getFullYear()+'/'+datetime.getMonth()+'/'+datetime.getDay()+' > '+datetime.getHours()+':'+datetime.getMinutes()+':'+datetime.getSeconds()+':'+datetime.getMilliseconds()
 }
+export const formatDate=(e) =>{
+  const dt=new Date(parseInt(e))
+  return (dt.getMonth()+1)+'/'+dt.getDate()+'/'+dt.getFullYear()+' '+dt.getHours()+':'+dt.getMinutes()+':'+dt.getSeconds()
+}
 export const isLogin = (route)=>{
-  console.log("Check Login Now >>",new Date().getTime())  
-  console.log("Check Login Exp >>",getSession(AppConfig.sessionExp))
-  console.log("Check Login Exped duration >>",new Date().getTime()-getSession(AppConfig.sessionExp))
+  // console.log("Check Login Now >>",new Date().getTime())  
+  // console.log("Check Login Exp >>",getSession(AppConfig.sessionExp))
+  // console.log("Check Login Exped duration >>",new Date().getTime()-getSession(AppConfig.sessionExp))
 
-  if(!_.isEmpty(getSession(AppConfig.sessionUserData))&&new Date().getTime()>=getSession(AppConfig.sessionExp)){
+  if(_.isEmpty(getSession(AppConfig.sessionUserData)) || new Date().getTime()>=getSession(AppConfig.sessionExp)){
       destroySession()
-      Swal.fire({
+      window.location="/"
+      if(route)
+      {
+        Swal.fire({
           title: 'Expire',
           text: 'Session expired or your not logged in please relogin to your account',
           icon: 'error',
           confirmButtonText: 'Ok',
           onClose:()=>window.location="/"
         })
-  }
-  else{
-      console.log("still valid")
-  }
+      }
+    }
+    else{
+        console.log("still valid")
+    }
 }
 export const formValidation=(str,input_name=null,rules)=>
 {
@@ -151,7 +150,6 @@ export const formValidation=(str,input_name=null,rules)=>
   let value=null
   if(err.length>0){ isValidate=true }
   else( value = str )
-  
   return { isValidate,value,err }
 }
 export const errorPopup= (errs)=>{

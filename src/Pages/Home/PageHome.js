@@ -6,27 +6,18 @@ import { connect } from 'react-redux'
 import {getSession} from '../../Utils/Utils'
 import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router-dom'
-import Mainstreaming from './VideoStream'
 import { isEmpty } from 'ramda'
 import _ from 'lodash'
 // Components
 import Header from '../../Containers/Header'
-import Footer from '../../Containers/Footer'
-import About from '../../Containers/Sections/About'
-import Services from '../../Containers/Sections/Services'
-import Pricing from '../../Containers/Sections/Pricing'
-import Team from '../../Containers/Sections/Team'
+
 import Hero from '../../Containers/Sections/Hero'
-import Client from '../../Containers/Sections/Clients'
-// Components
-// import HorizontalScroll from 'react-scroll-horizontal'
+// Sections
+import PnPOverview from './Sections/PlansPricingOverview'
 
 
 export default class PageHome extends PureComponent {
-
-  
   render() {  
-   
     return (
      <div className="navbar-header visible-xs">
        <Helmet>
@@ -34,14 +25,11 @@ export default class PageHome extends PureComponent {
        </Helmet>
       <Header/>
       <Hero/>
-        <div id="main">
-          <About/>
-          {/* <Team/> */}
-          {/* <Services/> */}
-          <Client/>
-          <Pricing/>
-        </div>
-      <Footer/>
+        <div className="main main-raised">
+            <div className="container">
+              <PnPOverview/>
+            </div>
+          </div>
      </div>
     )
   }

@@ -1,3 +1,5 @@
+import { Socket } from "dgram"
+
 const env = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? 'development' : 'production'
 export default {
   // font scaling override - RN default is on
@@ -19,5 +21,7 @@ export default {
   sessionExp: 'exp_date',
   loginFlag: 'il',
   sessionData: 'ssst',
-  concalUrl:'https://bheem.erevnaraya.com/'
+  concalUrl:'https://alpha.jitsi.net/',
+  invitationlUrl:'http://localhost:3001/concal/',
+  socketUrl:'http://localhost:3000/participant'
 }
