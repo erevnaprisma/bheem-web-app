@@ -17,8 +17,6 @@ import Swal from 'sweetalert2'
 import DateTimePicker from 'react-datetime-picker';
 //Actions
 import JoinMeetingActions from '../../Containers/JoinMeeting/redux'
-import io from 'socket.io-client'
-const socketIo=io(AppConfig.socketUrl)
 
 class JoinMeeting extends PureComponent {
   constructor(props)
@@ -33,13 +31,6 @@ class JoinMeeting extends PureComponent {
       endless:false,
       isLogin:getSession(AppConfig.loginFlag)||false
     }
-  }
-  static  _emit()
-  {
-    const userId=getSession(AppConfig.sessionUserData).id
-    const nickname=getSession(AppConfig.sessionUserData).nickname
-    console.log("isi yang dikirim",{userId,socketId:socketIo.id})
-    socketIo.emit('requestToJoinUser',{userId,socketId:socketIo.id})    
   }
   _onSubmitForm(e)
   {
@@ -59,9 +50,6 @@ class JoinMeeting extends PureComponent {
   }
   componentDidMount()
   {
-    socketIo.on('userAllow',e=>
-      alert("Success Join data>>>\n",e)
-    )  
     this.props.doReset()
   }
   componentWillUnmount()
