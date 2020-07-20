@@ -2,13 +2,14 @@
 import Swal from 'sweetalert2'
 import { isLoggedIn, getSession } from '../../Utils/Utils'
 import AppConfig from '../../Config/AppConfig'
-export const Listeners = (socketIo)=>{
+export const Listeners = (socketIo,{addUserlist}=>{
     // if(window.location.pathname.split('/')[1] == '/concal')  
     // {
         var data=null
         socketIo.on('requestToJoinHost', (socket) => {
           console.log('socket=', socket)
           data = socket
+          addUserlist(socket)
         })
         let userInfo
         socketIo.on('sendRequestToHost', (msg) => {

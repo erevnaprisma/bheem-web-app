@@ -40,8 +40,8 @@ class SubContainer extends React.PureComponent {
   }
   _addUserlist(usr)
   {
-    let arr=this.props.listUser
-    this.props.listUser({})
+    let listParticipant=this.props.listUser
+    this.props.listUser({listParticipant})
   }
   
   
@@ -54,7 +54,9 @@ class SubContainer extends React.PureComponent {
     //   isLogin()
     //   if(window.location.pathname == '/manage-meeting') isLogin(true) 
     // }
-    Listeners(socketIo)
+    Listeners(socketIo,{
+      addUserlist:(e)=>this._addUserlist(e)
+    })
   } 
   static _emitter(eventName,data)
   {
