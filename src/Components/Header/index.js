@@ -28,7 +28,7 @@ class index extends Component {
     }
     render() {
         const userData=getSession(AppConfig.sessionUserData)
-        
+        const meetingSesssion=getSession(AppConfig.sessionMeeting)
         const nav=!this._get() ? 'navbar navbar-inverse navbar-expand-lg bg-dark' : 'navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg'
         console.log("userdata session>>>",userData)
         return (
@@ -83,16 +83,22 @@ class index extends Component {
                                 </a>
                             </li> 
                         {/* )} */}
-                            <li className="nav-item">
+                            {(!meetingSesssion&&
+                              <li className="nav-item">
                                 <a className="nav-link" href="/host-meeting" target="_parent">
                                   <strong>Host Meeting</strong>
                                 </a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="/join-meeting" target="_parent">
-                                  <strong>Join Meeting</strong>
-                                </a>
-                            </li>
+                              </li>
+                            )}
+
+                            {(!meetingSesssion&&
+                              <li className="nav-item">
+                                  <a className="nav-link" href="/join-meeting" target="_parent">
+                                    <strong>Join Meeting</strong>
+                                  </a>
+                              </li>
+                            )}
+
                             {(_.isEmpty(userData) && !_.has(userData,'id') &&
                             <li className="nav-item">
                                 <a className="nav-link" href="/login" target="_parent">

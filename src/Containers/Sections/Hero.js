@@ -5,7 +5,8 @@ import AppConfig from '../../Config/AppConfig'
 import _ from  'lodash'
 import Lottie from 'react-lottie'
 import * as dataAnim from './assets/animasi-jempol.json'
-
+import Main from '../SubContainer'
+// const emitter=Main._emitter()
 export default class Hero extends Component {
     state={
         stopanim:false,
@@ -22,8 +23,8 @@ export default class Hero extends Component {
             segments:[0,77]
           };
         const userData=getSession(AppConfig.sessionUserData)
-
         return (
+            
             // <div className="page-header header-filter" data-parallax="true" style={{backgroundImage: `url("${Images.HomeIllus}")`}}>
             <div className="page-header" data-parallax="true" style={{backgroundImage: `url("${Images.HomeIllus}")`}}>
                 <div className="container">
@@ -47,7 +48,7 @@ export default class Hero extends Component {
                            </div>
                             <h4>Every landing page needs a small description after the big bold title, that's why we added this text here. Add here all the information that can make you or your product create the first impression.</h4>
                             <br />
-                            <a href="/sign-up" target="_blank" className="btn btn-danger btn-raised btn-lg" style={{background:'#fff',color:'rgba(240, 52, 52, 1)',boxShadow:"1px 3px 1px #9E9E9E"}}>
+                            <a href="#"   className="btn btn-danger btn-raised btn-lg" style={{background:'#fff',color:'rgba(240, 52, 52, 1)',boxShadow:"1px 3px 1px #9E9E9E"}}>
                                 <i className="fa fa-play" /> Get started
                             </a>
                         </div>

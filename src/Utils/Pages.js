@@ -8,6 +8,7 @@ import HostMeeting from '../Pages/HostMeeting/PageHostMeeting'
 import JoinMeeting from '../Pages/JoinMeeting/PageJoinMeeting'
 import PageManageMeeting from '../Pages/Management/PageManageMeeting'
 import PageWaitingRoom from '../Pages/WaitingRoom/PageWaitingRoom'
+import PageVidStreaming from '../Pages/VideoStream/PageBheem'
 
 const lp = {
   '/': { exact:true,route: '/', path: '/', component: PageHome },
@@ -18,6 +19,7 @@ const lp = {
   '/join-meeting': { exact:true,route: '/join-meeting', path: '/join-meeting', component: JoinMeeting },
   '/manage-meeting': { exact:false,route: '/manage-meeting', path: '/manage-meeting', component: PageManageMeeting },
   '/waiting-room': { exact:true,route: '/waiting-room', path: '/waiting-room', component: PageWaitingRoom },
+  '/concal': { exact:true,route: '/concal', path: '/concal/:room/', component: PageVidStreaming },
 }
 export const pageList = _.map(lp, (v) => v)
 export const getPage = (pageId) => lp[pageId] || {}

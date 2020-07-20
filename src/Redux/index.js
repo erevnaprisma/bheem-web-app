@@ -14,6 +14,7 @@ export default () => {
     createmeeting: require('../Containers/HostMeeting/redux').reducer,
     joinmeeting: require('../Containers/JoinMeeting/redux').reducer,
     schedulemeetings: require('../Containers/Management/SceduleMeeting/redux').reducer,
+    streaming: require('../Containers/Streaming/redux').reducer,
   })
   let finalReducers = rootReducer
 

@@ -63,10 +63,26 @@ export const getSession = (parameter) => {
   const sessionValue = path([parameter], currentSessionJson) || ''
   return sessionValue
 }
+export const removeSpecificSession = (session, cb) => {
+  const encryptedCurrentSession = window.localStorage.getItem(AppConfig.sessionData)
+  let currentSessionJson = {}
+  if (encryptedCurrentSession) {
+    // decrypt
+    var bytes = AES.decrypt(encryptedCurrentSession, 'prismalink2019')
+    var decryptedData = bytes.toString(EncUtf8)
+    currentSessionJson = JSON.parse(decryptedData)
+    currentSessionJson = merge(currentSessionJson, session)
+  }
+  var ciphertext = AES.encrypt(JSON.stringify(currentSessionJson), 'prismalink2019')
+  var encryptedData = ciphertext.toString()
+  window.localStorage.removeItem(AppConfig.sessionData, encryptedData)
+  if (cb) cb()
+}
 export const destroySession=() =>{
   window.localStorage.clear() 
   console.log("session destroyed")
 }
+
 export const updateURLParameter = (url, param, paramVal) => {
   var newAdditionalURL = ''
   var tempArray = url.split('?')
@@ -152,7 +168,7 @@ export const formValidation=(str,input_name=null,rules)=>
   else( value = str )
   return { isValidate,value,err }
 }
-export const errorPopup= (errs)=>{
+export const errorPopup = (errs)=>{
   console.log("Errors>>>",errs)
   const htmlerrs="<div style='color:red'>"+_.flatten(errs).join("").toString()+"</div>"
   Swal.fire({
@@ -163,3 +179,6 @@ export const errorPopup= (errs)=>{
     confirmButtonText:"Ok"
   })
 } 
+export const generateConcalURL = (roomId,type,displayname)=>{
+    return
+}

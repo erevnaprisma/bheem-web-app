@@ -130,7 +130,7 @@ export default class dialog extends Component {
                             <strong>{this.props.isRequest}</strong>
                             {(_.has(this.props,'do') || !this.props.isRequest &&
                                 <button className="btn btn-primary btn-round" onClick={this.props.cb}>
-                                    <i clasName="material-icons">{this.props.iconBtn}</i>
+                                    {/* <i clasName="material-icons">{this.props.iconBtn}</i> */}
                                     {this.props.textBtn}
                                 </button>
                             )}

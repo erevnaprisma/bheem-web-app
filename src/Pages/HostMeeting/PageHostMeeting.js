@@ -56,6 +56,11 @@ class HostMeeting extends PureComponent {
   } 
   componentWillMount()
   {
+    if(getSession(AppConfig.sessionMeeting))
+    {
+      window.location='/'
+    }
+
     if(_.isEmpty(getSession(AppConfig.sessionUserData)))
     {
       Swal.fire({
@@ -144,8 +149,7 @@ class HostMeeting extends PureComponent {
                     </div>
                   </div>
                 </div>
-              )}
-              
+              )} 
             </div>
           </div> 
       </div>

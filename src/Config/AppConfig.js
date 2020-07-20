@@ -18,6 +18,7 @@ export default {
   publicToken: 'publicToken',
   sessionToken: 'st',
   sessionUserData: 'userData',
+  sessionMeeting:'activeMeeting',
   sessionExp: 'exp_date',
   loginFlag: 'il',
   sessionData: 'ssst',

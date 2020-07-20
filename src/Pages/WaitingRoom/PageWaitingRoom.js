@@ -19,14 +19,14 @@ import io from 'socket.io-client'
 import AppConfig from '../../Config/AppConfig';
 
 class PageSignUp extends PureComponent {
-    componentDidMount()
-    {
-        const socketIo=io(AppConfig.socketUrl)
-        console.log("id soket>>> ",socketIo)
-        socketIo.on('userAllow',e=>
-          alert("Success Join data>>>\n",e)
-        )  
-    }
+  componentDidMount()
+  {
+      const socketIo=io(AppConfig.socketUrl)
+      console.log("id soket>>> ",socketIo)
+      socketIo.on('userAllow',e=>
+        alert("Success Join data>>>\n",e)
+      )  
+  }
   render() {
     const {status,errors,isRequesting} = this.props
     return (
@@ -34,7 +34,7 @@ class PageSignUp extends PureComponent {
       <Header/>
       <Helmet><title>Waiting Room</title></Helmet>
       {/* <div className="page-header" style={{backgroundImage:`url("${Images.SignUpIllus}")`, backgroundSize: 'cover', backgroundPosition: 'top center'}}> */}
-      <div className="page-header" style={{background:'#fff' ,backgroundSize: 'cover', backgroundPosition: 'top center'}}>
+        <div className="page-header" style={{background:'#fff' ,backgroundSize: 'cover', backgroundPosition: 'top center'}}>
             <div className="container">
               <div className="row">
                 <div className="col-lg-4 col-md-6 ml-auto mr-auto">

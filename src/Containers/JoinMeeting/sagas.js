@@ -1,16 +1,16 @@
 import { call, put, select } from 'redux-saga/effects'
 import DashboardActions from './redux'
 import AppConfig from '../../Config/AppConfig'
-import {isLogin,getSession} from '../../Utils/Utils'
+import {isLogin,getSession,setSession} from '../../Utils/Utils'
 import _ from 'lodash'
 import {path,merge} from 'ramda'
 import {isNullOrUndefined} from 'util'
 import JoinActions from './redux'
 import Swal from 'sweetalert2'
 import io from 'socket.io-client'
-import JoinUI from '../../Pages/JoinMeeting/PageJoinMeeting'
-const socketIo=io(AppConfig.socketUrl)
+import Streaming from '../SubContainer'
 
+//API
 export function * doJoinMeeting (api, action) {
     const { data } = action
     const response = yield call(api.doJoinMeeting,data)
@@ -29,8 +29,9 @@ export function * doJoinMeeting (api, action) {
     if (!_.isEmpty(errorbody)) err.push({ message: errorbody })
     if (_.isEmpty(err)&& status==200) {
       const errors=''
-      yield put(JoinActions.joinMeetingDone({status,errors}))
-      JoinUI._emit()
+      setSession({[AppConfig.sessionMeeting]: {meetingId:data.meetingId,needRequestToJoin:true,role:'participant'}})
+      yield put(JoinActions.joinMeetingDone({status,errors,}))
+      window.location='/concal/'+data.meetingId
     }
     else{
       let errors=''
@@ -60,7 +61,8 @@ export function * checkIsexistMeeting (api, action) {
   if (!_.isEmpty(errorbody)) err.push({ message: errorbody })
 
   if (_.isEmpty(err) && status==200) {
-    console.log("Meeting exist")
+    const isExist=true
+    yield put(JoinActions.joinMeetingDone({status,isExist}))  
   }
   else{
     let errors=''

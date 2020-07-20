@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects'
 import DashboardActions from './redux'
 import AppConfig from '../../Config/AppConfig'
-import {setSession,getSession,destroySession} from '../../Utils/Utils'
+import {setSession,getSession,destroySession,removeSpecificSession} from '../../Utils/Utils'
 import _ from 'lodash'
 import {path,merge} from 'ramda'
 import {isNullOrUndefined} from 'util'
@@ -64,6 +64,7 @@ export function * doLogin (api, action) {
   } 
 }
 export function * doLogout (api, action) {
+  removeSpecificSession(AppConfig.sessionMeeting)
   setTimeout(()=>{
       function * done()
       {

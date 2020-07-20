@@ -69,6 +69,13 @@ class JoinMeeting extends PureComponent {
     this.props.doReset()
   } 
   onChange = date => console.log("datetime>>>",date)
+  componentWillMount()
+  {
+    if(getSession(AppConfig.sessionMeeting))
+    {
+      window.location='/'
+    } 
+  }
   _waitingRoom()
   {
     const userId=getSession(AppConfig.sessionUserData).id

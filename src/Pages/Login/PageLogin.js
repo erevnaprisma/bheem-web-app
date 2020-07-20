@@ -44,7 +44,9 @@ class PageLogin extends PureComponent {
     return (
        <div>
         <Header/>
-        <Helmet>Login</Helmet>
+        <Helmet>
+          <title>Login</title>
+        </Helmet>
           <div className="page-header" style={{backgroundImage: `url("${Images.LoginIllus}")`, backgroundSize: 'cover', backgroundPosition: 'top center'}}>
             <div className="container">
               <div className="row">
