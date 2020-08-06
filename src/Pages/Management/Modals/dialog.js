@@ -18,18 +18,42 @@ export default class dialog extends Component {
             ask: false
           }
     }
-    _onSubmitForm(e)
+   async _onSubmitForm(e)
     {
         if (e) e.preventDefault()
         const title = this.refs.title_meeting.value
-        const start_date=new Date(this.state.s_date).getTime()
-        const end_date=new Date(this.state.e_date).getTime()
+        const start_date=await new Date(this.state.s_date).getTime()
+        const end_date=await new Date(this.state.e_date).getTime()
         const permission=this.state.ask ?'Yes' : 'No'
         const meetingId=this.props.dataForm.id
-        this.props.cb({title,start_date,end_date,permission,meetingId})
+        console.log("Submitted>>>",{title,start_date,end_date,permission,meetingId})
+        // this.props.cb({title,start_date,end_date,permission,meetingId})
     }
-    _form()
+   _form()
     {
+        console.log("Data form>>>",this.props.dataForm)
+        console.log("Data form is>>>",_.has(this.props.dataForm,'startDate'))
+        console.log("Data form state>>>",this.state)
+        
+        let d_start=null
+        let d_end=null
+        if(this.state.s_date && this.state.e_date)
+        {
+            d_start =new Date(this.state.s_date) 
+            d_end =new Date(this.state.e_date)
+        } 
+        else{
+            if(_.has(this.props,'dataForm'))
+            {
+                d_start=this.props.dataForm.startDate   
+                d_end=this.props.dataForm.endDate
+            }
+            else{
+                d_start=new Date()
+                d_end=new Date()
+            }
+        }
+
         return(
             <div className="modal fade" id="modal-action" tabIndex={-1} role="dialog">
                 <div className="modal-dialog modal-dialog-centered" role="document">
@@ -71,7 +95,7 @@ export default class dialog extends Component {
                                         <DateTimePicker
                                             className="dt-picker"
                                             onChange={s_date=>this.setState({ s_date})}
-                                            value={!this.state.s_date ? new Date(parseInt(this.props.dataForm.startDate)) : this.state.s_date }
+                                            value={d_start}
                                         />
                                         <br/>
                                         <br/>
@@ -80,7 +104,7 @@ export default class dialog extends Component {
                                         <DateTimePicker
                                             className="dt-picker"
                                             onChange={e_date=>this.setState({ e_date })}
-                                            value={!this.state.e_date ? new Date(parseInt(this.props.dataForm.endDate)) : this.state.e_date}
+                                            value={d_end}
                                         />
                                         </center>
                                     </div>

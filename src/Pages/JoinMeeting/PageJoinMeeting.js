@@ -1,4 +1,4 @@
-import React, { Component,useEffect, PureComponent } from 'react'
+import React, { Component,useEfect, PureComponent } from 'react'
 import Helmet from 'react-helmet'
 import Shimmer from "react-shimmer-effect";
 import { connect } from 'react-redux'
@@ -48,39 +48,30 @@ class JoinMeeting extends PureComponent {
     }
 
   }
-  componentDidMount()
-  {
-    this.props.doReset()
-  }
-  componentWillUnmount()
-  {
-    this.props.doReset()
-  } 
-  onChange = date => console.log("datetime>>>",date)
-  componentWillMount()
-  {
-    if(getSession(AppConfig.sessionMeeting))
-    {
-      window.location='/'
-    } 
-  }
+  // componentDidMount()
+  // {
+  //   this.props.doReset()
+  // }
+  // componentWillUnmount()
+  // {
+  //   this.props.doReset()
+  // } 
   _waitingRoom()
   {
     const userId=getSession(AppConfig.sessionUserData).id
     const nickname=getSession(AppConfig.sessionUserData).nickname    
     return (
-      <div className="page-header" style={{backgroundImage: `url("${Images.JoinIllus}")`, backgroundSize: 'cover', backgroundPosition: 'top center'}}>
-        <div className="page-header" style={{background:'#fff' ,backgroundSize: 'cover', backgroundPosition: 'top center'}}>
-            <div className="container">
-              <div className="row">
-                <div className="col-lg-4 col-md-6 ml-auto mr-auto">
-                  <div className="card card-login" style={{background:Colors.primaryRed}}>    
-                    <center>
-                        <Loader className="mx-auto" color="#fff"/>
-                        <p style={{color:'#fff'}}><b>Joining the room..</b></p>
-                        <p style={{color:'#fff'}}>Waiting for host to accept your request</p>
-                    </center>
-                </div>
+     <div className="page-header" 
+     style={{backgroundImage: `url("${Images.JoinIllus}")`, backgroundSize: 'cover', backgroundPosition: 'top center'}}>
+        <div className="container">
+          <div className="row justify-content-center align-items-center">
+              <div className="col-lg-4 col-md-6 ml-auto mr-auto">
+                <div className="card card-login" style={{background:Colors.primaryRed}}>    
+                  <center>
+                      <Loader className="mx-auto" color="#fff"/>
+                      <p style={{color:'#fff'}}><b>Joining the room..</b></p>
+                      <p style={{color:'#fff'}}>Waiting for host to accept your request</p>
+                  </center>
               </div>
             </div>
           </div>
@@ -121,7 +112,12 @@ class JoinMeeting extends PureComponent {
                         </div>
                       )}
                       <div className="footer text-center mt-5">
-                      <button type="submit" className="btn btn-primary btn-link btn-wd btn-lg">Join Meeting</button>
+                        {!isRequesting && <button type="submit" className="btn btn-primary btn-link btn-wd btn-lg">Join meeting</button>}
+                          {isRequesting &&(
+                            <center>
+                              <Loader className="mx-auto" color="#000"/>
+                            </center>
+                          )}
                       </div>
                     </form>
                   </div>
@@ -133,13 +129,13 @@ class JoinMeeting extends PureComponent {
   }
   render() {
     const {isLogin} = this.state
-    const {isRequesting,errors,status,title,host,createdBy,startDate,endDate,createdAt,meetingId} = this.props
+    const {needPermission,isRequesting,errors,status,title,host,createdBy,startDate,endDate,createdAt,meetingId} = this.props
     return (
       <div>
       <Header/>
       <Helmet><title>Join Meeting</title></Helmet>
-      {status == 200 && this._waitingRoom() }
-      {status != 200 && this._onJoin() }
+      {status != 200 && !needPermission && this._onJoin() }
+      {needPermission && this._waitingRoom()}
       </div>
     )
   }
@@ -149,7 +145,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     isRequesting: state.joinmeeting.isRequesting,
     errors :state.joinmeeting.errors,
-    status: state.joinmeeting.status
+    status: state.joinmeeting.status,
+    needPermission: state.joinmeeting.isNeedPermissionToJoin
   }
 }
 const mapDispatchToProps = dispatch => {

@@ -7,10 +7,9 @@ import {path,merge} from 'ramda'
 import {isNullOrUndefined} from 'util'
 import HostActions from './redux'
 import Swal from 'sweetalert2'
-
-export function * doCreateMeeting (api, action) {
+import socketIo from '../Socket/socketListeners'
+export function * doCreateMeeting (api,action) {
     const { data } = action
-    // console.log("data>>>>",data)
     isLogin()
     const response = yield call(api.doCreateMeeting,data)
     console.log("response fetch createmeeting>>>>",response)
@@ -26,11 +25,12 @@ export function * doCreateMeeting (api, action) {
     const startDate = path(['data', 'data', 'createMeeting', 'meeting','startDate'], response)||[]
     const endDate = path(['data', 'data', 'createMeeting', 'meeting','endDate'], response)||[] 
     const meetingId = path(['data', 'data', 'createMeeting','meeting','id'], response)||[]
-
+    
     if (!_.isEmpty(errorbody)) err.push({ message: errorbody })
     if (_.isEmpty(err)&& status==200) {
       const errors=''
       setSession({[AppConfig.sessionMeeting]: {meetingId:data.meetingId,needRequestToJoin:true,role:'host'}})
+      
       yield put(HostActions.createMeetingDone({status,errors,title,host,createdBy,startDate,endDate,meetingId}))
       Swal.fire({
         title: 'Success',
@@ -39,7 +39,6 @@ export function * doCreateMeeting (api, action) {
         confirmButtonText: 'Ok',
         onClose:()=>window.location='/concal/'+meetingId
       })
-    
     }
     else{
       let errors=''

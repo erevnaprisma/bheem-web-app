@@ -41,6 +41,7 @@ class Logout extends Component {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-primary" style={{background:Colors.primaryGray,color:Colors.primaryWhite}}  data-dismiss="modal">Cancel</button>
+                            &nbsp;
                             <button type="button" className="btn btn-secondary" style={{background:Colors.primaryGray,color:Colors.primaryWhite}}  onClick={()=>this.props.doLogout()}>Ok</button>
                         </div>
                     </div>

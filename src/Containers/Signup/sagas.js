@@ -9,16 +9,14 @@ import SignupActions from './redux'
 import Swal from 'sweetalert2'
 
 export function * doSignUp (api, action) {
-    const { data } = action
-    // console.log("data>>>>",data)
-    
+    const { data } = action 
     const response = yield call(api.doSignUp,data)
     console.log("response fetch signup>>>>",response)
     const err = path(['data','errors'], response)||[]
     
     if (!_.isEmpty(response.problem)) err.push({ message: response.problem })
-    const status = parseInt(path(['data', 'data', 'signUp', 'status'], response) || 0)
-    const errorbody = path(['data', 'data', 'signUp', 'error'], response)||[]
+    const status = parseInt(path(['data', 'data', 'bheemSignUp', 'status'], response) || 0)
+    const errorbody = path(['data', 'data', 'bheemSignUp', 'error'], response)||[]
 
     if (!_.isEmpty(errorbody)) err.push({ message: errorbody })
     if (_.isEmpty(err)&& status==200) {

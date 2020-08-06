@@ -7,45 +7,65 @@ import {path,merge} from 'ramda'
 import {isNullOrUndefined} from 'util'
 import JoinActions from './redux'
 import Swal from 'sweetalert2'
-import io from 'socket.io-client'
-import Streaming from '../SubContainer'
+import socket from '../Socket/socketListeners'
 
 //API
-export function * doJoinMeeting (api, action) {
-    const { data } = action
-    const response = yield call(api.doJoinMeeting,data)
+// export function * doJoinMeeting (api, action) {
+//     const { data } = action
+//     const response = yield call(api.doJoinMeeting,data)
     
-    console.log("response fetch join meeting>>>>",response)
-    const err = path(['data','errors'], response)||[]
-    
-    if (!_.isEmpty(response.problem)) err.push({ message: response.problem })
-    const loginStatus=getSession(AppConfig.loginFlag)||false
-    let root=''
-    if(loginStatus){ root='requestTojoinMeeting'; }
-    else{ root='anonymousRequestTojoinMeeting' ;}
+//     console.log("response fetch join meeting>>>>",response)
+//     const err = path(['data','errors'], response)||[]
 
-    const status = parseInt(path(['data', 'data', root, 'status'], response) || 0)
-    const errorbody = path(['data', 'data', root, 'error'], response)||[]
-    if (!_.isEmpty(errorbody)) err.push({ message: errorbody })
-    if (_.isEmpty(err)&& status==200) {
-      const errors=''
-      setSession({[AppConfig.sessionMeeting]: {meetingId:data.meetingId,needRequestToJoin:true,role:'participant'}})
-      yield put(JoinActions.joinMeetingDone({status,errors,}))
-      window.location='/concal/'+data.meetingId
-    }
-    else{
-      let errors=''
-      if(_.has(err[0],'message')){ errors=err[0].message||"Something error" }
-      else{ errors=err[0] }
-      yield put(JoinActions.joinMeetingFailed({errors,status}))
-      Swal.fire({
-        title: 'Error!',
-        text: 'Can\'t join meeting or invalid meeting or meeting has been ended',
-        icon: 'error',
-        confirmButtonText: 'Ok'
-      })
-    }
+//     if (!_.isEmpty(response.problem)) err.push({ message: response.problem })
+//     const loginStatus=getSession(AppConfig.loginFlag)||false
+//     let root=''
+//     if(loginStatus){ root='requestTojoinMeeting'; }
+//     else{ root='anonymousRequestTojoinMeeting' ;}
+//     const isNeedPermissionToJoin=true
+//     const status = parseInt(path(['data', 'data', root, 'status'], response) || 0)
+//     const errorbody = path(['data', 'data', root, 'error'], response)||[]
+//     if (!_.isEmpty(errorbody)) err.push({ message: errorbody })
+//     if (_.isEmpty(err)&& status==200) {
+//       const errors=''
+//       setSession({[AppConfig.sessionMeeting]: {meetingId:data.meetingId,needRequestToJoin:true,role:'participant'}})
+//       yield put(JoinActions.joinMeetingDone({status,errors,isNeedPermissionToJoin}))
+//       if(!isNeedPermissionToJoin) window.location='/concal/'+data.meetingId
+//       const message = {
+//         socketId: socket.id,
+//         userId:getSession(AppConfig.sessionUserData).id||'anonymous',
+//         username:getSession(AppConfig.sessionUserData).firstName||'anonymous',
+//         meetingId:data.meetingId
+//       }
+//       socket.emit('requestToJoin', message)
+//     }
+//     else{
+//       let errors=''
+//       if(_.has(err[0],'message')){ errors=err[0].message||"Something error" }
+//       else{ errors=err[0] }
+//       yield put(JoinActions.joinMeetingFailed({errors,status}))
+//       Swal.fire({
+//         title: 'Error!',
+//         text: errors||'Can\'t join meeting or invalid meeting or meeting has been ended',
+//         icon: 'error',
+//         confirmButtonText: 'Ok'
+//       })
+//     }
+// }
+
+export function * doJoinMeeting (api, action) {
+  const { data } = action
+  // isNeedPermissionToJoin
+  const message = {
+    socketId: socket.id,
+    userId:getSession(AppConfig.sessionUserData).id||navigator.userAgent,
+    username:getSession(AppConfig.sessionUserData).firstName||'anonymous',
+    meetingId:data.meetingId
+  }
+  
+  socket.emit('requestToJoin',message)
 }
+
 export function * checkIsexistMeeting (api, action) {
   const { data } = action
   const response = yield call(api.isMeetingExist,data)
@@ -56,13 +76,14 @@ export function * checkIsexistMeeting (api, action) {
 
   const status = parseInt(path(['data', 'data', 'isMeetingExist', 'status'], response) || 0)
   const errorbody = path(['data', 'data', 'isMeetingExist', 'error'], response)||[]
+  const meetingData = path(['data', 'data', 'isMeetingExist', 'meeting'], response)||[]
 
 
   if (!_.isEmpty(errorbody)) err.push({ message: errorbody })
 
   if (_.isEmpty(err) && status==200) {
     const isExist=true
-    yield put(JoinActions.joinMeetingDone({status,isExist}))  
+    yield put(JoinActions.joinMeetingDone({status,isExist,meetingData}))  
   }
   else{
     let errors=''

@@ -5,7 +5,7 @@ import {getSession,generateHmac, generateSha256 } from '../../Utils/Utils'
 export const create = api => ({
   doLogin: ({email,password}) => {
     const body = `mutation{
-      login(email:"${email}",password:"${password}")
+      bheemLogin(email:"${email}",password:"${password}")
       {
         status
         error

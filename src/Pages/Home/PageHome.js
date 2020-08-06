@@ -14,10 +14,11 @@ import Header from '../../Containers/Header'
 import Hero from '../../Containers/Sections/Hero'
 // Sections
 import PnPOverview from './Sections/PlansPricingOverview'
-
+import Soket from '../../Containers/Socket/socketListeners'
 
 export default class PageHome extends PureComponent {
   render() {  
+    console.log("soket>>>>",Soket)
     return (
      <div className="navbar-header visible-xs">
        <Helmet>

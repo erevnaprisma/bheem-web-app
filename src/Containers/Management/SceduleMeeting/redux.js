@@ -17,7 +17,6 @@ const { Types, Creators } = createActions({
 
 export const ScheduleMeetingsTypes = Types
 export default Creators
-
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({

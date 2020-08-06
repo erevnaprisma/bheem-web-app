@@ -26,6 +26,7 @@ class ManageMeeting extends Component {
       type:''
     }
   }
+
   _CopyToClipboard() {
     if (document.selection) {
       var range = document.body.createTextRange();
@@ -60,6 +61,7 @@ class ManageMeeting extends Component {
 
   render() {
     const {data,cancelMeeting,startMeeting,editMeeting,isDoing} = this.props
+    //init table columns 
     const column=[{
         name: 'Meeting ID',
         selector: 'id',
@@ -90,7 +92,7 @@ class ManageMeeting extends Component {
                       <button className="btn btn-primary btn-fab btn-round btn" data-toggle="tooltip" data-placement="top" title="Start meeting" data-container="body" data-toggle="modal" data-target="#modal-action" onClick={()=>this.setState({textBtn:'Start meeting',iconBtn:'play_arrow',msg:'<br><br>Are you sure to start meeting?<br><br>',cb:()=>startMeeting({meetingId:e.id,do:true}),textHeader:'Start Meeting',type:'alert'})}>
                         <i className="material-icons">play_arrow</i>
                       </button>
-                      <button className="btn btn-primary btn-fab btn-round btn" data-toggle="tooltip" data-placement="top" title="Edit meeting" data-container="body" data-toggle="modal" data-target="#modal-action" onClick={()=>this.setState({textBtn:'Edit meeting',iconBtn:'create',msg:'Edit meeting',cb:({title,start_date,end_date,permission,meetingId})=>editMeeting({title,start_date,end_date,permission,meetingId}),textHeader:'Edit meeting',type:'form',dataForm:{endDate:e.end,startDate:e.start,topic:e.title,permission:e.needPermisionToJoin,id:e.id}})}>
+                      <button className="btn btn-primary btn-fab btn-round btn" data-toggle="tooltip" data-placement="top" title="Edit meeting" data-container="body" data-toggle="modal" data-target="#modal-action" onClick={()=>this.setState({textBtn:'Edit meeting',iconBtn:'create',msg:'Edit meeting',cb:({title,start_date,end_date,permission,meetingId})=>editMeeting({title,start_date,end_date,permission,meetingId}),textHeader:'Edit meeting',type:'form',dataForm:{endDate:new Date(e.endDate),startDate:new Date(e.startDate),topic:e.title,permission:e.needPermisionToJoin,id:e.id}})}>
                         <i className="material-icons">create</i>
                       </button>
                         <button className="btn btn-primary btn-fab btn-round btn" data-toggle="tooltip" data-placement="top" title="Generate invitation" data-container="body" data-toggle="modal" data-target="#modal-action" onClick={()=>this.setState({textBtn:'Copy invitation',iconBtn:'content_copy',msg:this._generateInvitation(e.title,e.id,e.startDate,e.endDate),cb:()=>this._CopyToClipboard(),textHeader:'Invitation',type:'alert'})}>
@@ -101,6 +103,8 @@ class ManageMeeting extends Component {
                       </button>
                     </div>
       }]
+      //init table columns 
+
       return (
       <div className="section section-basic tab-pane active" id="manage-meeting" style={{padding:0}}>
             <Modal 
@@ -113,22 +117,21 @@ class ManageMeeting extends Component {
             isRequestText={this.state.textProcess}
             textHeader={this.state.textHeader}
             type={this.state.type}/>
-          {/* <div className="container"> */}
-              <ul className="nav nav-pills nav-pills-icons" role="tablist">
-                
-                <li className="nav-item " style={{cursor:'pointer'}}>
-                  <a className="nav-link "  data-toggle="modal" data-target="#create-meeting">
-                    <i className="material-icons">queue</i>
-                    New meeting
-                  </a>
-                </li>
-              </ul>
-          {/* </div> */}
+
+            <ul className="nav nav-pills nav-pills-icons" role="tablist">
+              
+              <li className="nav-item " style={{cursor:'pointer'}}>
+                <a className="nav-link "  data-toggle="modal" data-target="#create-meeting">
+                  <i className="material-icons">queue</i>
+                  New meeting
+                </a>
+              </li>
+            </ul>
             {!this.props.isRequest && <Table column={column} data={this._preprocessData(data)}/>}
             {(this.props.isRequest && 
-                <center>
-                  <Loader className="mx-auto" color="#000"/>
-                  <p><strong>Fetching data</strong></p>
+              <center>
+                <Loader className="mx-auto" color="#000"/>
+                <p><strong>Fetching data</strong></p>
               </center>
             )}
             <br/>

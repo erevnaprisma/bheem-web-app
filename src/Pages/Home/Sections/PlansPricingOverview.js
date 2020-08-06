@@ -33,13 +33,13 @@ export default class PlansPricingOverview extends Component {
                 <div className="features">
                     <div className="row">
                         {( 
-                            plans.map(r=>
-                                <div className="col-md-4">
+                            plans.map((r,i)=>
+                                <div className="col-md-4" key={i}>
                                     <div className="info" style={{background:'#E9001E',marginTop:10,padding:10,paddingBottom:30,borderRadius:10}}>
                                         <h2 className="info-title" style={{margin:5,fontSize:30,color:'white'}}>{r.pnp}</h2>
                                         <b><h4 className="info-title" style={{margin:5,fontSize:30,color:'white'}}><sup>$</sup>{r.price}<span> / month</span></h4></b>
-                                        {r.rules.map(s=>
-                                            <li style={liStyle}>{s}</li>
+                                        {r.rules.map((s,j)=>
+                                            <li style={liStyle} key={j}>{s}</li>
                                          )}
                                          <button style={btnStyle} >{r.btn}</button>
                                     </div>

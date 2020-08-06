@@ -30,7 +30,9 @@ class index extends Component {
         const userData=getSession(AppConfig.sessionUserData)
         const meetingSesssion=getSession(AppConfig.sessionMeeting)
         const nav=!this._get() ? 'navbar navbar-inverse navbar-expand-lg bg-dark' : 'navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg'
-        console.log("userdata session>>>",userData)
+        console.log("bheem all session>>>",window.localStorage.getItem(AppConfig.sessionUserData))
+        console.log("bheem userdata session>>>",userData)
+        console.log("bheem sion>>>",meetingSesssion)
         return (
             <nav className='navbar navbar-inverse navbar-expand-lg bg-dark' id="sectionsNav" style={{padding:0, marginBottom:0}}>
                 <div className="container">
@@ -83,21 +85,21 @@ class index extends Component {
                                 </a>
                             </li> 
                         {/* )} */}
-                            {(!meetingSesssion&&
+                            {/* {(!meetingSesssion&& */}
                               <li className="nav-item">
                                 <a className="nav-link" href="/host-meeting" target="_parent">
                                   <strong>Host Meeting</strong>
                                 </a>
                               </li>
-                            )}
+                            {/* )} */}
 
-                            {(!meetingSesssion&&
+                            {/* {(!meetingSesssion&& */}
                               <li className="nav-item">
                                   <a className="nav-link" href="/join-meeting" target="_parent">
                                     <strong>Join Meeting</strong>
                                   </a>
                               </li>
-                            )}
+                            {/* )} */}
 
                             {(_.isEmpty(userData) && !_.has(userData,'id') &&
                             <li className="nav-item">

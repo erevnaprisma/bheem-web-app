@@ -36,7 +36,8 @@ export const generateHmac = (msg) => {
 export const generateSha256 = (msg) => {
   return sha256(msg).toString()
 }
-export const setSession = (newSession, cb) => {
+export const setSession = (newSession, logged) => {
+  console.log("Set session meeting>>> ",newSession)
   const encryptedCurrentSession = window.localStorage.getItem(AppConfig.sessionData)
   let currentSessionJson = {}
   if (encryptedCurrentSession) {
@@ -48,8 +49,8 @@ export const setSession = (newSession, cb) => {
   }
   var ciphertext = AES.encrypt(JSON.stringify(currentSessionJson), 'prismalink2019')
   var encryptedData = ciphertext.toString()
+
   window.localStorage.setItem(AppConfig.sessionData, encryptedData)
-  if (cb) cb()
 }
 export const getSession = (parameter) => {
   const encryptedCurrentSession = window.localStorage.getItem(AppConfig.sessionData)
@@ -63,7 +64,7 @@ export const getSession = (parameter) => {
   const sessionValue = path([parameter], currentSessionJson) || ''
   return sessionValue
 }
-export const removeSpecificSession = (session, cb) => {
+export const removeSpecificSession = (session) => {
   const encryptedCurrentSession = window.localStorage.getItem(AppConfig.sessionData)
   let currentSessionJson = {}
   if (encryptedCurrentSession) {
@@ -71,12 +72,14 @@ export const removeSpecificSession = (session, cb) => {
     var bytes = AES.decrypt(encryptedCurrentSession, 'prismalink2019')
     var decryptedData = bytes.toString(EncUtf8)
     currentSessionJson = JSON.parse(decryptedData)
-    currentSessionJson = merge(currentSessionJson, session)
   }
-  var ciphertext = AES.encrypt(JSON.stringify(currentSessionJson), 'prismalink2019')
-  var encryptedData = ciphertext.toString()
-  window.localStorage.removeItem(AppConfig.sessionData, encryptedData)
-  if (cb) cb()
+  if(_.isEmpty(currentSessionJson)) console.log("Item doesn \'t exist")
+  else{
+    let sessionMeeting = delete currentSessionJson[session]
+    var ciphertext = AES.encrypt(JSON.stringify(currentSessionJson), 'prismalink2019')
+    var encryptedData = ciphertext.toString()
+    window.localStorage.setItem(AppConfig.sessionData,encryptedData)
+  }
 }
 export const destroySession=() =>{
   window.localStorage.clear() 
@@ -134,8 +137,7 @@ export const isLogin = (route)=>{
     }
 }
 export const formValidation=(str,input_name=null,rules)=>
-{
-  
+{ 
     let err=[]
     if(_.isEmpty(str))
     {

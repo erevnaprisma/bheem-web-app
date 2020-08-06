@@ -7,7 +7,7 @@ export const create = api => ({
     const deviceId=navigator.userAgent
     const body = `
     mutation{
-      signUp(email:"${email}",fullName:"${first_name+last_name}",firstName:"${first_name}",lastName:"${last_name}",deviceId:"${deviceId}")
+      bheemSignUp(email:"${email}",fullName:"${first_name+' '+last_name}",firstName:"${first_name}",lastName:"${last_name}",deviceId:"${deviceId}")
       {
         status
         error

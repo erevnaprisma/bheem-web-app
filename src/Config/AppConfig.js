@@ -24,5 +24,5 @@ export default {
   sessionData: 'ssst',
   concalUrl:'https://alpha.jitsi.net/',
   invitationlUrl:'http://localhost:3001/concal/',
-  socketUrl:'http://localhost:3000/participant'
+  socketUrl:'ws://localhost:3000/participant'
 }

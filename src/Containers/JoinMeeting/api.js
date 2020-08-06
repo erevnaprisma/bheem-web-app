@@ -43,10 +43,24 @@ export const create = api => ({
                   {
                     status
                     error
+                    meeting
+                    {
+                      title
+                      hosts
+                      {
+                        userId
+                      }
+                      createdBy
+                      startDate
+                      endDate
+                      createdAt
+                      id
+                      needPermisionToJoin
+                    }
                   }
                 }`
-    console.log(body)
     const query= { query:body }
+    console.log(body)
     // api.setHeader('Authorization',getSession(AppConfig.sess))
     // api.setHeader('hmac', generateHmac(JSON.stringify(query)))
     const resp = api.post('/graphql', query)

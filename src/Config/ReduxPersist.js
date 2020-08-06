@@ -6,12 +6,12 @@ import {setSession, getSession} from '../Utils/Utils'
 // More info here:  https://shift.infinite.red/shipping-persistant-reducers-7341691232b1
 const REDUX_PERSIST = {
   active: true,
-  reducerVersion: '7',
+  reducerVersion: '8',
   storeConfig: {
     key: 'root',
     storage: storage, // Come back and replace this at some point
     // storage: 'AsyncStorage', // Come back and replace this at some point
-    blacklist: ['login','signUp','schedulemeetings','createmeeting','joinmeeting','streaming'], // reducer keys that you do NOT want stored to persistence here
+    blacklist: ['login','signUp','schedulemeetings','createmeeting','streaming','joinmeeting'], // reducer keys that you do NOT want stored to persistence here
     // whitelist: [], Optionally, just specify the keys you DO want stored to
     // persistence. An empty array means 'don't store any reducers' -> infinitered/ignite#409
     transforms: [immutablePersistenceTransform]
@@ -24,6 +24,5 @@ const nextReducerVersion = REDUX_PERSIST.reducerVersion
 if (currentReducerVersion !== nextReducerVersion) {
   setSession({currentReducerVersion: nextReducerVersion, [AppConfig.loginFlag]: false})
 }
-// setSession({name: 'opet', alamat: 'jakarta'})
 
 export default REDUX_PERSIST

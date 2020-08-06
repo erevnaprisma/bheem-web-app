@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { config } from 'dotenv'
-import './index.css'
+// import './index.css'
 // import App from './App'
 import App from './Containers/Container'
 import * as serviceWorker from './serviceWorker'

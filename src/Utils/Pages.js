@@ -9,6 +9,7 @@ import JoinMeeting from '../Pages/JoinMeeting/PageJoinMeeting'
 import PageManageMeeting from '../Pages/Management/PageManageMeeting'
 import PageWaitingRoom from '../Pages/WaitingRoom/PageWaitingRoom'
 import PageVidStreaming from '../Pages/VideoStream/PageBheem'
+import socketIO from '../Containers/Socket/socketListeners'
 
 const lp = {
   '/': { exact:true,route: '/', path: '/', component: PageHome },

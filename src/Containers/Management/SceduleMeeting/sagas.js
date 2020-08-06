@@ -92,13 +92,13 @@ export function * editScheduleMeeting (api, action) {
   if (_.isEmpty(err)&& status==200) {
     const errors=''
     yield put(ScheduleActions.scheduleDone({status,errors}))
-    Swal.fire({
-      title: 'Success',
-      text:'Edit meeting successs',
-      icon: 'success',
-      confirmButtonText: 'Ok',
-      onClose:()=>window.location="/manage-meeting"
-    })
+    // Swal.fire({
+    //   title: 'Success',
+    //   text:'Edit meeting successs',
+    //   icon: 'success',
+    //   confirmButtonText: 'Ok',
+    //   onClose:()=>window.location="/manage-meeting"
+    // })
   }
   else{
     let errors=''

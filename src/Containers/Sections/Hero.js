@@ -14,7 +14,7 @@ export default class Hero extends Component {
     }
     render() {
         const defaultOptions = {
-            loop: true,
+            loop: false,
             autoplay: false, 
             animationData: dataAnim.default,
             rendererSettings: {

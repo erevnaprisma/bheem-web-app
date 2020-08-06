@@ -34,13 +34,13 @@ class HostMeeting extends PureComponent {
     }
   }
 
-  _onSubmitForm(e)
+  async _onSubmitForm(e)
   {
     if (e) e.preventDefault()
     const title = this.refs.title_meeting.value
     const created_by=getSession(AppConfig.sessionUserData).id
-    const start_date=new Date(this.state.s_date).getTime()
-    const end_date=this.state.endless ? new Date(this.state.e_date).getTime() : ''
+    const start_date=await new Date(this.state.s_date).getTime()
+    const end_date=this.state.endless ? await new Date(this.state.e_date).getTime() : ''
     const host=created_by
     const permissionTojoin=this.state.ask ?'Yes' : 'No'
     // console.log("data>>>>",{title,host,created_by,start_date,end_date})
@@ -54,25 +54,6 @@ class HostMeeting extends PureComponent {
   {
     this.props.doReset()
   } 
-  componentWillMount()
-  {
-    if(getSession(AppConfig.sessionMeeting))
-    {
-      window.location='/'
-    }
-
-    if(_.isEmpty(getSession(AppConfig.sessionUserData)))
-    {
-      Swal.fire({
-        title: 'Not logged',
-        text: 'You have to login to your account to use this feature',
-        icon: 'error',
-        confirmButtonText: 'Ok',
-        onClose:()=>window.location="/login"
-      })
-    }
-  }
-  onChange = date => console.log("datetime>>>",date)
 
   render() {
     const {isRequesting,errors,status,title,host,createdBy,startDate,endDate,createdAt,meetingId} = this.props
@@ -143,7 +124,8 @@ class HostMeeting extends PureComponent {
                             </div>
                           )}
                         <div className="footer text-center mt-5">
-                          <button type="submit" className="btn btn-primary btn-link btn-wd btn-lg">Host meeting</button>
+                          {!isRequesting && <button type="submit" className="btn btn-primary btn-link btn-wd btn-lg">Host meeting</button>}
+                          {isRequesting && <Loader className="mx-auto" color="#000"/>}
                         </div>
                       </form>
                     </div>

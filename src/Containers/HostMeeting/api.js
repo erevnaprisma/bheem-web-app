@@ -7,7 +7,7 @@ export const create = api => ({
     // const permissionTojoin = "Yes"
     const body = `
                 mutation{
-                  createMeeting(title:"${title}",host:${JSON.stringify(host)},createdBy:"${created_by}",startDate:"${start_date}",endDate:"${end_date}",permissionToJoin:"${permissionTojoin}")
+                  createMeeting(title:"${title}",host:${JSON.stringify(host)},createdBy:"${created_by}",startDate:"${start_date}",endDate:"${end_date}",permissionToJoin:"${'Yes'}")
                   {
                     status
                     error

@@ -23,18 +23,20 @@ export const INITIAL_STATE = Immutable({
     errors:[],
     status:0,
     isExist:false,
+    isNeedPermissionToJoin:false,
     title:'',
     host:'',
     createdBy:'',
     startDate:'',
     endDate:'',
-    meetingId:''
+    meetingId:'',
+    meetingData:{}
 })
 
 export const check = (state,{data}) => state.merge({ isRequesting: true })
 export const checkDone = (state,{data}) => state.merge({ isRequesting: true })
 
-export const doJoin = (state,{data}) => state.merge({ isRequesting: true })
+export const doJoin = (state,{data}) => state.merge({ isRequesting: true,...data })
 export const done = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const failed = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const reset = state=> state.merge(INITIAL_STATE)
