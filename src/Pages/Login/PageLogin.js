@@ -13,6 +13,7 @@ import Header from '../../Containers/Header'
 import Footer from '../../Containers/Footer'
 import Loader from '../../Components/Loader'
 import LoginAction from '../../Containers/Login/redux'
+import AppConfig from '../../Config/AppConfig';
 
 
 class PageLogin extends PureComponent {
@@ -34,6 +35,10 @@ class PageLogin extends PureComponent {
   componentDidMount()
   {
     this.props.doReset()
+    if(getSession(AppConfig.sessionUserData))
+    {
+      window.location='/'
+    }
   }
   componentWillUnmount()
   {

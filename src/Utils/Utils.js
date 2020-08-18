@@ -120,7 +120,8 @@ export const isLogin = (route)=>{
 
   if(_.isEmpty(getSession(AppConfig.sessionUserData)) || new Date().getTime()>=getSession(AppConfig.sessionExp)){
       destroySession()
-      window.location="/"
+      if(window.location.pathname == 'host-meeting') window.location="/login"
+      else window.location="/"
       if(route)
       {
         Swal.fire({
@@ -133,7 +134,7 @@ export const isLogin = (route)=>{
       }
     }
     else{
-        console.log("still valid")
+        
     }
 }
 export const formValidation=(str,input_name=null,rules)=>
@@ -171,15 +172,15 @@ export const formValidation=(str,input_name=null,rules)=>
   return { isValidate,value,err }
 }
 export const errorPopup = (errs)=>{
-  console.log("Errors>>>",errs)
-  const htmlerrs="<div style='color:red'>"+_.flatten(errs).join("").toString()+"</div>"
-  Swal.fire({
-    title: '<strong>Input error</strong>',
-    icon: 'error',
-    html:htmlerrs,
-    showCloseButton: true,
-    confirmButtonText:"Ok"
-  })
+    console.log("Errors>>>",errs)
+    const htmlerrs="<div style='color:red'>"+_.flatten(errs).join("").toString()+"</div>"
+    Swal.fire({
+      title: '<strong>Input error</strong>',
+      icon: 'error',
+      html:htmlerrs,
+      showCloseButton: true,
+      confirmButtonText:"Ok"
+    })
 } 
 export const generateConcalURL = (roomId,type,displayname)=>{
     return

@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import Table from './Table'
-import Loader from '../../Components/Loader'
+import Loader from '../../../Components/Loader'
 import _ from 'lodash'
 import { prop } from 'ramda'
 import Modal from './Modals/dialog'
-import MeetingActions from '../../Containers/Management/SceduleMeeting/redux'
-import {getSession,formatDate} from '../../Utils/Utils'
-import AppConfig from '../../Config/AppConfig'
+import MeetingActions from '../../../Containers/Management/SceduleMeeting/redux'
+import {getSession,formatDate} from '../../../Utils/Utils'
+import AppConfig from '../../../Config/AppConfig'
 
 class ManageMeeting extends Component {
   constructor(props)
@@ -58,9 +58,13 @@ class ManageMeeting extends Component {
                     +"<p style='text-align:left;margin-left:10%;margin-right:10%'>"+AppConfig.invitationlUrl+meetingId+"</p></div>"
     return invitation
   }
-
+  componentDidMount()
+  {
+    this.props.fetchMeetings()
+  }
   render() {
-    const {data,cancelMeeting,startMeeting,editMeeting,isDoing} = this.props
+    const {data,fetchMeetings,cancelMeeting,startMeeting,editMeeting,isDoing} = this.props
+    
     //init table columns 
     const column=[{
         name: 'Meeting ID',
@@ -153,7 +157,8 @@ const mapDispatchToProps = dispatch => {
   return{
     cancelMeeting:data=>dispatch(MeetingActions.cancelScheduleMeeting(data)),
     startMeeting:data=>dispatch(MeetingActions.startScheduleMeeting(data)),
-    editMeeting:data=>dispatch(MeetingActions.editScheduleMeeting(data))
+    editMeeting:data=>dispatch(MeetingActions.editScheduleMeeting(data)),
+    fetchMeetings:data=>dispatch(MeetingActions.getListMeeting(data))
   }
 }
 export default connect(

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
-import Loader from '../../../Components/Loader'
-import {getSession,formatDate} from '../../../Utils/Utils'
-import AppConfig from '../../../Config/AppConfig'
+import Loader from '../../../../Components/Loader'
+import {getSession,formatDate} from '../../../../Utils/Utils'
+import AppConfig from '../../../../Config/AppConfig'
 import DateTimePicker from 'react-datetime-picker';
 
 export default class dialog extends Component {

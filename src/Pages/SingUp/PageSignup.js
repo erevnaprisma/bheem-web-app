@@ -3,6 +3,7 @@ import Helmet from 'react-helmet'
 import Shimmer from "react-shimmer-effect";
 import { connect } from 'react-redux'
 import {getSession,formValidation,errorPopup} from '../../Utils/Utils'
+import AppConfig from '../../Config/AppConfig'
 import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router-dom'
 import { isEmpty } from 'ramda'
@@ -51,6 +52,10 @@ class PageSignUp extends PureComponent {
   componentDidMount()
   {
     this.props.doReset()
+    if(getSession(AppConfig.sessionUserData))
+    {
+      window.location='/'
+    }
   }
   componentWillUnmount()
   {

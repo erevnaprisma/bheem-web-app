@@ -29,7 +29,7 @@ class HostMeeting extends PureComponent {
     this.state={
       s_date:new Date(),
       e_date:new Date(),
-      ask: false,
+      ask: true,
       endless:false
     }
   }
@@ -57,7 +57,7 @@ class HostMeeting extends PureComponent {
 
   render() {
     const {isRequesting,errors,status,title,host,createdBy,startDate,endDate,createdAt,meetingId} = this.props
-    
+    console.log('isAsk>>>>',this.state.ask);
     return (
       <div style={{background:`linear-gradient(to right bottom, #bdc3c7, #2c3e50)`,backgroundSize:'contain'}}>
       <Header/>
@@ -91,7 +91,7 @@ class HostMeeting extends PureComponent {
                                 </div>
                                 <div className="form-check">
                                   <label className="form-check-label">
-                                    <input className="form-check-input" type="checkbox"  onChange={e=>this.setState({ask:e.target.checked})} checked/>
+                                    <input className="form-check-input" type="checkbox"  onChange={e=>this.setState({ask:e.target.checked})} defaultChecked/>
                                     Participant ask to join
                                     <span className="form-check-sign">
                                       <span className="check" />

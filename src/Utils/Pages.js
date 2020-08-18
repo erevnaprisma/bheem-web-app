@@ -6,7 +6,7 @@ import Login from '../Pages/Login/PageLogin'
 import Signup from '../Pages/SingUp/PageSignup'
 import HostMeeting from '../Pages/HostMeeting/PageHostMeeting'
 import JoinMeeting from '../Pages/JoinMeeting/PageJoinMeeting'
-import PageManageMeeting from '../Pages/Management/PageManageMeeting'
+import PageManagement from '../Pages/Management/PageManageMeeting'
 import PageWaitingRoom from '../Pages/WaitingRoom/PageWaitingRoom'
 import PageVidStreaming from '../Pages/VideoStream/PageBheem'
 import socketIO from '../Containers/Socket/socketListeners'
@@ -18,7 +18,7 @@ const lp = {
   '/signup': { exact:true,route: '/signup', path: '/signup', component: Signup },
   '/host-meeting': { exact:true,route: '/host-meeting', path: '/host-meeting', component: HostMeeting },
   '/join-meeting': { exact:true,route: '/join-meeting', path: '/join-meeting', component: JoinMeeting },
-  '/manage-meeting': { exact:false,route: '/manage-meeting', path: '/manage-meeting', component: PageManageMeeting },
+  '/me/': { exact:false,route: '/me', path: '/me/:page', component: PageManagement },
   '/waiting-room': { exact:true,route: '/waiting-room', path: '/waiting-room', component: PageWaitingRoom },
   '/concal': { exact:true,route: '/concal', path: '/concal/:room/', component: PageVidStreaming },
 }

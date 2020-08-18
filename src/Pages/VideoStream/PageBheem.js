@@ -6,56 +6,20 @@ import {connect} from 'react-redux'
 import {Images,Colors} from '../../Themes'
 import Loader from '../../Components/Loader'
 import JoinActions from '../../Containers/JoinMeeting/redux'
-import StreamingActions from '../../Containers/Streaming/redux'
+import StreamingActions, { setApi } from '../../Containers/Streaming/redux'
 
 import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList } from 'react-window';
-
+import './video-stream.css'
 import swal from 'sweetalert2'
 import { stat } from 'fs'
 import Header from '../../Containers/Header'
 import Draggable from "react-draggable";
 import ListParticipant from '../../Components/ConcalComponents/ListParticipant'
 import socketIo from '../../Containers/Socket/socketListeners'
-  // iframe Integration
-  const VideoConference = ({ roomName,opt,id }) => {
-    const [jitsi, setJitsi] = React.useState(0)
-    const jitsiContainerId = 'jitsi-container-id'
-    const loadBheemScript = () => {
-      let resolveLoadBheemScriptPromise = null
-      const loadBheemScriptPromise = new Promise(resolve => {
-        resolveLoadBheemScriptPromise = resolve
-      })
-      const script = document.createElement('script')
-      script.src = 'https://bheem.erevnaraya.com/external_api.js';
-      script.async = true
-      script.onload = () => resolveLoadBheemScriptPromise(true)
-      document.body.appendChild(script)
-      return loadBheemScriptPromise
-    }
-    const initialiseJitsi = async () => {
-      if (!window.JitsiMeetExternalAPI) {
-        await loadBheemScript()
-      }
-      const _jitsi = new window.JitsiMeetExternalAPI('bheem.erevnaraya.com', {
-        roomName,
-        id,
-        parentNode: document.getElementById(jitsiContainerId),
-        userInfo:opt
-      })
-      setJitsi(_jitsi)
-    }
-
-    React.useEffect(() => {
-      initialiseJitsi()
-      return () => jitsi?.dispose?.()
-    }, [])
-
-    return <div className="page-header" id={jitsiContainerId}/>
-  }
-  // iframe Integration
+import {BheemVidStreamComponent,do_mute_specific,do_mute_everyone,toogle_lobby} from './BheemVidStreamComponent'
 
 class PageBheem extends Component {
   constructor(props)
@@ -66,13 +30,14 @@ class PageBheem extends Component {
     this._listParticipant=this._listParticipant.bind(this)
     this._admitParticipant=this._admitParticipant.bind(this) 
     this._rejectParticipant=this._rejectParticipant.bind(this) 
+    this._handleSidebarUserList=this._handleSidebarUserList.bind(this)
     this.state={
-      show:true,
-      icon:'-',
-      jAudio:null,
-      jVideo:null
+      isShowSidebar:true,
+      listParticipantContainerId:'list-users-joined',
+      videoStreamerContainerId:'bheem-video-container'
     }
   }
+
   //Host functions
   _admitParticipant(userId,socketId)
   {
@@ -80,83 +45,95 @@ class PageBheem extends Component {
     const meetingId=this.props.match.params.room
     socketIo.emit('admitUserToJoinHost', { meetingId, userId: userId, hostId:userData.id, socketId: socketId })
   } 
-  _rejectParticipant(userId)
+  _rejectParticipant(userId,socketId)
   {
     const userData=getSession(AppConfig.sessionUserData)
     const meetingId=this.props.match.params.room
-    socketIo.emit('rejectUserToJoinHost', { meetingId, userId: userId, hostId:userData.id })
+    socketIo.emit('rejectUserToJoinHost', {socketId,meetingId, userId, hostId:userData.id })
   }  
   //Host functions
 
-
-
-  async componentWillMount()
-  {
-    this.props.doReset()
-    const meetingId=this.props.match.params.room
-    await this.props.checkIsExist({meetingId})
-  }
-  componentDidMount()
-  {
-    const meetingId=this.props.match.params.room
-    if(getSession(AppConfig.sessionMeeting) && getSession(AppConfig.sessionMeeting).role == "host") 
-    {
-      socketIo.emit('createMeeting', {meetingId})
-    }
-  }
   _listParticipant()
   {
-    const waitingRoom=this.props.listWaitingRoom
-    const participants=this.props.listparticipant
-    console.log("list> participant>>>",typeof participants)
-    // socket.emit('admitUserToJoinHost', { meetingId: userInfo.meetingId, userId: userInfo.userId, hostId, socketId: userInfo.socketId })
+    const waitingRoom=[
+                  {userId:'34234234234',username:'ungke aloringatu pangaribuan',socketId:'342342342334'},
+                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+                ]
+    const participants=[
+      {userId:'34234234234',fullName:'ungke aloringatu pangaribuan',socketId:'342342342334'},
+      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+    ]
+    
+    console.log("Bhm list Waiting rooom comp>>>",waitingRoom)
+    console.log("Bhm list participant comp>>>",participants)
     return(
-     <Draggable>
-       {/* <div style={{position:'absolute',right:5,bottom:'20%'}}>
-          <div style={{overflow:'hidden',background:Colors.primaryGray,color:'white'}}>
-              <p style={{color:'white',float:'right',marginRight:5,cursor:'pointer'}}>
-                <b onClick={()=>{
-                  if(this.state.show) this.setState({show:false,icon:'+'})
-                  else this.setState({show:true,icon:'-'})
-                }}>{this.state.icon}</b>
-              </p>
-              <p style={{margin:5,float:'left',color:'white'}}>List Participant</p>
-              <hr/>
-          </div> 
-       </div> */}
-       
-          <div style={{overflow:'scroll',position:'absolute',maxHeight:`${this.state.show ? '30%' : '' }`,minWidth:'20%',minHeight:`${this.state.show ? '30%' : '' }`,background:'white',borderRadius:10,right:5,bottom:'20%'}}>
-            <label className="ml-1 mt-3">Waiting room</label>
-            <hr/>
-            {waitingRoom.length>0 && waitingRoom.map((r,i)=>(
-              <div style={{background:'#1c1c1c',marginTop:2,textAlign:'left',margin:5,color:'white',width:'100%'}} key={i}>
-                <div className="row" style={{float:'right'}}>
-                    <button className="" onClick={()=>this._admitParticipant(r.userId,r.socketId)}>Admit</button>
-                    &nbsp;
-                    <button onClick={()=>this._rejectParticipant(r.userId)}>Reject</button>
-                </div>
-                <p>{r.username}</p> 
-              </div>
-            ))}
-            <label className="ml-1 mt-3">List participant room</label>
-            <hr/>
-            {participants.map((r,i)=>(
-              <div style={{background:'#1c1c1c',marginTop:2,textAlign:'left',margin:5,color:'white',width:'100%'}} key={i}>
-                <div className="row" style={{float:'right'}}>
-                    <button className="" onClick={()=>this._admitParticipant(r.userId,r.socketId)}>Mute</button>
-                    &nbsp;
-                    <button>Put to waiting room</button>
-                </div>
-                <p>{r.fullName}</p> 
-              </div>
-            ))}
+      // <Draggable>
+          <div className="bheem-list" style={{background:'white'}} id={this.state.listParticipantContainerId}>
+                  <div className="main-header-list">Participants ({waitingRoom.length+participants.length})</div>
+                  <div>
+                      <label className="mt-2 head-list-participant">Waiting room({waitingRoom.length})</label>
+                        <ul className="container-list-waiting-room" >
+                          {waitingRoom.length>0 && waitingRoom.map((r,i)=>(
+                            <li key={i}>
+                                <div className="container-userinfo-wrapper">
+                                  <div style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}}/>
+                                  <span>{r.username}</span> 
+                                </div>
+                                <div className="container-button-wrapper">
+                                  <button className="" onClick={()=>this._admitParticipant(r.userId,r.socketId)}>Admit</button>
+                                  &nbsp;
+                                  <button onClick={()=>this._rejectParticipant(r.userId,r.socketId)}>Reject</button>
+                                </div>
+                            </li>
+                          ))}
+                        </ul>
+                  </div>
+                  {participants.length>0 &&
+                    <div>
+                        <label className="mt-2 head-list-participant">List participant room({participants.length})</label>
+                          <ul className="container-list-joined">
+                            {participants.map((r,i)=>(
+                                <li  key={i}>
+                                  <div className="container-userinfo-wrapper">
+                                    <div style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}}/>
+                                    <span>{r.fullName}</span> 
+                                  </div>
+                                  <div className="container-button-wrapper">
+                                    <button className="" onClick={()=>this._admitParticipant(r.userId,r.socketId)}>Mute</button>
+                                    &nbsp;
+                                    <button>Put to waiting room</button>
+                                  </div>
+                                </li>
+                            ))}
+                          </ul>
+                    </div>
+                  }
           </div>
-     </Draggable>
+      //</Draggable> 
     )
   }
 
-  _notAllowed()
-  {
+  _notAllowed(){
     const meetingId=this.props.match.params.room
     const { topic,allowed,needPermission,isExist,isRequesting,meetingData } = this.props
     
@@ -164,8 +141,6 @@ class PageBheem extends Component {
       <div>
         <Helmet>
           <title>{'Bheem meeting'}</title>
-          {/* {!getSession(AppConfig.sessionMeeting) || getSession(AppConfig.sessionMeeting).meetingId != meetingId  &&  <title>{'On Post Join'}</title>}
-          {getSession(AppConfig.sessionMeeting).needRequestToJoin && getSession(AppConfig.sessionMeeting).meetingId == meetingId && <title>{'Waiting room..'}</title>} */}
         </Helmet>
         <Header/>
         {(getSession(AppConfig.sessionMeeting).needRequestToJoin && getSession(AppConfig.sessionMeeting).meetingId == meetingId &&
@@ -208,39 +183,90 @@ class PageBheem extends Component {
       </div>
     )
   }
-  _allowed()
-  {
+ 
+  _allowed(){
     const meetingId=this.props.match.params.room
     const { topic,allowed,needPermission,isExist,isRequesting,meetingData } = this.props
     const userData=getSession(AppConfig.sessionUserData)
     const opt={
-         id:userData.id||navigator.userAgent,
-         email:userData.email||'Anonymous@mail.com',
-         displayName:userData.fullName||'anonymous'
-       }
+                 containerId:this.state.videoStreamerContainerId,
+                 className:'bheem-video-stream',
+                 isMuteVideo:this.state.jVideo,
+                 isMuteAudio:this.state.jAudio,
+                 roomName:'Coba',
+                 roomId:meetingId,
+                 userInfo:{
+                  id:userData.id||navigator.userAgent,
+                  email:userData.email||'Anonymous@mail.com',
+                  displayName:userData.fullName||'anonymous'
+                 }
+              }
+    
     return(
       <div>
         <Helmet>
           <title>{'Bheem Conference Call'}</title>
         </Helmet> 
-          <div>
-            <VideoConference style={{height:'100%',width:'100%'}} roomName={'cobaa'}   opt={opt}/>
+          <div className="row" style={{margin:0,padding:0}}>
+            <BheemVidStreamComponent style={{height:'100%',width:'100%'}}  opt={opt}/>
             {this._listParticipant()}
           </div>
       </div>
     )
   }
 
+  _handleSidebarUserList()
+  {
+    if(document.getElementById(this.state.videoStreamerContainerId) && document.getElementById(this.state.listParticipantContainerId)){
+      let mainSize="100vw"
+      let sidebarSize=""
+      if(!this.state.isShowSidebar){
+        this.setState({isShowSidebar:true})
+        document.getElementById(this.state.videoStreamerContainerId).style.width = mainSize;
+        document.getElementById(this.state.listParticipantContainerId).style.width = sidebarSize;
+      }
+      else{
+        this.setState({isShowSidebar:false})
+        mainSize="80vw"
+        sidebarSize="20vw"
+        document.getElementById(this.state.videoStreamerContainerId).style.width = mainSize;
+        document.getElementById(this.state.listParticipantContainerId).style.width = sidebarSize;
+      }
+    }
+  }
+
+  async componentWillMount()
+  {
+    this.props.doReset()
+    const meetingId=this.props.match.params.room
+    await this.props.checkIsExist({meetingId})
+  }
+  componentDidMount()
+  {
+    //open sidebar
+    let mainSize="80vw"
+    let sidebarSize="20vw"
+    document.getElementById(this.state.videoStreamerContainerId).style.width = mainSize;
+    document.getElementById(this.state.listParticipantContainerId).style.width = sidebarSize;
+    document.getElementById(this.state.listParticipantContainerId).style.display = 'inline-block';
+
+    const meetingId=this.props.match.params.room
+    if(getSession(AppConfig.sessionMeeting) && getSession(AppConfig.sessionMeeting).role == "host") 
+    {
+      socketIo.emit('createMeeting', {meetingId})
+    }
+  }
+
   render () {
     const meeting=getSession(AppConfig.sessionMeeting)
+    let ApiStreaming=null
+    console.log("api streaming>>>>",this.state.apiBheem)
     console.log("Session meeting>>",getSession(AppConfig.sessionMeeting))
     return (
       <div style={{background:`url(${Images.HomeIllus}) center`,backgroundSize:'contain'}}>
+        <button style={{position:'absolute'}} onClick={()=> this._handleSidebarUserList()}>toogle audio</button> 
         {meeting&& this._allowed()}
         {!meeting&& this._notAllowed()}
-        {/* {this.props.allowed||meeting.role == 'host' && this._allowed()}
-        {!this.props.allowed && meeting.role!= 'host'&& this._notAllowed()}
-        {!!meeting&& this._notAllowed()} */}
       </div>
     )
   }

@@ -1,17 +1,14 @@
 import React, { Component,useEffect, PureComponent } from 'react'
 import Helmet from 'react-helmet'
-import Shimmer from "react-shimmer-effect";
 import { connect } from 'react-redux'
+import Header from '../../Containers/Header'
 import {getSession,formValidation, isLogin} from '../../Utils/Utils'
 import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router-dom'
-import { isEmpty } from 'ramda'
 import _ from 'lodash'
 import AppConfig from '../../Config/AppConfig'
 import {Images,Colors} from '../../Themes'
 // Components
-import Header from '../../Containers/Header'
-import Footer from '../../Containers/Footer'
 import Loader from '../../Components/Loader'
 import Swal from 'sweetalert2'
 import DateTimePicker from 'react-datetime-picker';
@@ -20,67 +17,69 @@ import DateTimePicker from 'react-datetime-picker';
 import MeetingActions from '../../Containers/Management/SceduleMeeting/redux'
 
 //Menu
-import Manage from './ManageMeeting'
-import Setting from './SettingMeeting'
+import Manage from './Meeting/ManageMeeting'
+import MeetingSetting from './Meeting/SettingMeeting'
+import AccountSetting from './Account/AccountSetting'
 
 //Modals
-import CreateMeeting from './Modals/createScheduleMeeting'
+import CreateMeeting from './Meeting/Modals/createScheduleMeeting'
+import { title } from 'process'
 
 
 class PageManageMeeting extends PureComponent {
   constructor(props)
   {
     super(props)
+    this._onClickLink=this._onClickLink.bind(this)
+    this._generateTitle=this._generateTitle.bind(this)
   }
-  componentWillMount()
+  _generateTitle(list)
   {
-    isLogin()
+    var title=null
+    const param=this.props.match.params.page
+    list.map((r,i)=>{
+      if(r.path==param){
+        title=( <title>{r.name}</title>)
+      }
+    }) 
+    return title   
   }
-  _selected(nav)
+  _onClickLink(path)
   {
-    const param=this.props.match.params.opt
-    if(param == nav)
-    {
-        return 'nav-link active'
-    }
-    else
-    {
-        return 'nav-link' 
-    }
+    this.props.history.replace({pathname:path})
   }
   render() {
     const {fetchMeetings} = this.props
-    fetchMeetings()
-    // console.log("paramss>>>>>",this.props.match.params.opt)
-
+    const listPages=[
+      {name:'Manage Schedule Meeting',path:'manage-meeting',icon:'dashboard',comp:<Manage/>},
+      {name:'Metting Settings',path:'meeting-settings',icon:'build',comp:<MeetingSetting/>},
+      {name:'Account Settings',path:'account-settings',icon:'account_box',comp:<AccountSetting/>}
+    ]
+    const param=this.props.match.params.opt
     return (
       <div>
-        <Helmet><title>Manage Meeting</title></Helmet>
+        <Helmet>
+           {this._generateTitle(listPages)}
+        </Helmet>
         <Header/>
         <CreateMeeting/>
         <br/>
         <br/>
         <br/>
         <div className="main-raised">
-            {/* Tabs with icons on Card */}
             <div className="card card-nav-tabs">
               <div className="card-header card-header-primary">
-                {/* colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" */}
                 <div className="nav-tabs-navigation">
                   <div className="nav-tabs-wrapper">
                     <ul className="nav nav-tabs" data-tabs="tabs">
-                      <li className="nav-item" onClick={()=>fetchMeetings()}>
-                        <a className={this._selected('manage-meeting')} href="#manage-meeting" data-toggle="tab">
-                          <i className="material-icons">dashboard</i>
-                          Manage Schedule Meeting
-                        </a>
-                      </li>
-                      <li className="nav-item">
-                        <a className={this._selected('meeting-setting')} href="#setting-meeting" data-toggle="tab">
-                          <i className="material-icons">build</i>
-                         Meeting Settings
-                        </a>
-                      </li>
+                      {listPages.map((r,i)=>(
+                        <li className="nav-item" key={i}>
+                          <a className={param ==r.path ? 'nav-link active' : 'nav-link' } href={'#'+r.path} data-toggle="tab" onClick={()=>this._onClickLink(r.path)}>
+                          <i className="material-icons">{r.icon}</i>
+                          {r.name}
+                          </a>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -88,30 +87,26 @@ class PageManageMeeting extends PureComponent {
               {/* content */}
               <div className="card-body ">
                 <div className="tab-content text-center">
-                  <Manage/>
-                  <Setting/>
+                  {listPages.map((r,i)=>(
+                      r.comp
+                    ))
+                  }
                 </div>
               </div>
               {/* content */}
             </div>
-            
             {/* End Tabs with icons on Card */}
           </div>
-
-          
-          
       </div>
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return null
+  return {}
 }
 const mapDispatchToProps = dispatch => {
-  return {
-    fetchMeetings:data=>dispatch(MeetingActions.getListMeeting(data))
-  }
+  return {}
 }
 export default connect(
   mapStateToProps,

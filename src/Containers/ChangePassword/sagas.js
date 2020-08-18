@@ -6,17 +6,17 @@ import _ from 'lodash'
 import {path,merge} from 'ramda'
 import {isNullOrUndefined} from 'util'
 import Swal from 'sweetalert2'
-import LoginActions from './redux'
+import ChangePasswordActions from './redux'
 import jwtDecode from 'jwt-decode'
-export function * doLogin (api, action) {
-  console.log('loginDoLogin')
+
+
+export function * doChangePassword (api, action) {
   const { data } = action
   const response = yield call(api.doLogin, data)
-  console.log("Response login>>>>>>>>>>>>",response) 
+  console.log("Response changePassword>>>>>>>>>>>>",response) 
   
   let errors=[]
   if (!_.isEmpty(response.problem)) errors.push({ message: response.problem })
-
   // detect error from body
   const status = parseInt(path(['data', 'data', 'bheemLogin', 'status'], response) || 0)
   const errorbody = path(['data', 'data', 'bheemLogin', 'error','message'], response)||[]
@@ -32,21 +32,15 @@ export function * doLogin (api, action) {
 
   // success
   if (_.isEmpty(errors) && status) {
-    const exp=jwtDecode(token).expireTime //milliseconds
-    const now=new Date().getTime()
-    const exp_end=now+exp
-    setSession({[AppConfig.loginFlag]: true, [AppConfig.sessionUserData]:userdata,[AppConfig.sessionToken]:token, [AppConfig.sessionExp]:exp_end})
+    
     yield put(
-      LoginActions.doLoginDone({
+      ChangePasswordActions.doLoginDone({
         status,
         errors,
         userdata
       })
     )
-    console.log('login flag>>>>>',getSession(AppConfig.loginFlag));
     window.location="/"
-
-     
   } else {    
     let error=''
     let err=errors[0]
@@ -61,23 +55,6 @@ export function * doLogin (api, action) {
       icon: 'error',
       confirmButtonText: 'Ok'
     }) 
-    return yield put(LoginActions.doLoginFailed({  status, error }))
+    return yield put(ChangePasswordActions.failedChangePassword({  status, error }))
   } 
-}
-export function * doLogout (api, action) {
-   //logged/unlogged pages
-  removeSpecificSession(AppConfig.sessionMeeting)
-  setTimeout(()=>{
-      function * done()
-      {
-        yield put(LoginActions.doLogoutDone())
-      }
-      done()
-      logout()  
-    },2000)
-}
-function logout()
-{
-  destroySession()
-  window.location="/"
 }

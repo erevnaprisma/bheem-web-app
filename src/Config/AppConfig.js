@@ -20,6 +20,7 @@ export default {
   sessionUserData: 'userData',
   sessionMeeting:'activeMeeting',
   sessionExp: 'exp_date',
+  sessionBheemApi:'api',
   loginFlag: 'il',
   sessionData: 'ssst',
   concalUrl:'https://alpha.jitsi.net/',

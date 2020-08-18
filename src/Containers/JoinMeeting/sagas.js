@@ -56,13 +56,17 @@ import socket from '../Socket/socketListeners'
 export function * doJoinMeeting (api, action) {
   const { data } = action
   // isNeedPermissionToJoin
-  const message = {
+  let message = {
     socketId: socket.id,
     userId:getSession(AppConfig.sessionUserData).id||navigator.userAgent,
-    username:getSession(AppConfig.sessionUserData).firstName||'anonymous',
+    username:getSession(AppConfig.sessionUserData).firstName||data.username,
     meetingId:data.meetingId
   }
-  
+  //TODO: Anonymous >>>  remove userId, append anonymous:true, 
+  // if(!getSession(AppConfig.sessionUserData)){
+  //   message.id
+  // }
+
   socket.emit('requestToJoin',message)
 }
 
@@ -93,7 +97,7 @@ export function * checkIsexistMeeting (api, action) {
     
     Swal.fire({
       title: 'Error!',
-      text:'Meeting doens\'t exist or has been ended',
+      text:'Meeting doens\'t exist or has been ended *check is exist meeting',
       icon: 'error',
       confirmButtonText: 'Ok',
       onClose:()=>window.location="/join-meeting"

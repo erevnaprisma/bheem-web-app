@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 
 export default class SettingMeeting extends Component {
-    render() {
+  render() {
         return (
-            <div className="section section-basic tab-pane " id="setting-meeting">
+            <div className="section section-basic tab-pane " id="meeting-settings">
                     
               <strong>Basic meeting settings</strong>
               <hr/>

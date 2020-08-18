@@ -48,14 +48,14 @@ class JoinMeeting extends PureComponent {
     }
 
   }
-  // componentDidMount()
-  // {
-  //   this.props.doReset()
-  // }
-  // componentWillUnmount()
-  // {
-  //   this.props.doReset()
-  // } 
+  componentDidMount()
+  {
+    this.props.doReset()
+  }
+  componentWillUnmount()
+  {
+    this.props.doReset()
+  } 
   _waitingRoom()
   {
     const userId=getSession(AppConfig.sessionUserData).id
@@ -69,7 +69,7 @@ class JoinMeeting extends PureComponent {
                 <div className="card card-login" style={{background:Colors.primaryRed}}>    
                   <center>
                       <Loader className="mx-auto" color="#fff"/>
-                      <p style={{color:'#fff'}}><b>Joining the room..</b></p>
+                      <p style={{color:'#fff'}}><b>Joining room..</b></p>
                       <p style={{color:'#fff'}}>Waiting for host to accept your request</p>
                   </center>
               </div>
@@ -79,52 +79,52 @@ class JoinMeeting extends PureComponent {
       </div>
     )
   }
-  _onJoin()
-  {
+  _onJoin(){
+    console.log('Sesssion>>>>>>>',getSession(AppConfig.sessionUserData));
     const {isLogin} = this.state
     const {isRequesting,errors,status,title,host,createdBy,startDate,endDate,createdAt,meetingId} = this.props
     return(
       <div className="page-header" style={{backgroundImage: `url("${Images.JoinIllus}")`, backgroundSize: 'cover', backgroundPosition: 'top center'}}>
-            <div className="container">
-              <div className="row">
-                <div className="col-lg-4 col-md-6 ml-auto mr-auto">
-                  <div className="card card-login" >
-                    <form className="form" onSubmit={(e)=>this._onSubmitForm(e)} style={{minHeight:0,paddingBottom:20}}>
-                      <div className="card-header card-header-primary text-center">
-                        <h4 className="card-title">Join Meeting</h4>
-                      </div>
-                      <br/>
-                      {(!isLogin &&
-                        <div className="card-body " style={{margin:0,padding:0}}>
-                          <div className="input-group mt-9">
-                            <input type="text" className="form-control" placeholder="Meeting ID" ref="meeting_id" required style={{textAlign:'center', marginLeft:10,marginRight:10}}/>
-                          </div>
-                          <div className="input-group mt-9">
-                            <input type="text" className="form-control" placeholder="Your name" ref="u_name" required style={{textAlign:'center', marginLeft:10,marginRight:10}}/>
-                          </div>
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-4 col-md-6 ml-auto mr-auto">
+                <div className="card card-login" >
+                  <form className="form" onSubmit={(e)=>this._onSubmitForm(e)} style={{minHeight:0,paddingBottom:20}}>
+                    <div className="card-header card-header-primary text-center">
+                      <h4 className="card-title">Join Meeting</h4>
+                    </div>
+                    <br/>
+                    {(!getSession(AppConfig.sessionUserData) &&
+                      <div className="card-body " style={{margin:0,padding:0}}>
+                        <div className="input-group mt-9">
+                          <input type="text" className="form-control" placeholder="Meeting ID" ref="meeting_id" required style={{textAlign:'center', marginLeft:10,marginRight:10}}/>
                         </div>
-                      )}
-                      {(isLogin &&
-                        <div className="card-body " style={{margin:0,padding:0}}>
-                          <div className="input-group mt-9">
-                            <input type="text" className="form-control" placeholder="Meeting ID" ref="meeting_id" required style={{textAlign:'center', marginLeft:10,marginRight:10}}/>
-                          </div>
+                        <div className="input-group mt-9">
+                          <input type="text" className="form-control" placeholder="Your name" ref="u_name" required style={{textAlign:'center', marginLeft:10,marginRight:10}}/>
                         </div>
-                      )}
-                      <div className="footer text-center mt-5">
-                        {!isRequesting && <button type="submit" className="btn btn-primary btn-link btn-wd btn-lg">Join meeting</button>}
-                          {isRequesting &&(
-                            <center>
-                              <Loader className="mx-auto" color="#000"/>
-                            </center>
-                          )}
                       </div>
-                    </form>
-                  </div>
+                    )}
+                    {(getSession(AppConfig.sessionUserData) &&
+                      <div className="card-body " style={{margin:0,padding:0}}>
+                        <div className="input-group mt-9">
+                          <input type="text" className="form-control" placeholder="Meeting ID" ref="meeting_id" required style={{textAlign:'center', marginLeft:10,marginRight:10}}/>
+                        </div>
+                      </div>
+                    )}
+                    <div className="footer text-center mt-5">
+                      {!isRequesting && <button type="submit" className="btn btn-primary btn-link btn-wd btn-lg">Join meeting</button>}
+                        {isRequesting &&(
+                          <center>
+                            <Loader className="mx-auto" color="#000"/>
+                          </center>
+                        )}
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
-        </div>
+          </div>
+      </div>
     )
   }
   render() {

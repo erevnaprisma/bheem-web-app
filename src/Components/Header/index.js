@@ -24,14 +24,15 @@ class index extends Component {
      }
     _Logout()
     {
-        this.props.doLogout()
+      this.props.doLogout()
     }
     render() {
         const userData=getSession(AppConfig.sessionUserData)
         const meetingSesssion=getSession(AppConfig.sessionMeeting)
         const nav=!this._get() ? 'navbar navbar-inverse navbar-expand-lg bg-dark' : 'navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg'
-        console.log("bheem all session>>>",window.localStorage.getItem(AppConfig.sessionUserData))
+        console.log("bheem all session>>>",window.localStorage.getItem(AppConfig.sessionData))
         console.log("bheem userdata session>>>",userData)
+        console.log("bheem login flag>>>",getSession(AppConfig.loginFlag))
         console.log("bheem sion>>>",meetingSesssion)
         return (
             <nav className='navbar navbar-inverse navbar-expand-lg bg-dark' id="sectionsNav" style={{padding:0, marginBottom:0}}>
@@ -125,8 +126,9 @@ class index extends Component {
                                   </div>
                                   <div className="dropdown-menu dropdown-menu-right">
                                       {/* <h6 className="dropdown-header">Dropdown header</h6> */}
-                                      <a href="#" className="dropdown-item">Me ({userData.firstName})</a>
-                                      <a href="/manage-meeting" className="dropdown-item">My meetings</a>
+                                      <a href="/me/profile" className="dropdown-item">Me ({userData.firstName})</a>
+                                      <a href="/me/manage-meeting" className="dropdown-item">My meetings</a>
+                                      <a href="/me/meeting-settings" className="dropdown-item">Meeting settings</a>
                                       <a href="#" className="dropdown-item">Settings</a>
                                       <a  className="dropdown-item" data-toggle="modal"  data-target="#modal-logout">Logout</a>
                                   </div>

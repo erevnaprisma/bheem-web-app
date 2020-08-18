@@ -42,23 +42,28 @@ class SubContainer extends React.PureComponent {
         }
       }
   }
-
   async componentWillMount(){
-    const pg=['/','/home','/login','/waiting-room','/join-meeting','/signup','/concal/'] //List pages that can be entered without login
-
+      const pg=['/','/home','/login','/waiting-room','/join-meeting','/signup','/concal/'] //List pages that can be entered without login
       if(!this._excludePages(pg) || window.location.pathname.split('/')[1] == '/concal' && _.isEmpty(window.location.pathname.split('/')[2]))
       {
-        // if(window.location.pathname == '/manage-meeting') isLogin(true) 
-        // else isLogin()
+        if(window.location.pathname == '/manage-meeting') isLogin(true) 
+        else isLogin()
       } 
       else
       {
         await removeSpecificSession(AppConfig.sessionMeeting)
-        
       } 
-    //logged/unlogged pages
   }
-  
+  async componentDidMount()
+  {
+    var prevLocalStorage=getSession(AppConfig.sessionUserData)
+    window.addEventListener('storage',()=>{
+      if(!_.isEmpty(prevLocalStorage)&&_.isEmpty(getSession(AppConfig.sessionUserData)))
+      {
+        window.location="/"
+      }
+    })
+  }
   render () {
     //Pages using footer
     const pgFooter=['/','/home','/manage-meeting']
