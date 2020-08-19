@@ -13,6 +13,7 @@ const { Types, Creators } = createActions({
   doToggleAudio:['data'],
   doToggleVideo:['data'],
   setApi:['data'],
+  getListParticipant:['data'],
   resetStreaming:null
 })
 export const StreamingTypes = Types
@@ -35,6 +36,7 @@ export const INITIAL_STATE = Immutable({
 export const add = (state,{data}) =>{
    return state.merge({...data})
 }
+export const get_list = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const remove = (state,{data}) => state.replace({ isRequesting:false, listWaitingRoom:data.list })
 export const put = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const kick = (state,{data}) => state.merge({ isRequesting:false, ...data })
@@ -46,6 +48,7 @@ export const reset = state=> state.merge(INITIAL_STATE)
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.SET_API]: setApi,
+  [Types.GET_LIST_PARTICIPANT]:get_list,
   [Types.ADD_PARTICIPANT]: add,
   [Types.REMOVE_PARTICIPANT]: remove,
   [Types.PUT_TO_WAITING_ROOM]: put,

@@ -30,7 +30,6 @@ class index extends Component {
         const userData=getSession(AppConfig.sessionUserData)
         const meetingSesssion=getSession(AppConfig.sessionMeeting)
         const nav=!this._get() ? 'navbar navbar-inverse navbar-expand-lg bg-dark' : 'navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg'
-        console.log("bheem all session>>>",window.localStorage.getItem(AppConfig.sessionData))
         console.log("bheem userdata session>>>",userData)
         console.log("bheem login flag>>>",getSession(AppConfig.loginFlag))
         console.log("bheem sion>>>",meetingSesssion)

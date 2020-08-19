@@ -9,7 +9,7 @@ import ScheduleActions from './redux'
 import Swal from 'sweetalert2'
 
 export function * fetchMeetings (api, action) {
-  isLogin()
+    isLogin()
     const { data } = action
     const response = yield call(api.fetchMeetings,data)
     console.log("response fetch schedule meeting>>>>",response)
@@ -60,7 +60,7 @@ export function * createScheduleMeeting (api, action) {
       text:'Schedule meeting has been created',
       icon: 'success',
       confirmButtonText: 'Ok',
-      onClose:()=>window.location="/manage-meeting"
+      onClose:()=>window.location="/me/manage-meeting"
     })
   }
   else{

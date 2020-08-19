@@ -66,7 +66,7 @@ class SubContainer extends React.PureComponent {
   }
   render () {
     //Pages using footer
-    const pgFooter=['/','/home','/manage-meeting']
+    const pgFooter=['/','/home','me/manage-meeting','me/profile','me/manage-settings']
     const loc = window.location.pathname
     return (
       <div>

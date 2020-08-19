@@ -8,6 +8,7 @@ import Loader from '../../Components/Loader'
 import JoinActions from '../../Containers/JoinMeeting/redux'
 import StreamingActions, { setApi } from '../../Containers/Streaming/redux'
 
+import {Image} from '../../Themes'
 import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -55,34 +56,36 @@ class PageBheem extends Component {
 
   _listParticipant()
   {
-    const waitingRoom=[
-                  {userId:'34234234234',username:'ungke aloringatu pangaribuan',socketId:'342342342334'},
-                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-                  {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-                ]
-    const participants=[
-      {userId:'34234234234',fullName:'ungke aloringatu pangaribuan',socketId:'342342342334'},
-      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-      {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-    ]
+    // const waitingRoom=[
+    //               {userId:'34234234234',username:'ungke aloringatu pangaribuan',socketId:'342342342334'},
+    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
+    //             ]
+    // const participants=[
+    //   {userId:'34234234234',fullName:'ungke aloringatu pangaribuan',socketId:'342342342334'},
+    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
+    // ]
+    const waitingRoom=this.props.listWaitingRoom||[]
+    const participants=this.props.listParticipant||[]
     
     console.log("Bhm list Waiting rooom comp>>>",waitingRoom)
     console.log("Bhm list participant comp>>>",participants)
@@ -96,7 +99,7 @@ class PageBheem extends Component {
                           {waitingRoom.length>0 && waitingRoom.map((r,i)=>(
                             <li key={i}>
                                 <div className="container-userinfo-wrapper">
-                                  <div style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}}/>
+                                  <img style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}} src={Images.Avatar}/>
                                   <span>{r.username}</span> 
                                 </div>
                                 <div className="container-button-wrapper">
@@ -115,7 +118,7 @@ class PageBheem extends Component {
                             {participants.map((r,i)=>(
                                 <li  key={i}>
                                   <div className="container-userinfo-wrapper">
-                                    <div style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}}/>
+                                    <img style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}} src={Images.Avatar}/>
                                     <span>{r.fullName}</span> 
                                   </div>
                                   <div className="container-button-wrapper">
@@ -246,13 +249,14 @@ class PageBheem extends Component {
     //open sidebar
     let mainSize="80vw"
     let sidebarSize="20vw"
-    document.getElementById(this.state.videoStreamerContainerId).style.width = mainSize;
-    document.getElementById(this.state.listParticipantContainerId).style.width = sidebarSize;
-    document.getElementById(this.state.listParticipantContainerId).style.display = 'inline-block';
+    if(document.getElementById(this.state.videoStreamerContainerId) && document.getElementById(this.state.listParticipantContainerId)){
+      document.getElementById(this.state.videoStreamerContainerId).style.width = mainSize;
+      document.getElementById(this.state.listParticipantContainerId).style.width = sidebarSize;
+      document.getElementById(this.state.listParticipantContainerId).style.display = 'inline-block';
+    }
 
     const meetingId=this.props.match.params.room
-    if(getSession(AppConfig.sessionMeeting) && getSession(AppConfig.sessionMeeting).role == "host") 
-    {
+    if(getSession(AppConfig.sessionMeeting) && getSession(AppConfig.sessionMeeting).role == "host") {
       socketIo.emit('createMeeting', {meetingId})
     }
   }
