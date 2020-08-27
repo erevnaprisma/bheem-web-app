@@ -35,9 +35,9 @@ class JoinMeeting extends PureComponent {
   _onSubmitForm(e)
   {
     if (e) e.preventDefault()
-    const isLogin=this.state.isLogin
+    // const isLogin=this.state.isLogin
     const meetingId = this.refs.meeting_id.value
-    if(isLogin)
+    if(getSession(AppConfig.sessionUserData))
     {
       this.props.doJoinMeeting({meetingId})
     }
@@ -80,7 +80,7 @@ class JoinMeeting extends PureComponent {
     )
   }
   _onJoin(){
-    console.log('Sesssion>>>>>>>',getSession(AppConfig.sessionUserData));
+    console.log('Sesssion>>>>>>>',getSession(AppConfig.loginFlag));
     const {isLogin} = this.state
     const {isRequesting,errors,status,title,host,createdBy,startDate,endDate,createdAt,meetingId} = this.props
     return(

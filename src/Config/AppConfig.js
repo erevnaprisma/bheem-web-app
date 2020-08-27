@@ -19,6 +19,7 @@ export default {
   sessionToken: 'st',
   sessionUserData: 'userData',
   sessionMeeting:'activeMeeting',
+  sessionAnonymous:'anonymousData',
   sessionExp: 'exp_date',
   sessionBheemApi:'api',
   loginFlag: 'il',

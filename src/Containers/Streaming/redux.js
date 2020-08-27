@@ -27,7 +27,6 @@ export const INITIAL_STATE = Immutable({
     status:0,
     needPermission:false,
     allowed:false,
-    api:null,
     listWaitingRoom:[],
     listParticipant:[],
     tooggleVideo:null,

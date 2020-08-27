@@ -59,16 +59,27 @@ export function * doJoinMeeting (api, action) {
   let message = {
     socketId: socket.id,
     userId:getSession(AppConfig.sessionUserData).id||navigator.userAgent,
-    username:getSession(AppConfig.sessionUserData).firstName||data.username,
+    username:getSession(AppConfig.sessionUserData).fullName||data.name,
     meetingId:data.meetingId
   }
   //TODO: Anonymous >>>  remove userId, append anonymous:true, 
-  // if(!getSession(AppConfig.sessionUserData)){
-  //   message.id
-  // }
-
-  socket.emit('requestToJoin',message)
+  if(!getSession(AppConfig.sessionUserData)){
+    delete message.userId
+    message.anonymous=true
+    setSession({[AppConfig.sessionMeeting]:{fullName:data.name}})
+    console.log('anonymous obj. >>',message);
+    socket.emit('requestToJoin',message)
+  }
+  else{
+    setSession({[AppConfig.sessionMeeting]:{
+        fullName:getSession(AppConfig.sessionUserData).fullName
+       ,userId:getSession(AppConfig.sessionUserData).id
+      }})
+    socket.emit('requestToJoin',message)
+  }
 }
+
+
 
 export function * checkIsexistMeeting (api, action) {
   const { data } = action

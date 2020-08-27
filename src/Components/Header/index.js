@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import {Images,Colors} from '../../Themes'
 import AppConfig from '../../Config/AppConfig'
 import jwtDecode from 'jwt-decode'
-import {getSession} from '../../Utils/Utils'
+import {getSession,isValuePropertyExist} from '../../Utils/Utils'
 import _ from 'lodash'
 import { injectIntl } from 'react-intl'
 import { withRouter } from 'react-router-dom'
@@ -32,7 +32,7 @@ class index extends Component {
         const nav=!this._get() ? 'navbar navbar-inverse navbar-expand-lg bg-dark' : 'navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg'
         console.log("bheem userdata session>>>",userData)
         console.log("bheem login flag>>>",getSession(AppConfig.loginFlag))
-        console.log("bheem sion>>>",meetingSesssion)
+        
         return (
             <nav className='navbar navbar-inverse navbar-expand-lg bg-dark' id="sectionsNav" style={{padding:0, marginBottom:0}}>
                 <div className="container">

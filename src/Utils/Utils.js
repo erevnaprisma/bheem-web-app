@@ -37,7 +37,6 @@ export const generateSha256 = (msg) => {
   return sha256(msg).toString()
 }
 export const setSession = (newSession, logged) => {
-  console.log("Set session meeting>>> ",newSession)
   const encryptedCurrentSession = window.localStorage.getItem(AppConfig.sessionData)
   let currentSessionJson = {}
   if (encryptedCurrentSession) {
@@ -45,14 +44,39 @@ export const setSession = (newSession, logged) => {
     var bytes = AES.decrypt(encryptedCurrentSession, 'prismalink2019')
     var decryptedData = bytes.toString(EncUtf8)
     currentSessionJson = JSON.parse(decryptedData)
-    currentSessionJson = merge(currentSessionJson, newSession)
+    currentSessionJson = _.merge(currentSessionJson, newSession)
+    console.log('setsession>>>>',currentSessionJson);
   }
   var ciphertext = AES.encrypt(JSON.stringify(currentSessionJson), 'prismalink2019')
   var encryptedData = ciphertext.toString()
 
   window.localStorage.setItem(AppConfig.sessionData, encryptedData)
 }
+export const isValuePropertyExist = ({obj,propName,value,type})=>{
+  console.log('check obj>>>',obj);
+  switch(type){
+    case 'propOnly':
+      if(_.has(obj,propName)){
+        return true
+      }
+      return false
+      break;
+    case 'valueOnly':
+      if(_.has(obj,propName)){
+        if(obj[propName]===value){
+          return true
+        }
+        return false
+      }
+      return false
+      break;
+    default:
+      console.log('No checker type exist');
+      break;
+  }
+}
 export const getSession = (parameter) => {
+  // console.log("Get session meeting>>> ",parameter)
   const encryptedCurrentSession = window.localStorage.getItem(AppConfig.sessionData)
   let currentSessionJson = {}
   if (encryptedCurrentSession) {
@@ -60,11 +84,13 @@ export const getSession = (parameter) => {
     var bytes = AES.decrypt(encryptedCurrentSession, 'prismalink2019')
     var decryptedData = bytes.toString(EncUtf8)
     currentSessionJson = JSON.parse(decryptedData)
+    
   }
   const sessionValue = path([parameter], currentSessionJson) || ''
   return sessionValue
 }
 export const removeSpecificSession = (session) => {
+  // console.log("remove session meeting>>> ",session)
   const encryptedCurrentSession = window.localStorage.getItem(AppConfig.sessionData)
   let currentSessionJson = {}
   if (encryptedCurrentSession) {
@@ -77,6 +103,24 @@ export const removeSpecificSession = (session) => {
   else{
     let sessionMeeting = delete currentSessionJson[session]
     var ciphertext = AES.encrypt(JSON.stringify(currentSessionJson), 'prismalink2019')
+    var encryptedData = ciphertext.toString()
+    window.localStorage.setItem(AppConfig.sessionData,encryptedData)
+  }
+}
+export const updateSpecificSesssion = (sessionName,sessionProperty,sessionData) => {
+  const encryptedCurrentSession = window.localStorage.getItem(AppConfig.sessionData)
+  let currentSessionJson = {}
+  if (encryptedCurrentSession) {
+    // decrypt
+    var bytes = AES.decrypt(encryptedCurrentSession, 'prismalink2019')
+    var decryptedData = bytes.toString(EncUtf8)
+    currentSessionJson = JSON.parse(decryptedData)
+  }
+  if(_.isEmpty(currentSessionJson)) console.log("Item doesn \'t exist")
+  else{
+    let sessionMeeting =currentSessionJson[sessionName]
+    sessionMeeting[sessionProperty]=sessionData
+    var ciphertext = AES.encrypt(JSON.stringify(sessionMeeting), 'prismalink2019')
     var encryptedData = ciphertext.toString()
     window.localStorage.setItem(AppConfig.sessionData,encryptedData)
   }

@@ -17,54 +17,47 @@ import Swal from 'sweetalert2'
 //Actions
 
 class SubContainer extends React.PureComponent {
-  constructor(props)
-  {
+  constructor(props){
     super(props)
   }
   // exclusion
-  _excludePages(pg,footer)
-  {
-      if(footer)
-      {
+  _excludePages(pg,footer){
+      if(footer){
         if(pg.includes(window.location.pathname)) return true
         else  return false
       }
-      else
-      {
-        if(window.location.pathname.split('/')[1] == '/concal' && !_.isEmpty(window.location.pathname.split('/')[2]))
-        {
+      else{
+        if(window.location.pathname.split('/')[1] == 'concal' && !_.isEmpty(window.location.pathname.split('/')[2])){
+          
           return true
         }
-        else
-        {
+        else{
+          console.log('Pagess else');
           if(pg.includes(window.location.pathname)) return true
           else  return false
         }
       }
   }
   async componentWillMount(){
-      const pg=['/','/home','/login','/waiting-room','/join-meeting','/signup','/concal/'] //List pages that can be entered without login
-      if(!this._excludePages(pg) || window.location.pathname.split('/')[1] == '/concal' && _.isEmpty(window.location.pathname.split('/')[2]))
-      {
-        if(window.location.pathname == '/manage-meeting') isLogin(true) 
-        else isLogin()
+      let pg=['/','/home','/login','/waiting-room','/join-meeting','/signup'] //List pages that can be entered without login
+      if(!this._excludePages(pg)){
+        isLogin(true)
       } 
-      else
+      pg=[]
+      if(!this._excludePages(pg))
       {
         await removeSpecificSession(AppConfig.sessionMeeting)
-      } 
+      }
   }
-  async componentDidMount()
-  {
+  async componentDidMount(){
     var prevLocalStorage=getSession(AppConfig.sessionUserData)
     window.addEventListener('storage',()=>{
-      if(!_.isEmpty(prevLocalStorage)&&_.isEmpty(getSession(AppConfig.sessionUserData)))
-      {
+      if(!_.isEmpty(prevLocalStorage)&&_.isEmpty(getSession(AppConfig.sessionUserData))){
         window.location="/"
       }
     })
   }
-  render () {
+  render (){
     //Pages using footer
     const pgFooter=['/','/home','me/manage-meeting','me/profile','me/manage-settings']
     const loc = window.location.pathname

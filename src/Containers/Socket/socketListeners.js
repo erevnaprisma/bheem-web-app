@@ -1,13 +1,13 @@
 import Swal from 'sweetalert2'
 //utils
-import {isLoggedIn, getSession, setSession} from '../../Utils/Utils'
+import {isLoggedIn, getSession, setSession,isValuePropertyExist} from '../../Utils/Utils'
 import AppConfig from '../../Config/AppConfig'
 //socket
 import io from 'socket.io-client'
 import {store} from '../Container'
 import _ from 'lodash'
 //sagas
-import {doCreateMeeting} from '../../Containers/HostMeeting/sagas'
+import {doCreateMeeting,} from '../../Containers/HostMeeting/sagas'
 //actions
 import SocketActions from '../../Containers/Streaming/redux'
 import JoinActions from '../../Containers/JoinMeeting/redux'
@@ -22,7 +22,6 @@ socketIo.on('requestToJoinHost', (msg) => {
 /////////////////HOST///////////////// On user join to meeting
 socketIo.on('sendRequestToHost', async(msg) => {
   console.log("SOOOOKKKEETTT User joined>>>>", msg)
-  console.log('API bheem !>>>>>',window.apiBheem)
   const {listParticipant, listWaitingRoom} = store.getState().streaming
   let list = []
   list.push(msg)
@@ -33,14 +32,29 @@ socketIo.on('sendRequestToHost', async(msg) => {
 })
 
 //On first entermeeting
+//get meeting list
 socketIo.on('meetingList',msg=>{
-  console.log("SOOOOKKKEETTT listmeeting>>>>", msg) 
+  console.log("SOOOOKKKEETTT listmeeting>>>>", msg)
+  const listParticipant=msg.meetingList 
+  store.dispatch(SocketActions.getListParticipant({listParticipant}))
 })
+//get waiting list
+socketIo.on('newWaitingList',msg=>{
+  console.log("SOOOOKKKEETTT waitinglist>>>>", msg)
+  if(isValuePropertyExist({obj:getSession(AppConfig.sessionMeeting),propName:'role',type:'valueOnly',value:'host'})){
+    console.log("DISPATCH waitinglist>>>>")
+    const listWaitingRoom=msg
+    store.dispatch(SocketActions.getListParticipant({listWaitingRoom}))
+  }
+})
+
+
 
 //On end meeting
 socketIo.on('endMeeting',msg=>{
   console.log("SOOOOKKKEETTT end meeting>>>>", msg)  
 })
+
 
 //on successfully join to meeting
 socketIo.on('succeessfullyAdmit', (msg) => {
@@ -78,45 +92,72 @@ socketIo.on('successfullyReject', (msg) => {
 /////////////////CLIENT///////////////
 // Step 1 Join | listening meeting need permission
 socketIo.on('needPermission', async(msg) => {
-  console.log('API bheem !>>>>>',window.apiBheem)
   console.log("SOOOOKKKEETTT needpermission>>>>", msg)
-  if (msg == "Waiting for host approval") {
+  console.log('session meeting>>>>>>',getSession(AppConfig.sessionMeeting));
+  console.log('session user>>>>>>',getSession(AppConfig.sessionUserData));
+  // if anonymous || not, need permission
+  if (msg.message == "Waiting for host approval"){
     store.dispatch(JoinActions.joinMeetingDone({isNeedPermissionToJoin: true}))
-  } else {
+    await console.log('session meet>>>>>>',getSession(AppConfig.sessionMeeting));
+    await setSession({
+      [AppConfig.sessionMeeting]: {
+        title:msg.meetingTitle,
+        userId:getSession(AppConfig.sessionUserData).id||msg.userId, //get from session or socket
+      }
+    })
+
+    console.log('session meeting 1>>>>>>',getSession(AppConfig.sessionMeeting));
+
+  }
+  //auth/not, doesn't need permission
+  else {
     const {meetingId} = await store.getState().joinmeeting
     await setSession({
       [AppConfig.sessionMeeting]: {
+        title:msg.title,
+        userId:getSession(AppConfig.userData).id||msg.userId, //get from session or socket
+        fullName:getSession(AppConfig.userData).fullName||getSession(AppConfig.sessionMeeting).fullName,
         meetingId,
-        needRequestToJoin: false,
         role: 'participant'
       }
-    })
-    // window.location = '/concal/' + meetingId
+    })  
+    console.log('session meeting 3>>>>>>',getSession(AppConfig.sessionMeeting)); 
+    window.location = '/concal/' + meetingId
   }
 })
+
 //Step 2 Join | listening meeting on accept
 socketIo.on('userPermission', async(msg) => {
   console.log("SOOOOKKKEETTT User permission soket>>", msg)
-  const meetingId = store.getState().streaming.meetingId
-  if (msg === 'REJECT') {
-    await store.dispatch(JoinActions.joinMeetingDone({isNeedPermissionToJoin: false}))
-    await Swal.fire({
-      title: 'Failed to Join Meeting',
-      text: 'Sorry your request to join has been rejected by host',
-      icon: 'error',
-      confirmButtonText: 'Ok',
-    })
-  } 
-  else
-  {
-    const userData = getSession(AppConfig.sessionUserData)
-    await setSession({
-      [AppConfig.sessionMeeting]: {
-        meetingId: msg.meetingId,
-        role: msg.role
-      }
-    })
-    window.location = '/concal/' + msg.meetingId
+  console.log('session meeting>>>>>>',getSession(AppConfig.sessionMeeting));
+  if(isValuePropertyExist({obj:msg,propName:'userId',type:'valueOnly',value:getSession(AppConfig.sessionMeeting).userId})){
+    const meetingData=getSession(AppConfig.sessionMeeting) 
+    // returend data {userId,fullName,meetingId,needRequestToJoin,role}
+    const meetingId = store.getState().streaming.meetingId
+
+    if (msg.message === 'REJECT') {
+      await store.dispatch(JoinActions.joinMeetingDone({isNeedPermissionToJoin: false}))
+      await Swal.fire({
+        title: 'Failed to Join Meeting',
+        text: 'Sorry your request to join has been rejected by host',
+        icon: 'error',
+        confirmButtonText: 'Ok',
+      })
+    } 
+    else
+    {
+      const meetingData=getSession(AppConfig.sessionMeeting) 
+      const userData = getSession(AppConfig.sessionUserData)
+      await setSession({
+        [AppConfig.sessionMeeting]: {
+          userId:userData.id||msg.userId,
+          fullName:userData.fullName||meetingData.fullName,
+          meetingId: msg.meetingId,
+          role: msg.role
+        }
+      })
+      window.location = '/concal/' + msg.meetingId
+    }
   } 
 })
 

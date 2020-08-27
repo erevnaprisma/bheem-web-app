@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects'
 import DashboardActions from './redux'
 import AppConfig from '../../Config/AppConfig'
-import {isLogin,setSession } from '../../Utils/Utils'
+import {isLogin,setSession, getSession } from '../../Utils/Utils'
 import _ from 'lodash'
 import {path,merge} from 'ramda'
 import {isNullOrUndefined} from 'util'
@@ -29,8 +29,7 @@ export function * doCreateMeeting (api,action) {
     if (!_.isEmpty(errorbody)) err.push({ message: errorbody })
     if (_.isEmpty(err)&& status==200) {
       const errors=''
-      setSession({[AppConfig.sessionMeeting]: {meetingId:data.meetingId,needRequestToJoin:true,role:'host'}})
-      
+      setSession({[AppConfig.sessionMeeting]: {meetingId:data.meetingId,role:'host',title,userId:getSession(AppConfig.sessionUserData).id},fullName:getSession(AppConfig.sessionUserData).fullName})
       yield put(HostActions.createMeetingDone({status,errors,title,host,createdBy,startDate,endDate,meetingId}))
       Swal.fire({
         title: 'Success',

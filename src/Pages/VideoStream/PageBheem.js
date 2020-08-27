@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import Helmet from 'react-helmet'
 import AppConfig from '../../Config/AppConfig'
-import {getSession} from '../../Utils/Utils'
+import {getSession,updateSpecificSesssion,isValuePropertyExist} from '../../Utils/Utils'
 import {connect} from 'react-redux'
 import {Images,Colors} from '../../Themes'
 import Loader from '../../Components/Loader'
 import JoinActions from '../../Containers/JoinMeeting/redux'
 import StreamingActions, { setApi } from '../../Containers/Streaming/redux'
+import _ from 'lodash'
 
 import {Image} from '../../Themes'
 import { makeStyles } from '@material-ui/core/styles';
@@ -23,8 +24,7 @@ import socketIo from '../../Containers/Socket/socketListeners'
 import {BheemVidStreamComponent,do_mute_specific,do_mute_everyone,toogle_lobby} from './BheemVidStreamComponent'
 
 class PageBheem extends Component {
-  constructor(props)
-  {
+  constructor(props){
     super(props)
     this._allowed=this._allowed.bind(this)
     this._notAllowed=this._notAllowed.bind(this)
@@ -40,95 +40,89 @@ class PageBheem extends Component {
   }
 
   //Host functions
-  _admitParticipant(userId,socketId)
-  {
+  _admitParticipant(data){
     const userData=getSession(AppConfig.sessionUserData)
     const meetingId=this.props.match.params.room
-    socketIo.emit('admitUserToJoinHost', { meetingId, userId: userId, hostId:userData.id, socketId: socketId })
+    console.log('data>>>',data);
+    if(data.status == 'Anonymous'){
+      socketIo.emit('admitUserToJoinHost', { status:'Anonymous',meetingId, userId: data.userId, hostId:userData.id, socketId: data.socketId,username:data.username })
+    }
+    else{
+      socketIo.emit('admitUserToJoinHost', { meetingId, userId: data.userId, hostId:userData.id, socketId: data.socketId, username:data.username})
+    }
   } 
-  _rejectParticipant(userId,socketId)
-  {
-    const userData=getSession(AppConfig.sessionUserData)
-    const meetingId=this.props.match.params.room
-    socketIo.emit('rejectUserToJoinHost', {socketId,meetingId, userId, hostId:userData.id })
-  }  
-  //Host functions
 
+  _rejectParticipant(data){
+    console.log('reject dataa>>>',data);
+    const userData=getSession(AppConfig.sessionMeeting)
+    const meetingId=this.props.match.params.room
+    if(_.has(data,'status')|| data.status == 'Anonymous'){
+      socketIo.emit('rejectUserToJoinHost', {status:'Anonymous',socketId:data.socketId,meetingId, userId:data.userId, hostId:userData.userId})
+    }
+    else{
+      socketIo.emit('rejectUserToJoinHost', {socketId:data.socketId,meetingId, userId:data.userId, hostId:getSession(AppConfig.sessionData).id}) 
+    }
+  }  
+
+  //Host functions
   _listParticipant()
   {
-    // const waitingRoom=[
-    //               {userId:'34234234234',username:'ungke aloringatu pangaribuan',socketId:'342342342334'},
-    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-    //               {userId:'34234234234',username:'ungke',socketId:'342342342334'},
-    //             ]
-    // const participants=[
-    //   {userId:'34234234234',fullName:'ungke aloringatu pangaribuan',socketId:'342342342334'},
-    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-    //   {userId:'34234234234',fullName:'ungke',socketId:'342342342334'},
-    // ]
     const waitingRoom=this.props.listWaitingRoom||[]
     const participants=this.props.listParticipant||[]
     
-    console.log("Bhm list Waiting rooom comp>>>",waitingRoom)
-    console.log("Bhm list participant comp>>>",participants)
+    // console.log("Bhm list Waiting rooom comp>>>",waitingRoom)
+    // console.log("Bhm list participant comp>>>",participants)
+    let myMeetingData=getSession(AppConfig.sessionMeeting) //get meeting data
+    
     return(
       // <Draggable>
           <div className="bheem-list" style={{background:'white'}} id={this.state.listParticipantContainerId}>
                   <div className="main-header-list">Participants ({waitingRoom.length+participants.length})</div>
-                  <div>
-                      <label className="mt-2 head-list-participant">Waiting room({waitingRoom.length})</label>
-                        <ul className="container-list-waiting-room" >
-                          {waitingRoom.length>0 && waitingRoom.map((r,i)=>(
-                            <li key={i}>
-                                <div className="container-userinfo-wrapper">
-                                  <img style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}} src={Images.Avatar}/>
-                                  <span>{r.username}</span> 
-                                </div>
-                                <div className="container-button-wrapper">
-                                  <button className="" onClick={()=>this._admitParticipant(r.userId,r.socketId)}>Admit</button>
-                                  &nbsp;
-                                  <button onClick={()=>this._rejectParticipant(r.userId,r.socketId)}>Reject</button>
-                                </div>
-                            </li>
-                          ))}
-                        </ul>
-                  </div>
-                  {participants.length>0 &&
+                  
+                  {getSession(AppConfig.sessionMeeting).role == 'host' &&
                     <div>
-                        <label className="mt-2 head-list-participant">List participant room({participants.length})</label>
-                          <ul className="container-list-joined">
-                            {participants.map((r,i)=>(
-                                <li  key={i}>
+                        <label className="mt-2 head-list-participant">Waiting room({waitingRoom.length})</label>
+                          <ul className="container-list-waiting-room" >
+                            {waitingRoom.length>0 && waitingRoom.map((r,i)=>(
+                              <li key={i}>
+                                {console.log('data user>>>>',r)}
                                   <div className="container-userinfo-wrapper">
                                     <img style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}} src={Images.Avatar}/>
-                                    <span>{r.fullName}</span> 
+                                    <span>{r.username}</span> 
                                   </div>
                                   <div className="container-button-wrapper">
-                                    <button className="" onClick={()=>this._admitParticipant(r.userId,r.socketId)}>Mute</button>
+                                    <button className="" onClick={()=>this._admitParticipant(r)}>Admit</button>
                                     &nbsp;
-                                    <button>Put to waiting room</button>
+                                    <button onClick={()=>this._rejectParticipant(r)}>Reject</button>
                                   </div>
-                                </li>
-                            ))}
+                              </li>
+                            )
+                            )}
                           </ul>
+                    </div>
+                  }
+                  {participants.length>0 &&
+                    <div className="wrapper-list-participant">
+                        <label className="mt-2 head-list-participant">List participant room({participants.length})</label>
+                        <ul className="container-list-joined">
+                          {participants.map((r,i)=>(
+                              <li  key={i}>
+                                <div className="container-userinfo-wrapper">
+                                  <img style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}} src={Images.Avatar}/>
+                                  <span>{r.fullName}</span> 
+                                </div>
+                                <div className="container-button-wrapper">
+                                  {r.userId == myMeetingData.userId && r.role == 'Host' ? `(Me - Host)` : ''}
+                                  {r.userId == myMeetingData.userId && r.role != 'Host' ? `(Me)` : ''}
+                                  {r.userId != myMeetingData.userId && r.role == 'Host' ? `(Host)` : ''}
+                                  &nbsp; 
+                                  <button className="" onClick={()=>this._admitParticipant(r.userId,r.socketId)}>Mute</button>
+                                  &nbsp;
+                                  <button>Put to waiting room</button>
+                                </div>
+                              </li>
+                          ))}
+                        </ul>
                     </div>
                   }
           </div>
@@ -189,22 +183,30 @@ class PageBheem extends Component {
  
   _allowed(){
     const meetingId=this.props.match.params.room
-    const { topic,allowed,needPermission,isExist,isRequesting,meetingData } = this.props
+    const { topic,allowed,needPermission,isExist,isRequesting} = this.props
+    const meetingData=getSession(AppConfig.sessionMeeting)
     const userData=getSession(AppConfig.sessionUserData)
     const opt={
                  containerId:this.state.videoStreamerContainerId,
                  className:'bheem-video-stream',
-                 isMuteVideo:this.state.jVideo,
-                 isMuteAudio:this.state.jAudio,
-                 roomName:'Coba',
+                //  isMuteVideo:this.state.jVideo,
+                //  isMuteAudio:this.state.jAudio,
+                 roomName:getSession(AppConfig.sessionMeeting).title||'Bheeem meeting conference',
                  roomId:meetingId,
                  userInfo:{
-                  id:userData.id||navigator.userAgent,
+                  id:userData.id||meetingData.userId,
                   email:userData.email||'Anonymous@mail.com',
-                  displayName:userData.fullName||'anonymous'
+                  displayName:userData.fullName||meetingData.fullName
                  }
               }
-    
+  //  console.log('Meeting session>>>>', getSession(AppConfig.sessionMeeting));           
+  //  console.log('api data>>>',{containerId:this.state.videoStreamerContainerId,className:'bheem-video-stream',roomName:getSession(AppConfig.sessionMeeting).title,roomId:meetingId,
+  //   userInfo:{
+  //    id:userData.id||'34234234234',
+  //    email:userData.email||'Anonymous@mail.com',
+  //    displayName:userData.fullName||'anonymous'
+  //  }}); 
+   
     return(
       <div>
         <Helmet>
@@ -240,19 +242,26 @@ class PageBheem extends Component {
 
   async componentWillMount()
   {
-    this.props.doReset()
+    const meetingData=await getSession(AppConfig.sessionMeeting)
     const meetingId=this.props.match.params.room
+    // Get all user list on first join meeting
+    socketIo.emit("afterUserJoinMeeting",{fullName:meetingData.fullName,userId:meetingData.id,meetingId:meetingId})
+    this.props.doReset()
     await this.props.checkIsExist({meetingId})
   }
+
   componentDidMount()
   {
+    
+    // console.log('Is property exist>>>>>>>',isValuePropertyExist({obj:getSession(AppConfig.sessionUserData),propName:'id',type:'valueOnly',value:'5f3115316bd81c1958a19914'}));
+    console.log('Content session meeting>>>',getSession(AppConfig.sessionMeeting));
     //open sidebar
     let mainSize="80vw"
     let sidebarSize="20vw"
     if(document.getElementById(this.state.videoStreamerContainerId) && document.getElementById(this.state.listParticipantContainerId)){
       document.getElementById(this.state.videoStreamerContainerId).style.width = mainSize;
       document.getElementById(this.state.listParticipantContainerId).style.width = sidebarSize;
-      document.getElementById(this.state.listParticipantContainerId).style.display = 'inline-block';
+      document.getElementById(this.state.listParticipantContainerId).style.display = 'flex';
     }
 
     const meetingId=this.props.match.params.room
@@ -263,12 +272,9 @@ class PageBheem extends Component {
 
   render () {
     const meeting=getSession(AppConfig.sessionMeeting)
-    let ApiStreaming=null
-    console.log("api streaming>>>>",this.state.apiBheem)
-    console.log("Session meeting>>",getSession(AppConfig.sessionMeeting))
     return (
       <div style={{background:`url(${Images.HomeIllus}) center`,backgroundSize:'contain'}}>
-        <button style={{position:'absolute'}} onClick={()=> this._handleSidebarUserList()}>toogle audio</button> 
+        
         {meeting&& this._allowed()}
         {!meeting&& this._notAllowed()}
       </div>
@@ -283,7 +289,7 @@ const mapStateToProps = (state, ownProps) => {
     isExist: state.joinmeeting.isExist,
     needPermission:state.streaming.needPermission,
     allowed:state.streaming.allowed,
-    listparticipant:state.streaming.listParticipant,
+    listParticipant:state.streaming.listParticipant,
     listWaitingRoom:state.streaming.listWaitingRoom,
     meetingData:state.streaming.meetingData
   }
