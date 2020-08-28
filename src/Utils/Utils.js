@@ -164,16 +164,14 @@ export const isLogin = (route)=>{
 
   if(_.isEmpty(getSession(AppConfig.sessionUserData)) || new Date().getTime()>=getSession(AppConfig.sessionExp)){
       destroySession()
-      if(window.location.pathname == 'host-meeting') window.location="/login"
-      else window.location="/"
       if(route)
       {
+        window.location="/login"
         Swal.fire({
           title: 'Expire',
           text: 'Session expired or your not logged in please relogin to your account',
           icon: 'error',
-          confirmButtonText: 'Ok',
-          onClose:()=>window.location="/"
+          confirmButtonText: 'Ok'
         })
       }
     }

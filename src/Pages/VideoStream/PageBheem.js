@@ -84,7 +84,7 @@ class PageBheem extends Component {
                         <label className="mt-2 head-list-participant">Waiting room({waitingRoom.length})</label>
                           <ul className="container-list-waiting-room" >
                             {waitingRoom.length>0 && waitingRoom.map((r,i)=>(
-                              <li key={i}>
+                              <li key={i} className="row">
                                 {console.log('data user>>>>',r)}
                                   <div className="container-userinfo-wrapper">
                                     <img style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}} src={Images.Avatar}/>
@@ -96,17 +96,16 @@ class PageBheem extends Component {
                                     <button onClick={()=>this._rejectParticipant(r)}>Reject</button>
                                   </div>
                               </li>
-                            )
-                            )}
+                            ))}
                           </ul>
                     </div>
                   }
                   {participants.length>0 &&
                     <div className="wrapper-list-participant">
                         <label className="mt-2 head-list-participant">List participant room({participants.length})</label>
-                        <ul className="container-list-joined">
+                        <ul className="container-list-joined ">
                           {participants.map((r,i)=>(
-                              <li  key={i}>
+                              <li  key={i} className="row">
                                 <div className="container-userinfo-wrapper">
                                   <img style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}} src={Images.Avatar}/>
                                   <span>{r.fullName}</span> 
@@ -189,15 +188,14 @@ class PageBheem extends Component {
     const opt={
                  containerId:this.state.videoStreamerContainerId,
                  className:'bheem-video-stream',
-                //  isMuteVideo:this.state.jVideo,
-                //  isMuteAudio:this.state.jAudio,
                  roomName:getSession(AppConfig.sessionMeeting).title||'Bheeem meeting conference',
                  roomId:meetingId,
                  userInfo:{
                   id:userData.id||meetingData.userId,
                   email:userData.email||'Anonymous@mail.com',
                   displayName:userData.fullName||meetingData.fullName
-                 }
+                 },
+                 configOverwrite: { startWithAudioMuted: true,startWithVideoMuted:false },
               }
   //  console.log('Meeting session>>>>', getSession(AppConfig.sessionMeeting));           
   //  console.log('api data>>>',{containerId:this.state.videoStreamerContainerId,className:'bheem-video-stream',roomName:getSession(AppConfig.sessionMeeting).title,roomId:meetingId,
