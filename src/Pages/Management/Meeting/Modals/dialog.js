@@ -27,7 +27,7 @@ export default class dialog extends Component {
         const permission=this.state.ask ?'Yes' : 'No'
         const meetingId=this.props.dataForm.id
         console.log("Submitted>>>",{title,start_date,end_date,permission,meetingId})
-        // this.props.cb({title,start_date,end_date,permission,meetingId})
+        this.props.cb({title,start_date,end_date,permission,meetingId})
     }
    _form()
     {

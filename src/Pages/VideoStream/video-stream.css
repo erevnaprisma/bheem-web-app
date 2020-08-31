@@ -28,7 +28,7 @@
     width: 100%;
     padding: 5px;
     font-size: 13px;
-    font-weight: bold;
+font-weight: bold;
     
     /* -webkit-box-shadow: inset -1px 5px 10px 0px rgba(0,0,0,0.15);
     -moz-box-shadow: inset -1px 5px 10px 0px rgba(0,0,0,0.15);
@@ -60,20 +60,23 @@
     overflow: hidden;
 }
 
+.live-search-bar{
+
+}
 
 .container-list-waiting-room{
     flex: 0 1 auto;
     overflow: scroll;
-    list-style-type: none;
+    /* list-style-type: none;
     min-height: 20vh;
-    max-height: 20vh;
+    max-height: 20vh; */
     margin: 3px;
     padding:0px;
     width: auto;
     border-radius: 10px 10px 10px 10px;
     -moz-border-radius: 10px 10px 10px 10px;
     -webkit-border-radius: 10px 10px 10px 10px;
-    border: 3px solid #ff5275;
+    /* border: 3px solid #ff5275; */
 
     -webkit-order: 0;
     -ms-flex-order: 0;

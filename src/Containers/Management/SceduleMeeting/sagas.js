@@ -134,7 +134,7 @@ export function * cancelScheduleMeeting (api, action) {
       text:'Meeting canceled',
       icon: 'success',
       confirmButtonText: 'Ok',
-      onClose:()=>window.location="/manage-meeting"
+      onClose:()=>window.location="/me/manage-meeting"
     })
     
   }

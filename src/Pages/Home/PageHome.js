@@ -18,7 +18,6 @@ import Soket from '../../Containers/Socket/socketListeners'
 
 export default class PageHome extends PureComponent {
   render() {  
-    console.log("soket>>>>",Soket)
     return (
      <div className="navbar-header visible-xs">
        <Helmet>
@@ -35,21 +34,3 @@ export default class PageHome extends PureComponent {
     )
   }
 }
-
-// const mapStateToProps = (state, ownProps) => {
-  
-//   return {
-//   }
-// }
-// const mapDispatchToProps = dispatch => {
-  
-//   return {
-    
-//   }
-// }
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(
-//   injectIntl(withRouter(PageHome))
-// )

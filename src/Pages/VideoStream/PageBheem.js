@@ -32,6 +32,7 @@ class PageBheem extends Component {
     this._admitParticipant=this._admitParticipant.bind(this) 
     this._rejectParticipant=this._rejectParticipant.bind(this) 
     this._handleSidebarUserList=this._handleSidebarUserList.bind(this)
+    this._searchParticipant=this._searchParticipant.bind(this)
     this.state={
       isShowSidebar:true,
       listParticipantContainerId:'list-users-joined',
@@ -43,7 +44,7 @@ class PageBheem extends Component {
   _admitParticipant(data){
     const userData=getSession(AppConfig.sessionUserData)
     const meetingId=this.props.match.params.room
-    console.log('data>>>',data);
+    this.props.putToJoinList(data.userId)
     if(data.status == 'Anonymous'){
       socketIo.emit('admitUserToJoinHost', { status:'Anonymous',meetingId, userId: data.userId, hostId:userData.id, socketId: data.socketId,username:data.username })
     }
@@ -64,11 +65,23 @@ class PageBheem extends Component {
     }
   }  
 
+  _searchParticipant(query,list){
+    var regex_qry=query.toLowerCase();
+    var regex = new RegExp(regex_qry)
+    var listSearch = list.filter(e=>{
+      console.log('match>>> ', e.fullName, " >> ",e.fullName.match(regex));
+      return e.fullName.toLowerCase().match(regex)
+    })
+    console.log('List search>>>',listSearch);
+    this.props.doSearch({listSearch})
+  }
+
   //Host functions
   _listParticipant()
   {
     const waitingRoom=this.props.listWaitingRoom||[]
-    const participants=this.props.listParticipant||[]
+    const participants=_.isEmpty(this.props.listSearch) ? this.props.listParticipant : this.props.listSearch
+    const joiningList=this.props.listOnJoining||[]
     
     // console.log("Bhm list Waiting rooom comp>>>",waitingRoom)
     // console.log("Bhm list participant comp>>>",participants)
@@ -77,24 +90,29 @@ class PageBheem extends Component {
     return(
       // <Draggable>
           <div className="bheem-list" style={{background:'white'}} id={this.state.listParticipantContainerId}>
-                  <div className="main-header-list">Participants ({waitingRoom.length+participants.length})</div>
-                  
-                  {getSession(AppConfig.sessionMeeting).role == 'host' &&
+                  <div className="main-header-list">Participants ({myMeetingData.role==='host' ? waitingRoom.length+participants.length : participants.length})</div>
+                  {getSession(AppConfig.sessionMeeting).role == 'host' && !_.isEmpty(waitingRoom) &&
                     <div>
                         <label className="mt-2 head-list-participant">Waiting room({waitingRoom.length})</label>
                           <ul className="container-list-waiting-room" >
                             {waitingRoom.length>0 && waitingRoom.map((r,i)=>(
                               <li key={i} className="row">
-                                {console.log('data user>>>>',r)}
                                   <div className="container-userinfo-wrapper">
                                     <img style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}} src={Images.Avatar}/>
                                     <span>{r.username}</span> 
                                   </div>
-                                  <div className="container-button-wrapper">
-                                    <button className="" onClick={()=>this._admitParticipant(r)}>Admit</button>
-                                    &nbsp;
-                                    <button onClick={()=>this._rejectParticipant(r)}>Reject</button>
-                                  </div>
+                                    {(!joiningList.includes(r.usserId) &&
+                                      <div className="container-button-wrapper">
+                                          <button className="" onClick={()=>this._admitParticipant(r)}>Admit</button>&nbsp;
+                                          <button onClick={()=>this._rejectParticipant(r)}>Reject</button>
+                                        
+                                      </div>
+                                    )}
+                                     {(joiningList.includes(r.usserId) &&
+                                      <div className="container-button-wrapper">
+                                        {joiningList.includes(r.usserId) && 'Joining...'}
+                                      </div>
+                                     )}
                               </li>
                             ))}
                           </ul>
@@ -103,6 +121,15 @@ class PageBheem extends Component {
                   {participants.length>0 &&
                     <div className="wrapper-list-participant">
                         <label className="mt-2 head-list-participant">List participant room({participants.length})</label>
+                        <div style={{display:'flex',flexDirection:'row'}} className="ml-2 mr-2">
+                          <input style={{width:'100%',borderRadius:20,fontSize:12,padding:3}} id="bheem-search-participant" placeholder="Search participant...." onChange={e=>this._searchParticipant(e.target.value,this.props.listParticipant)}/>
+                          <i className="material-icons" style={{cursor:'pointer'}} onClick={()=>{
+                            var search=document.getElementById("bheem-search-participant") 
+                            search.value=''
+                            this.props.doSearch({listSearch:[]})
+                          }}>clear</i>
+                        </div>
+
                         <ul className="container-list-joined ">
                           {participants.map((r,i)=>(
                               <li  key={i} className="row">
@@ -287,13 +314,17 @@ const mapStateToProps = (state, ownProps) => {
     isExist: state.joinmeeting.isExist,
     needPermission:state.streaming.needPermission,
     allowed:state.streaming.allowed,
+    listSearch:state.streaming.listSearch,
     listParticipant:state.streaming.listParticipant,
     listWaitingRoom:state.streaming.listWaitingRoom,
+    listJoining:state.streaming.listOnJoining,
     meetingData:state.streaming.meetingData
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
+    doSearch:data => dispatch(StreamingActions.doSearch(data)),
+    putToJoinList:data => dispatch(StreamingActions.putToJoiningList(data)),
     checkIsExist:data => dispatch(JoinActions.checkIsexistMeeting(data)),
     doReset:data => dispatch(StreamingActions.resetStreaming(data)),
   }

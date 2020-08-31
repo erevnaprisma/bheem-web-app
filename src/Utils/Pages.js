@@ -7,7 +7,6 @@ import Signup from '../Pages/SingUp/PageSignup'
 import HostMeeting from '../Pages/HostMeeting/PageHostMeeting'
 import JoinMeeting from '../Pages/JoinMeeting/PageJoinMeeting'
 import PageManagement from '../Pages/Management/PageManageMeeting'
-import PageWaitingRoom from '../Pages/WaitingRoom/PageWaitingRoom'
 import PageVidStreaming from '../Pages/VideoStream/PageBheem'
 import socketIO from '../Containers/Socket/socketListeners'
 
@@ -19,7 +18,6 @@ const lp = {
   '/host-meeting': { exact:true,route: '/host-meeting', path: '/host-meeting', component: HostMeeting },
   '/join-meeting': { exact:true,route: '/join-meeting', path: '/join-meeting', component: JoinMeeting },
   '/me/': { exact:false,route: '/me', path: '/me/:page', component: PageManagement },
-  '/waiting-room': { exact:true,route: '/waiting-room', path: '/waiting-room', component: PageWaitingRoom },
   '/concal': { exact:true,route: '/concal', path: '/concal/:room/', component: PageVidStreaming },
 }
 export const pageList = _.map(lp, (v) => v)

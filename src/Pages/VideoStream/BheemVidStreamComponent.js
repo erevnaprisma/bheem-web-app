@@ -3,7 +3,7 @@ import {store} from '../../Containers/Container'
 import StreamingAction from '../../Containers/Streaming/redux'
 import Loader from '../../Components/Loader'
 import AppConfig from '../../Config/AppConfig'
-import {setSession,getSession} from '../../Utils/Utils'
+import {setSession,getSession,isValuePropertyExist} from '../../Utils/Utils'
 import socketIo from '../../Containers/Socket/socketListeners'
 import { listeners } from 'process'
 import swal from 'sweetalert2'
@@ -48,9 +48,14 @@ export const BheemVidStreamComponent = ({ opt }) => {
     })
 
     _jitsi.addEventListener('participantLeft',u=>{
-      console.log('JITSI EVENT Participant left joined>>',u);
+      console.log('JITSI EVENT Participant left>>',u);
       // socketIo.emit('')
     })
+    _jitsi.addEventListener('participantRoleChanged',u=>{
+      console.log('JITSI EVENT Participant role change>>',u);
+      // socketIo.emit('')
+    })
+
     bheemApi=_jitsi
     setJitsi(_jitsi)
   }

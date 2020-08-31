@@ -27,14 +27,12 @@ import { title } from 'process'
 
 
 class PageManageMeeting extends PureComponent {
-  constructor(props)
-  {
+  constructor(props){
     super(props)
     this._onClickLink=this._onClickLink.bind(this)
     this._generateTitle=this._generateTitle.bind(this)
   }
-  _generateTitle(list)
-  {
+  _generateTitle(list){
     var title=null
     const param=this.props.match.params.page
     list.map((r,i)=>{
@@ -44,11 +42,15 @@ class PageManageMeeting extends PureComponent {
     }) 
     return title   
   }
-  _onClickLink(path)
-  {
+  _isInclude(listPages,path){
+    const list=listPages.filter(e=> e.name === path)
+    if(list.length > 0) return true
+    return false
+  }
+  _onClickLink(path){
     this.props.history.replace({pathname:path})
   }
-  render() {
+  render(){
     const {fetchMeetings} = this.props
     const listPages=[
       {name:'Manage Schedule Meeting',path:'manage-meeting',icon:'dashboard',comp:<Manage/>},
@@ -56,6 +58,8 @@ class PageManageMeeting extends PureComponent {
       {name:'Account Settings',path:'account-settings',icon:'account_box',comp:<AccountSetting/>}
     ]
     const param=this.props.match.params.opt
+    // if(param == null) window.location='/'
+    // if(this._isInclude(listPages,param)) window.location='/'
     return (
       <div>
         <Helmet>
@@ -74,7 +78,7 @@ class PageManageMeeting extends PureComponent {
                     <ul className="nav nav-tabs" data-tabs="tabs">
                       {listPages.map((r,i)=>(
                         <li className="nav-item" key={i}>
-                          <a className={param ==r.path ? 'nav-link active' : 'nav-link' } href={'#'+r.path} data-toggle="tab" onClick={()=>this._onClickLink(r.path)}>
+                          <a className={param === r.path ? 'nav-link active' : 'nav-link' } href={'#'+r.path} data-toggle="tab" onClick={()=>this._onClickLink(r.path)}>
                           <i className="material-icons">{r.icon}</i>
                           {r.name}
                           </a>
