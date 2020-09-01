@@ -23,12 +23,17 @@
     color: black;
     font-weight: bold;
 }
+.sub-main-header-list{
+    display: inline-flex;
+    align-self: center;
+}
+
 .head-list-participant{
     color: black;
     width: 100%;
     padding: 5px;
     font-size: 13px;
-font-weight: bold;
+    font-weight: bold;
     
     /* -webkit-box-shadow: inset -1px 5px 10px 0px rgba(0,0,0,0.15);
     -moz-box-shadow: inset -1px 5px 10px 0px rgba(0,0,0,0.15);
@@ -126,6 +131,7 @@ font-weight: bold;
     -webkit-align-self: flex-start;
     -ms-flex-item-align: start;
     align-self: flex-start;
+    max-width: 11.5vw;
 }
 .container-button-wrapper{
     justify-items: center;
@@ -154,11 +160,18 @@ font-weight: bold;
     border-radius: 2em;
 }
 .container-userinfo-wrapper > span {
+    overflow: hidden;   
     white-space: nowrap;
     text-overflow: ellipsis;
     margin:0px;
     margin-left: 3px;
+    max-width: 100%;
+}
 
+.bheem-setting-section{
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
 }
 
 

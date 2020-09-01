@@ -11,9 +11,7 @@ const loginPath = basePath + '/login'
 class App extends Component {
   constructor (props) {
     super(props)
-    this.unlisten = this.props.history.listen((location, action) => {
-      this.checkLogin(window.location.pathname)
-    })
+    
   }
   componentWillUnmount () {
     this.unlisten()

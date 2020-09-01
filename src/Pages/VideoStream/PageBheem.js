@@ -90,7 +90,13 @@ class PageBheem extends Component {
     return(
       // <Draggable>
           <div className="bheem-list" style={{background:'white'}} id={this.state.listParticipantContainerId}>
-                  <div className="main-header-list">Participants ({myMeetingData.role==='host' ? waitingRoom.length+participants.length : participants.length})</div>
+                  <div className="main-header-list">
+                    <div className="sub-main-header-list">
+                       Participants ({myMeetingData.role==='host' ? waitingRoom.length+participants.length : participants.length})
+                        <span className="material-icons">lock</span>
+                        <span className="material-icons">lock_open</span>
+                    </div>
+                  </div>
                   {getSession(AppConfig.sessionMeeting).role == 'host' && !_.isEmpty(waitingRoom) &&
                     <div>
                         <label className="mt-2 head-list-participant">Waiting room({waitingRoom.length})</label>
@@ -108,11 +114,12 @@ class PageBheem extends Component {
                                         
                                       </div>
                                     )}
-                                     {(joiningList.includes(r.usserId) &&
+                                    {console.log('Joining Status>>>',joiningList.includes(r.usserId))}
+                                    {(joiningList.includes(r.usserId) &&
                                       <div className="container-button-wrapper">
                                         {joiningList.includes(r.usserId) && 'Joining...'}
                                       </div>
-                                     )}
+                                    )}
                               </li>
                             ))}
                           </ul>
@@ -136,11 +143,11 @@ class PageBheem extends Component {
                                 <div className="container-userinfo-wrapper">
                                   <img style={{alignSelf:'center',width:20,height:20,borderRadius:'100%',background:'black'}} src={Images.Avatar}/>
                                   <span>{r.fullName}</span> 
-                                </div>
-                                <div className="container-button-wrapper">
                                   {r.userId == myMeetingData.userId && r.role == 'Host' ? `(Me - Host)` : ''}
                                   {r.userId == myMeetingData.userId && r.role != 'Host' ? `(Me)` : ''}
                                   {r.userId != myMeetingData.userId && r.role == 'Host' ? `(Host)` : ''}
+                                </div>
+                                <div className="container-button-wrapper">
                                   &nbsp; 
                                   <button className="" onClick={()=>this._admitParticipant(r.userId,r.socketId)}>Mute</button>
                                   &nbsp;
@@ -151,6 +158,20 @@ class PageBheem extends Component {
                         </ul>
                     </div>
                   }
+                  <div className="bheem-setting-section">
+                        <div style={{flex:1}}>
+                          <button type="button" class="btn btn-primary" onClick={()=>do_mute_everyone()}>Mute all</button>
+                        </div>
+                        <div class="dropdown show flex-end ">
+                          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i className="material-icons">more_vert</i> More
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li class="dropdown-item">Lock meeting</li>
+                            <li class="dropdown-item">End Meeting</li>
+                          </div>
+                      </div>
+                  </div>
           </div>
       //</Draggable> 
     )
@@ -238,6 +259,7 @@ class PageBheem extends Component {
           <title>{'Bheem Conference Call'}</title>
         </Helmet> 
           <div className="row" style={{margin:0,padding:0}}>
+            <button style={{position:'absolute',zIndex:1000}} onClick={()=>this._handleSidebarUserList()}>Toogle Sidebar</button>
             <BheemVidStreamComponent style={{height:'100%',width:'100%'}}  opt={opt}/>
             {this._listParticipant()}
           </div>
