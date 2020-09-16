@@ -17,46 +17,43 @@ import socketIo from './socketListeners'
 // Step 1 Join | listening meeting need permission
 export const onGetIsNeedPermission = (socketIo)=>{
     socketIo.on('needPermission', async(msg) => {
-        console.log("SOOOOKKKEETTT needpermission>>>>", msg)
-        console.log('session meeting>>>>>>',getSession(AppConfig.sessionMeeting));
-        console.log('session user>>>>>>',getSession(AppConfig.sessionUserData));
-        // if anonymous || not, need permission
-        if (msg.message == "Waiting for host approval"){
-          store.dispatch(JoinActions.joinMeetingDone({isNeedPermissionToJoin: true}))
-          await console.log('session meet>>>>>>',getSession(AppConfig.sessionMeeting));
-          await setSession({
-            [AppConfig.sessionMeeting]: {
-              title:msg.meetingTitle,
-              userId:getSession(AppConfig.sessionUserData).id||msg.userId, //get from session or socket
-            }
-          })
-      
-          console.log('session meeting 1>>>>>>',getSession(AppConfig.sessionMeeting));
-      
-        }
-        //auth/not, doesn't need permission
-        else {
-          const {meetingId} = await store.getState().joinmeeting
-          await setSession({
-            [AppConfig.sessionMeeting]: {
-              title:msg.title,
-              userId:getSession(AppConfig.userData).id||msg.userId, //get from session or socket
-              fullName:getSession(AppConfig.userData).fullName||getSession(AppConfig.sessionMeeting).fullName,
-              meetingId,
-              role: 'participant'
-            }
-          })  
-          console.log('session meeting 3>>>>>>',getSession(AppConfig.sessionMeeting)); 
-          window.location = '/concal/' + meetingId
-        }
-      })
+      console.log("SOOOOKKKEETTT needpermission>>>>", msg)
+      // console.log('session meeting>>>>>>',getSession(AppConfig.sessionMeeting));
+      // console.log('session user>>>>>>',getSession(AppConfig.sessionUserData));
+      // if anonymous || not, need permission
+      if(msg.message == "Waiting for host approval"){
+        store.dispatch(JoinActions.joinMeetingDone({isNeedPermissionToJoin: true}))
+        await setSession({
+          [AppConfig.sessionMeeting]: {
+            title:msg.meetingTitle,
+            userId:getSession(AppConfig.sessionUserData).id||msg.userId, //get from session or socket
+          }
+        })
+      }
+      //auth/not, doesn't need permission
+      else {
+        console.log('doesn\'t need permission');
+        const {meetingId} = await store.getState().joinmeeting
+        await setSession({
+          [AppConfig.sessionMeeting]: {
+            title:msg.title,
+            userId:getSession(AppConfig.userData).id||msg.userId, //get from session or socket
+            fullName:getSession(AppConfig.userData).fullName||getSession(AppConfig.sessionMeeting).fullName,
+            meetingId,
+            role: 'participant'
+          }
+        })  
+        window.location = '/concal/' + meetingId
+      }
+    })
 }
-  //Step 2 Join | listening meeting on accept
+  //Step 2 Join | listening meeting on accept || or doens't need permission
 export const onGetAdmitStatus = (socketIo) =>{
     socketIo.on('userPermission', async(msg) => {
-        console.log("SOOOOKKKEETTT User permission soket>>", msg)
-        console.log('session meeting>>>>>>',getSession(AppConfig.sessionMeeting));
-        if(isValuePropertyExist({obj:msg,propName:'userId',type:'valueOnly',value:getSession(AppConfig.sessionMeeting).userId})){
+      console.log("SOOOOKKKEETTT userPermission>>>>", msg)
+      const meetingData=getSession(AppConfig.sessionMeeting)
+
+      if(meetingData.userId === msg.userId){ 
           const meetingData=getSession(AppConfig.sessionMeeting) 
           // returend data {userId,fullName,meetingId,needRequestToJoin,role}
           const meetingId = store.getState().streaming.meetingId
@@ -84,7 +81,22 @@ export const onGetAdmitStatus = (socketIo) =>{
             })
             window.location = '/concal/' + msg.meetingId
           }
-        } 
-      })
+      }
+      else if(msg.message === 'ADMIT'){
+        console.log('ON ADMITTT????');
+        if(_.isEmpty(getSession(AppConfig.sessionMeeting).meetingId)){
+          await store.dispatch(JoinActions.joinMeetingDone({isNeedPermissionToJoin: false}))
+          await setSession({
+            [AppConfig.sessionMeeting]: {
+              title:msg.meetingTitle,
+              userId:getSession(AppConfig.sessionUserData).id||msg.userId, //get from session or 
+              role:'participant',
+              meetingId:msg.meetingId
+            }
+          }) 
+          window.location = '/concal/' + msg.meetingId
+        }
+      } 
+    })
       
 }

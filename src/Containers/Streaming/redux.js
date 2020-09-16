@@ -15,6 +15,7 @@ const { Types, Creators } = createActions({
   getListParticipant:['data'],
   putToJoiningList:['data'],
   doSearch:['data'],
+  doLockMeeting:['data'],
   resetStreaming:null
 })
 export const StreamingTypes = Types
@@ -43,6 +44,7 @@ export const joining = (state,{data}) => state.merge({ isRequesting:false, ...da
 export const remove = (state,{data}) => state.replace({ isRequesting:false, listWaitingRoom:data.list })
 export const put = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const kick = (state,{data}) => state.merge({ isRequesting:false, ...data })
+export const lock_or_unlock_meeting = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const toogleAudio = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const toogleVideo = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const reset = state=> state.merge(INITIAL_STATE)
@@ -59,4 +61,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.RESET_STREAMING]: reset,
   [Types.DO_SEARCH]: do_search,
   [Types.PUT_TO_JOINING_LIST]: joining,
+  [Types.DO_LOCK_MEETING]: lock_or_unlock_meeting,
 })

@@ -13,46 +13,52 @@ import SocketActions from '../../Containers/Streaming/redux'
 import JoinActions from '../../Containers/JoinMeeting/redux'
 
 //On first entermeeting
+export const checkMeetingLockStatus=  (socketIo) =>{
+  socketIo.on('meetingStatus',async msg=>{
+      console.log("SOOOOKKKEETTT meetingHasCreated>>>>", msg)
+  })
+}
+
 //get meeting list
-export const onReceiveMeetingList= (socketIo) =>{
-    socketIo.on('meetingList',msg=>{
-        console.log("SOOOOKKKEETTT listmeeting>>>>", msg)
-        const listParticipant=msg.meetingList 
-        store.dispatch(SocketActions.getListParticipant({listParticipant}))
+export const onReceiveMeetingList=  (socketIo) =>{
+    socketIo.on('meetingList',async msg=>{
+        console.log("SOOOOKKKEETTT meetingList>>>>", msg)
+        const listParticipant= msg.meetingList 
+        await store.dispatch(SocketActions.getListParticipant({listParticipant}))
     })
 }
 //On end meeting
 export const onMeetingEnd = (socketIo) =>{
     socketIo.on('endMeeting',msg=>{
-        console.log("SOOOOKKKEETTT end meeting>>>>", msg)  
+        console.log("SOOOOKKKEETTT endMeeting>>>>", msg)  
     })
 }
   // listening to meeting error
 export const onMeetingError = (socketIo) =>{
-    socketIo.on('meetingError', (msg) => {
-        Swal.fire({
-          title: 'Failed Join to Meeting',
-          text: msg,
-          icon: 'error',
-          confirmButtonText: 'Ok',
-          onClose: () => store.dispatch(JoinActions.joinMeetingDone())
-        })
+  socketIo.on('meetingError', (msg) => {
+      Swal.fire({
+        title: 'Failed Join to Meeting',
+        text: msg,
+        icon: 'error',
+        confirmButtonText: 'Ok',
+        onClose: () => store.dispatch(JoinActions.joinMeetingDone())
       })
+    })
 }
   
 export const onDisconnect= (socketIo) =>{
   socketIo.on('disconnect', () => {
-    console.log("SOOOOKKKEETTT ta diskonek>>>", socketIo.disconnected);
+    console.log("SOOOOKKKEETTT disconnect>>>", socketIo.disconnected);
   });
 }
 export const onReconnecting = (socketIo) =>{
   socketIo.on('reconnecting', (e) => {
-    console.log("SOOOOKKKEETTT rekonekting>>>", e);
+    console.log("SOOOOKKKEETTT reconnecting>>>", e);
   });
 }
 export const onConnectError = (socketIo) =>{
   socketIo.on('connect_error', (error) => {
-    console.log("SOOOOKKKEETTT konek error>>>", error);
+    console.log("SOOOOKKKEETTT connect_error>>>", error);
   });
 }
 export const onError = (socketIo) =>{

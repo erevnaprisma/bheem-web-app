@@ -56,6 +56,10 @@ class SubContainer extends React.PureComponent {
         window.location="/"
       }
     })
+    if(prevLocalStorage)
+    {
+      isLogin()
+    }
   }
   render (){
     //Pages using footer

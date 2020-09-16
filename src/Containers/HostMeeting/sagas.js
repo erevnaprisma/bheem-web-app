@@ -29,7 +29,15 @@ export function * doCreateMeeting (api,action) {
     if (!_.isEmpty(errorbody)) err.push({ message: errorbody })
     if (_.isEmpty(err)&& status==200) {
       const errors=''
-      setSession({[AppConfig.sessionMeeting]: {meetingId:data.meetingId,role:'host',title,userId:getSession(AppConfig.sessionUserData).id},fullName:getSession(AppConfig.sessionUserData).fullName})
+      // console.log('session user data>>>>',getSession(AppConfig.sessionUserData));
+      // console.log('session user data>>>>',);
+      
+      setSession({[AppConfig.sessionMeeting]: {
+        meetingId:meetingId,
+        role:'host',title,
+        userId:getSession(AppConfig.sessionUserData).id,
+        fullName:getSession(AppConfig.sessionUserData).fullName
+      }})
       yield put(HostActions.createMeetingDone({status,errors,title,host,createdBy,startDate,endDate,meetingId}))
       Swal.fire({
         title: 'Success',

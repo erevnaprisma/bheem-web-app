@@ -53,7 +53,6 @@ export const setSession = (newSession, logged) => {
   window.localStorage.setItem(AppConfig.sessionData, encryptedData)
 }
 export const isValuePropertyExist = ({obj,propName,value,type})=>{
-  console.log('check obj>>>',obj);
   switch(type){
     case 'propOnly':
       if(_.has(obj,propName)){

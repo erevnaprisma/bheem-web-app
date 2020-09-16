@@ -15,65 +15,71 @@ import socketIo from './socketListeners'
 
 
 
-export const onParticipantJoin = (socketIo)=>{
-    socketIo.on('sendRequestToHost', async(msg) => {
-        console.log("SOOOOKKKEETTT User joined>>>>", msg)
-        const {listParticipant, listWaitingRoom} = store.getState().streaming
+export const onParticipantJoinToParticipantList = (socketIo)=>{
+  socketIo.on('userHasJoinMeeting', async(msg) => {
+      console.log("SOOOOKKKEETTT userHasJoinMeeting>>>>", msg)
+      const {listParticipant} = store.getState().streaming
+      let list = []
+      msg.role=msg.role.toLowerCase()
+      list.push({fullName:msg.fullName,role:msg.role,userId:msg.userId})
+      list.push(listParticipant)
+      store.dispatch(SocketActions.addParticipant({
+        listParticipant: _.flatten(list)
+      }))
+  })
+}
+
+
+export const onParticipantJoinToWaitingList = (socketIo)=>{
+  socketIo.on('sendRequestToHost', async(msg) => {
+      console.log("SOOOOKKKEETTT sendRequestToHost>>>>", msg)
+      console.log('Sessuion meeting >>',getSession(AppConfig.sessionMeeting));
+      if(getSession(AppConfig.sessionMeeting).role === 'host'){
+        const {listWaitingRoom} = store.getState().streaming
         let list = []
         list.push(msg)
         list.push(listWaitingRoom)
         store.dispatch(SocketActions.addParticipant({
           listWaitingRoom: _.flatten(list)
         }))
-      })
+      }
+  })
 }
+
+export const onNewWaitingList = (socketIo) =>{
+  socketIo.on('newWaitingList', async(msg)=>{
+    console.log("SOOOOKKKEETTT newWaitingList>>>>", msg)
+    const listWaitingRoom=msg 
+    store.dispatch(SocketActions.getListParticipant({listWaitingRoom}))
+  })
+}
+
 
 
 export const onSuccessAdmitUser = (socketIo) =>{
     socketIo.on('succeessfullyAdmit', (msg) => {
-        console.log("SOOOOKKKEETTT admitted>>>>", msg)
-        const {listParticipant, listWaitingRoom, listOnJoining} = store.getState().streaming
-        //pop from joining list
-        let list=[]
-        store.dispatch(SocketActions.putToJoiningList({
-            listOnJoining: _.flatten(list.filter(r=> r != msg.userId ))
-        }))
-
-        let lstWaiting = []        
-        lstWaiting.push(listWaitingRoom)
+      console.log("SOOOOKKKEETTT succeessfullyAdmit>>>>", msg)
+      const {listWaitingRoom} = store.getState().streaming
         store.dispatch(SocketActions.addParticipant({
-          listWaitingRoom: _.flatten(lstWaiting).filter(e=>e.userId != msg.userId)
+          listWaitingRoom: _.flatten(listWaitingRoom).filter(e=>e.userId != msg.userId)
         }))
-      
-        let lstParticipant = []
-        //push to participant list
-        lstParticipant.push(listParticipant)
-        lstParticipant.push(msg)
-        store.dispatch(SocketActions.addParticipant({
-          listParticipant: _.flatten(lstParticipant)
-        }))
-      })
+    })
 }
 
 export const onSuccessRejectUser = (socketIo) =>{
     socketIo.on('successfullyReject', (msg) => {
-        console.log("SOOOOKKKEETTT rejected>>>>", msg)
-        const {listParticipant, listWaitingRoom} = store.getState().streaming
+      console.log("SOOOOKKKEETTT successfullyReject>>>>", msg)
+       const {listParticipant, listWaitingRoom} = store.getState().streaming
         let list = []
         //pop from waitinglist
         list.push(listWaitingRoom)
         store.dispatch(SocketActions.kickParticipant({
           listWaitingRoom: _.flatten(list).filter(e=>e.userId != msg.userId)
         }))
-      })
+    })
 }
 export const onGetWaitingList = (socketIo)=>{
     socketIo.on('newWaitingList',msg=>{
-        console.log("SOOOOKKKEETTT waitinglist>>>>", msg)
-        if(isValuePropertyExist({obj:getSession(AppConfig.sessionMeeting),propName:'role',type:'valueOnly',value:'host'})){
-        console.log("DISPATCH waitinglist>>>>")
-        const listWaitingRoom=msg
-        store.dispatch(SocketActions.getListParticipant({listWaitingRoom}))
-        }
+      console.log("SOOOOKKKEETTT newWaitingList>>>>", msg)
     })
 }

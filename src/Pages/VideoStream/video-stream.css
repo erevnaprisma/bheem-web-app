@@ -60,63 +60,50 @@
     border: 3px solid #ff5275;
 }
 .container-list-joined li{
+    padding: 5px;
     margin-left: 2px;
     margin-right: 2px;
-    overflow: hidden;
+}
+.container-list-joined > li:hover{
+    background-color: #dedede;
 }
 
-.live-search-bar{
+
+.list-button-wrapper{
+    
+}
+.list-status-wrapper{
+    display: flex;
+    flex: 1;
+    flex-direction: row-reverse;
+}
+
+.container-list-joined li{
+    margin-left: 2px;
+    margin-right: 2px;
+    /* overflow: hidden; */
 
 }
 
 .container-list-waiting-room{
-    flex: 0 1 auto;
+    height: 100%;
     overflow: scroll;
-    /* list-style-type: none;
-    min-height: 20vh;
-    max-height: 20vh; */
+    list-style-type: none;
     margin: 3px;
     padding:0px;
+    margin-bottom: 3px;
     width: auto;
-    border-radius: 10px 10px 10px 10px;
-    -moz-border-radius: 10px 10px 10px 10px;
-    -webkit-border-radius: 10px 10px 10px 10px;
-    /* border: 3px solid #ff5275; */
-
-    -webkit-order: 0;
-    -ms-flex-order: 0;
-    order: 0;
-    -webkit-flex: 0 1 auto;
-    -ms-flex: 0 1 auto;
-    flex: 0 1 auto;
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    align-self: auto;
 }
-
+.container-list-waiting-room > li:hover{
+    background-color: #dedede;
+}
 .container-list-waiting-room li{
+    padding: 3px;
     margin-left: 2px;
     margin-right: 2px;
-    overflow: hidden;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-direction: row;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    -webkit-flex-wrap: nowrap;
-    -ms-flex-wrap: nowrap;
-    flex-wrap: nowrap;
-    -webkit-justify-content: flex-end;
-    -ms-flex-pack: end;
-    justify-content: flex-end;
-    -webkit-align-content: stretch;
-    -ms-flex-line-pack: stretch;
-    align-content: stretch;
-    -webkit-align-items: flex-start;
-    -ms-flex-align: start;
-    align-items: flex-start;
+    
 }
+
 .container-userinfo-wrapper{
     right:0;
     top:0;
@@ -133,19 +120,57 @@
     align-self: flex-start;
     max-width: 11.5vw;
 }
-.container-button-wrapper{
+.container-menu-wrapper{
+    
+    display: inline-flex;
     justify-items: center;
     -webkit-order: 0;
     -ms-flex-order: 0;
     order: 0;
-    -webkit-flex: 0 1 auto;
-    -ms-flex: 0 1 auto;
-    flex: 0 1 auto;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
     -webkit-align-self: auto;
     -ms-flex-item-align: auto;
     align-self: auto;
 }
-.container-button-wrapper > button {
+.menu-button{
+    display: none;
+}
+.menu-status{
+    width: 100%;
+    display: inline-flex;
+}
+.container-menu-wrapper .menu-button .dd-menu-bheem{
+    background:transparent;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+}
+.container-menu-wrapper .menu-button .dd-menu-bheem > button{
+    display: inline-flex;
+    margin:0px;
+    padding: 1em;
+    width: auto;
+    height: 16px;
+    border: 1px solid #9dcc77;
+    background-color: #6faf3c;
+    color: white;
+    display: inline-flex;
+    align-items: center; 
+    font-size: 9px;
+    text-align: center;
+    border-radius: 2em; 
+}
+.container-list-joined > li:hover .container-menu-wrapper .menu-button{
+    width: 100%;
+    display: inline-flex;
+}
+.container-list-joined > li:hover .container-menu-wrapper .menu-status{
+    display: none;
+}
+
+.container-menu-wrapper .menu-button > button {
     margin:0px;
     padding: 1em;
     width: auto;
@@ -159,6 +184,33 @@
     text-align: center;
     border-radius: 2em;
 }
+.container-button-wrapper{
+    flex-direction: row-reverse;
+    flex: 1;
+    display: inline-flex;
+}
+.container-button-wrapper  > button {
+    align-self: flex-end;
+    margin:0px;
+    padding: 1em;
+    width: auto;
+    height: 16px;
+    border: 1px solid #9dcc77;
+    background-color: #6faf3c;
+    color: white;
+    display: inline-flex;
+    align-items: center; 
+    font-size: 9px;
+    text-align: center;
+    border-radius: 2em;
+}
+
+
+.container-menu-wrapper > span {
+    font-size: 20px;
+    
+}
+
 .container-userinfo-wrapper > span {
     overflow: hidden;   
     white-space: nowrap;

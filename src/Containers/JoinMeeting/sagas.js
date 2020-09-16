@@ -64,13 +64,16 @@ export function * doJoinMeeting (api, action) {
   }
   //TODO: Anonymous >>>  remove userId, append anonymous:true, 
   if(!getSession(AppConfig.sessionUserData)){
+    console.log('join not anonymous');
     delete message.userId
     message.anonymous=true
+    message.status='Anonymous'
     setSession({[AppConfig.sessionMeeting]:{fullName:data.name}})
-    console.log('anonymous obj. >>',message);
+    // console.log('anonymous obj. >>',message);
     socket.emit('requestToJoin',message)
   }
   else{
+    console.log('join anonymous');
     setSession({[AppConfig.sessionMeeting]:{
         fullName:getSession(AppConfig.sessionUserData).fullName
        ,userId:getSession(AppConfig.sessionUserData).id

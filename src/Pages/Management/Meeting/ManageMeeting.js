@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import Table from './Table'
 import Loader from '../../../Components/Loader'
 import _ from 'lodash'
-import { prop } from 'ramda'
 import Modal from './Modals/dialog'
 import MeetingActions from '../../../Containers/Management/SceduleMeeting/redux'
 import {getSession,formatDate} from '../../../Utils/Utils'
@@ -63,7 +62,7 @@ class ManageMeeting extends Component {
     this.props.fetchMeetings()
   }
   render() {
-    const {data,fetchMeetings,cancelMeeting,startMeeting,editMeeting,isDoing} = this.props
+    const {data,cancelMeeting,startMeeting,editMeeting,isDoing} = this.props
     
     //init table columns 
     const column=[{
@@ -96,7 +95,14 @@ class ManageMeeting extends Component {
                       <button className="btn btn-primary btn-fab btn-round btn" data-toggle="tooltip" data-placement="top" title="Start meeting" data-container="body" data-toggle="modal" data-target="#modal-action" onClick={()=>this.setState({textBtn:'Start meeting',iconBtn:'play_arrow',msg:'<br><br>Are you sure to start meeting?<br><br>',cb:()=>startMeeting({meetingId:e.id,do:true}),textHeader:'Start Meeting',type:'alert'})}>
                         <i className="material-icons">play_arrow</i>
                       </button>
-                      <button className="btn btn-primary btn-fab btn-round btn" data-toggle="tooltip" data-placement="top" title="Edit meeting" data-container="body" data-toggle="modal" data-target="#modal-action" onClick={()=>this.setState({textBtn:'Edit meeting',iconBtn:'create',msg:'Edit meeting',cb:({title,start_date,end_date,permission,meetingId})=>editMeeting({title,start_date,end_date,permission,meetingId}),textHeader:'Edit meeting',type:'form',dataForm:{endDate:new Date(e.endDate),startDate:new Date(e.startDate),topic:e.title,permission:e.needPermisionToJoin,id:e.id}})}>
+                      <button className="btn btn-primary btn-fab btn-round btn" data-toggle="tooltip" data-placement="top" title="Edit meeting" data-container="body" data-toggle="modal" data-target="#modal-action" onClick={()=>this.setState({
+                        textBtn:'Edit meeting',
+                        iconBtn:'create',
+                        msg:'Edit meeting',
+                        cb:({title,start_date,end_date,permission,meetingId})=>editMeeting({title,start_date,end_date,permission,meetingId}),
+                        textHeader:'Edit meeting',
+                        type:'form',
+                        dataForm:{endDate:new Date(e.endDate),startDate:new Date(e.startDate),topic:e.title,permission:e.needPermisionToJoin,id:e.id}})}>
                         <i className="material-icons">create</i>
                       </button>
                         <button className="btn btn-primary btn-fab btn-round btn" data-toggle="tooltip" data-placement="top" title="Generate invitation" data-container="body" data-toggle="modal" data-target="#modal-action" onClick={()=>this.setState({textBtn:'Copy invitation',iconBtn:'content_copy',msg:this._generateInvitation(e.title,e.id,e.startDate,e.endDate),cb:()=>this._CopyToClipboard(),textHeader:'Invitation',type:'alert'})}>

@@ -8,8 +8,6 @@ import HostMeeting from '../Pages/HostMeeting/PageHostMeeting'
 import JoinMeeting from '../Pages/JoinMeeting/PageJoinMeeting'
 import PageManagement from '../Pages/Management/PageManageMeeting'
 import PageVidStreaming from '../Pages/VideoStream/PageBheem'
-import socketIO from '../Containers/Socket/socketListeners'
-
 const lp = {
   '/': { exact:true,route: '/', path: '/', component: PageHome },
   '/home': { exact:true,route: '/home', path: '/home', component: PageHome },

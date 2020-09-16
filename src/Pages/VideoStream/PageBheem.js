@@ -46,9 +46,11 @@ class PageBheem extends Component {
     const meetingId=this.props.match.params.room
     this.props.putToJoinList(data.userId)
     if(data.status == 'Anonymous'){
+      console.log('emit admit anonymous>>>', { status:'Anonymous',meetingId, userId: data.userId, hostId:userData.id, socketId: data.socketId,username:data.username });
       socketIo.emit('admitUserToJoinHost', { status:'Anonymous',meetingId, userId: data.userId, hostId:userData.id, socketId: data.socketId,username:data.username })
     }
     else{
+      console.log('emit admit logged>>>', { meetingId, userId: data.userId, hostId:userData.id, socketId: data.socketId, username:data.username});
       socketIo.emit('admitUserToJoinHost', { meetingId, userId: data.userId, hostId:userData.id, socketId: data.socketId, username:data.username})
     }
   } 
@@ -80,9 +82,18 @@ class PageBheem extends Component {
   _listParticipant()
   {
     const waitingRoom=this.props.listWaitingRoom||[]
-    const participants=_.isEmpty(this.props.listSearch) ? this.props.listParticipant : this.props.listSearch
+    const participants=_.isEmpty(this.props.listSearch) ? _.sortBy(this.props.listParticipant,['role']) : _.sortBy(this.props.listSearch,['role'])
     const joiningList=this.props.listOnJoining||[]
-    
+    const listJoinedDropdownMenu=[
+                                        {name:'Rename',funct:()=>do_mute_everyone(),me:true},
+                                        {name:'Put to waiting room',funct:()=>do_mute_everyone(),},
+                                        {name:'Mute video',funct:()=>do_mute_everyone(),}
+                                  ]
+    const footerDropdownSettings=[
+                                      {name:'Lock meeting',funct:()=>do_mute_everyone(),},
+                                      {name:'Change meeting topic',funct:()=>do_mute_everyone(),},
+                                      {name:'End meeting',funct:()=>do_mute_everyone(),}
+                                  ]
     // console.log("Bhm list Waiting rooom comp>>>",waitingRoom)
     // console.log("Bhm list participant comp>>>",participants)
     let myMeetingData=getSession(AppConfig.sessionMeeting) //get meeting data
@@ -109,11 +120,11 @@ class PageBheem extends Component {
                                   </div>
                                     {(!joiningList.includes(r.usserId) &&
                                       <div className="container-button-wrapper">
-                                          <button className="" onClick={()=>this._admitParticipant(r)}>Admit</button>&nbsp;
-                                          <button onClick={()=>this._rejectParticipant(r)}>Reject</button>
-                                        
+                                        <button className="" onClick={()=>this._admitParticipant(r)}>Admit</button>&nbsp;
+                                        <button onClick={()=>this._rejectParticipant(r)}>Reject</button>
                                       </div>
                                     )}
+                                    
                                     {console.log('Joining Status>>>',joiningList.includes(r.usserId))}
                                     {(joiningList.includes(r.usserId) &&
                                       <div className="container-button-wrapper">
@@ -127,16 +138,16 @@ class PageBheem extends Component {
                   }
                   {participants.length>0 &&
                     <div className="wrapper-list-participant">
-                        <label className="mt-2 head-list-participant">List participant room({participants.length})</label>
+                        <label className="mt-2 head-list-participant mb-2">List participant in room({participants.length})</label>
                         <div style={{display:'flex',flexDirection:'row'}} className="ml-2 mr-2">
                           <input style={{width:'100%',borderRadius:20,fontSize:12,padding:3}} id="bheem-search-participant" placeholder="Search participant...." onChange={e=>this._searchParticipant(e.target.value,this.props.listParticipant)}/>
-                          <i className="material-icons" style={{cursor:'pointer'}} onClick={()=>{
+                          <i className="material-icons" style={{cursor:'pointer',position:'absolute',right:'1%',marginTop:'0.2%'}} onClick={()=>{
                             var search=document.getElementById("bheem-search-participant") 
                             search.value=''
                             this.props.doSearch({listSearch:[]})
                           }}>clear</i>
                         </div>
-
+                        
                         <ul className="container-list-joined ">
                           {participants.map((r,i)=>(
                               <li  key={i} className="row">
@@ -147,31 +158,53 @@ class PageBheem extends Component {
                                   {r.userId == myMeetingData.userId && r.role != 'Host' ? `(Me)` : ''}
                                   {r.userId != myMeetingData.userId && r.role == 'Host' ? `(Host)` : ''}
                                 </div>
-                                <div className="container-button-wrapper">
-                                  &nbsp; 
-                                  <button className="" onClick={()=>this._admitParticipant(r.userId,r.socketId)}>Mute</button>
-                                  &nbsp;
-                                  <button>Put to waiting room</button>
+                                <div className="container-menu-wrapper">
+                                    <div className="menu-button">
+                                      <div style={{flex:1}}></div>
+                                        &nbsp; 
+                                        <button className="" onClick={()=>this._admitParticipant(r.userId,r.socketId)}>Mute</button>
+                                        &nbsp;
+                                      {/* <button>Put to waiting room</button> */}
+                                      {/* <button>More</button> */}
+                                      <div className="btn-group dd-menu-bheem" style={{zIndex:100}}>
+                                            <button className="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                              More
+                                            </button>
+                                            <div className="dropdown-menu">
+                                              {listJoinedDropdownMenu.map((s,j)=>(
+                                                  <span className="dropdown-item" onClick={s.funct} key={j}>{s.name}</span>
+                                              ))}
+                                            </div>
+                                      </div>
+                                    </div>
+                                    <div className="menu-status">
+                                      <div style={{flex:1}}></div>
+                                      <span className="material-icons">videocam</span>
+                                      <span className="material-icons">volume_mute</span>
+                                    </div>
                                 </div>
                               </li>
                           ))}
                         </ul>
                     </div>
                   }
-                  <div className="bheem-setting-section">
-                        <div style={{flex:1}}>
-                          <button type="button" class="btn btn-primary" onClick={()=>do_mute_everyone()}>Mute all</button>
-                        </div>
-                        <div class="dropdown show flex-end ">
-                          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <i className="material-icons">more_vert</i> More
-                          </a>
-                          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <li class="dropdown-item">Lock meeting</li>
-                            <li class="dropdown-item">End Meeting</li>
+                  {(myMeetingData.role === 'host'&&
+                    <div className="bheem-setting-section">
+                          <div style={{flex:1}}>
+                            <button type="button" className="btn btn-primary" onClick={()=>do_mute_everyone()}>Mute all</button>
                           </div>
-                      </div>
-                  </div>
+                          <div className="dropdown show flex-end ">
+                            <a className="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i className="material-icons">more_vert</i> More
+                            </a>
+                            <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              {footerDropdownSettings.map((r,i)=>(
+                                  <span className="dropdown-item" onClick={r.funct} key={i} style={{cursor:'pointer'}}>{r.name}</span>
+                              ))}
+                            </div>
+                        </div>
+                    </div>
+                  )}
           </div>
       //</Draggable> 
     )
@@ -180,7 +213,6 @@ class PageBheem extends Component {
   _notAllowed(){
     const meetingId=this.props.match.params.room
     const { topic,allowed,needPermission,isExist,isRequesting,meetingData } = this.props
-    
     return(
       <div>
         <Helmet>
@@ -209,7 +241,7 @@ class PageBheem extends Component {
             <div className="page-header" style={{background:'#fff' ,backgroundSize: 'cover', backgroundPosition: 'top center'}}>
               <div className="container">
                 <div className="row">
-                  <div className="col-lg-10 col-md-2 ml-auto mr-auto">
+                  <div className="col-lg-10 ml-auto mr-auto">
                     <div className="card">    
                       <center>
                           <h2></h2>
@@ -233,6 +265,7 @@ class PageBheem extends Component {
     const { topic,allowed,needPermission,isExist,isRequesting} = this.props
     const meetingData=getSession(AppConfig.sessionMeeting)
     const userData=getSession(AppConfig.sessionUserData)
+    //init join meeting 
     const opt={
                  containerId:this.state.videoStreamerContainerId,
                  className:'bheem-video-stream',
@@ -245,14 +278,6 @@ class PageBheem extends Component {
                  },
                  configOverwrite: { startWithAudioMuted: true,startWithVideoMuted:false },
               }
-  //  console.log('Meeting session>>>>', getSession(AppConfig.sessionMeeting));           
-  //  console.log('api data>>>',{containerId:this.state.videoStreamerContainerId,className:'bheem-video-stream',roomName:getSession(AppConfig.sessionMeeting).title,roomId:meetingId,
-  //   userInfo:{
-  //    id:userData.id||'34234234234',
-  //    email:userData.email||'Anonymous@mail.com',
-  //    displayName:userData.fullName||'anonymous'
-  //  }}); 
-   
     return(
       <div>
         <Helmet>
@@ -292,7 +317,7 @@ class PageBheem extends Component {
     const meetingData=await getSession(AppConfig.sessionMeeting)
     const meetingId=this.props.match.params.room
     // Get all user list on first join meeting
-    socketIo.emit("afterUserJoinMeeting",{fullName:meetingData.fullName,userId:meetingData.id,meetingId:meetingId})
+    socketIo.emit("afterUserJoinMeeting",{fullName:meetingData.fullName,userId:meetingData.userId,meetingId:meetingId})
     this.props.doReset()
     await this.props.checkIsExist({meetingId})
   }
@@ -310,9 +335,8 @@ class PageBheem extends Component {
       document.getElementById(this.state.listParticipantContainerId).style.width = sidebarSize;
       document.getElementById(this.state.listParticipantContainerId).style.display = 'flex';
     }
-
     const meetingId=this.props.match.params.room
-    if(getSession(AppConfig.sessionMeeting) && getSession(AppConfig.sessionMeeting).role == "host") {
+    if(getSession(AppConfig.sessionMeeting).role == "host") {
       socketIo.emit('createMeeting', {meetingId})
     }
   }
@@ -321,7 +345,6 @@ class PageBheem extends Component {
     const meeting=getSession(AppConfig.sessionMeeting)
     return (
       <div style={{background:`url(${Images.HomeIllus}) center`,backgroundSize:'contain'}}>
-        
         {meeting&& this._allowed()}
         {!meeting&& this._notAllowed()}
       </div>

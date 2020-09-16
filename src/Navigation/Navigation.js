@@ -13,9 +13,9 @@ class App extends Component {
     super(props)
     
   }
-  componentWillUnmount () {
-    this.unlisten()
-  }
+  // componentWillUnmount () {
+  //   this.unlisten()
+  // }
   render () {
     return <div>{this.props.children}</div>
   }

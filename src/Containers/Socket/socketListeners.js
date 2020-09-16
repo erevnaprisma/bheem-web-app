@@ -12,7 +12,7 @@ import {doCreateMeeting,} from '../../Containers/HostMeeting/sagas'
 import SocketActions from '../../Containers/Streaming/redux'
 import JoinActions from '../../Containers/JoinMeeting/redux'
 import {onGetAdmitStatus,onGetIsNeedPermission} from './clientListeners'
-import {onGetWaitingList,onSuccessAdmitUser,onSuccessRejectUser,onParticipantJoin} from './hostListeners'
+import {onParticipantJoinToParticipantList,onParticipantJoinToWaitingList,onNewWaitingList,onGetWaitingList,onSuccessAdmitUser,onSuccessRejectUser} from './hostListeners'
 import {onMeetingEnd,onReceiveMeetingList,onMeetingError,onDisconnect,onConnectError,onReconnecting,onError} from './allRoleListeners'
 
 const socketIo = io(AppConfig.socketUrl)
@@ -20,16 +20,20 @@ const socketIo = io(AppConfig.socketUrl)
 onGetAdmitStatus(socketIo)
 onGetIsNeedPermission(socketIo)
 
+onParticipantJoinToWaitingList(socketIo)
+onParticipantJoinToParticipantList(socketIo)
 onGetAdmitStatus(socketIo)
 onGetIsNeedPermission(socketIo)
 
+
+onReceiveMeetingList(socketIo)
+
+onNewWaitingList(socketIo)
 onGetWaitingList(socketIo)
 onSuccessAdmitUser(socketIo)
 onSuccessRejectUser(socketIo)
-onParticipantJoin(socketIo)
 
 onMeetingEnd(socketIo)
-onReceiveMeetingList(socketIo)
 onMeetingError(socketIo)
 onDisconnect(socketIo)
 onConnectError(socketIo)
