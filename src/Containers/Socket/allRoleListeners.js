@@ -12,10 +12,28 @@ import {doCreateMeeting,} from '../../Containers/HostMeeting/sagas'
 import SocketActions from '../../Containers/Streaming/redux'
 import JoinActions from '../../Containers/JoinMeeting/redux'
 
+export const muteUnmuteHandlerAll=  (socketIo) =>{
+  socketIo.on('participantMuteAndVideoHandler', msg=>{
+      console.log("SOOOOKKKEETTT participantMuteAndVideoHandler>>>>", msg)
+      if(msg.message === 'mute'){
+        store.dispatch(SocketActions.doToggleAudio({toogleVideo:true}))
+      }else if(msg.message === 'unmute'){
+        store.dispatch(SocketActions.doToggleAudio({toogleVideo:false}))
+      }else if(msg.message === 'off video'){
+        store.dispatch(SocketActions.doToggleVideo({toogleVideo:false})) 
+      }else if(msg.message === 'on video'){
+        store.dispatch(SocketActions.doToggleVideo({toogleVideo:true})) 
+      }
+  })
+}
+
+
 //On first entermeeting
 export const checkMeetingLockStatus=  (socketIo) =>{
   socketIo.on('meetingStatus',async msg=>{
       console.log("SOOOOKKKEETTT meetingHasCreated>>>>", msg)
+      // await store.dispatch(SocketActions.doLockMeeting({isLock}))
+      // Swal.fire(msg.message)
   })
 }
 
@@ -37,7 +55,7 @@ export const onMeetingEnd = (socketIo) =>{
 export const onMeetingError = (socketIo) =>{
   socketIo.on('meetingError', (msg) => {
       Swal.fire({
-        title: 'Failed Join to Meeting',
+        title: 'Something Error',
         text: msg,
         icon: 'error',
         confirmButtonText: 'Ok',

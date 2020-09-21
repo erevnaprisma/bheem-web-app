@@ -19,10 +19,20 @@ export const onParticipantJoinToParticipantList = (socketIo)=>{
   socketIo.on('userHasJoinMeeting', async(msg) => {
       console.log("SOOOOKKKEETTT userHasJoinMeeting>>>>", msg)
       const {listParticipant} = store.getState().streaming
-      let list = []
+      let list = [...listParticipant]
+      // const isUser=list.filter(r=> r.userId == msg.userId)
+      const {listWaitingRoom,listOnJoining} = store.getState().streaming
+      
+      let lst=[...listOnJoining]
+      store.dispatch(SocketActions.removeFromJoiningList({listOnJoining:lst.filter(e=>e != msg.userId)}))
+      
+      store.dispatch(SocketActions.putToJoiningList({
+        listWaitingRoom: _.flatten(listWaitingRoom).filter(e=>e.userId != msg.userId)
+      }))
+
+
       msg.role=msg.role.toLowerCase()
       list.push({fullName:msg.fullName,role:msg.role,userId:msg.userId})
-      list.push(listParticipant)
       store.dispatch(SocketActions.addParticipant({
         listParticipant: _.flatten(list)
       }))
@@ -59,10 +69,7 @@ export const onNewWaitingList = (socketIo) =>{
 export const onSuccessAdmitUser = (socketIo) =>{
     socketIo.on('succeessfullyAdmit', (msg) => {
       console.log("SOOOOKKKEETTT succeessfullyAdmit>>>>", msg)
-      const {listWaitingRoom} = store.getState().streaming
-        store.dispatch(SocketActions.addParticipant({
-          listWaitingRoom: _.flatten(listWaitingRoom).filter(e=>e.userId != msg.userId)
-        }))
+      
     })
 }
 

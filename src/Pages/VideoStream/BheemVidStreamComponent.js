@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import {store} from '../../Containers/Container'
-import StreamingAction from '../../Containers/Streaming/redux'
 import Loader from '../../Components/Loader'
 import AppConfig from '../../Config/AppConfig'
 import {setSession,getSession,isValuePropertyExist} from '../../Utils/Utils'
 import socketIo from '../../Containers/Socket/socketListeners'
 import { listeners } from 'process'
 import swal from 'sweetalert2'
+import StreamingActions from '../../Containers/Streaming/redux'
 
 var bheemApi=null
 // iframe Integration
@@ -56,6 +56,28 @@ export const BheemVidStreamComponent = ({ opt }) => {
       // socketIo.emit('')
     })
 
+    //audio listeners
+    // _jitsi.addEventListener('audioAvailabilityChanged',u=>{
+    //   console.log('JITSI EVENT audioAvailabilityChanged>>',u);
+    //   // socketIo.emit('')
+    // })
+    _jitsi.addEventListener('audioMuteStatusChanged',u=>{
+      console.log('JITSI EVENT audioMuteStatusChanged >>',u);
+      // socketIo.emit('')
+      store.dispatch(StreamingActions.doToggleAudio({tooggleAudio:u.muted?false:true}))
+    })
+    //audioo listeners
+
+     //video listeners
+    _jitsi.addEventListener('videoAvailabilityChanged',u=>{
+      console.log('JITSI EVENT videoAvailabilityChanged>>',u);
+      
+    })
+    _jitsi.addEventListener('videoMuteStatusChanged',u=>{
+      console.log('JITSI EVENT videoMuteStatusChanged >>',u);
+      store.dispatch(StreamingActions.doToggleVideo({tooggleVideo:u.muted?false:true}))
+    })
+    //video listeners
     bheemApi=_jitsi
     setJitsi(_jitsi)
   }
@@ -71,9 +93,29 @@ export const BheemVidStreamComponent = ({ opt }) => {
     )
 }
 
-export const do_mute_me = async () =>{
-  const isAudioMuted=await bheemApi.isAudioMuted().then(muted => { return muted; });
-  if(!isAudioMuted) bheemApi.executeCommand('toggleAudio')
+export const do_mute_my_audio = async (flag) =>{
+  const {tooggleAudio} = store.getState().streaming
+  
+  bheemApi.isAudioMuted().then( async muted => { 
+    console.log('is muted >>>',muted);
+    // console.log('is same >>>',muted!==flag);
+    if(muted!==flag){
+      console.log('isMuted',muted);
+      bheemApi.executeCommand('toggleAudio')
+    }
+  });
+  
+}
+
+export const do_mute_my_video = async (flag) =>{
+  bheemApi.isVideoMuted().then(muted => { 
+        if(flag!==muted){
+          console.log('do mute');
+          bheemApi.executeCommand('toggleVideo')
+        } 
+  });
+  
+ 
 }
 
 export const do_mute_everyone = async () =>{

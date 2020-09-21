@@ -13,7 +13,7 @@ import SocketActions from '../../Containers/Streaming/redux'
 import JoinActions from '../../Containers/JoinMeeting/redux'
 import {onGetAdmitStatus,onGetIsNeedPermission} from './clientListeners'
 import {onParticipantJoinToParticipantList,onParticipantJoinToWaitingList,onNewWaitingList,onGetWaitingList,onSuccessAdmitUser,onSuccessRejectUser} from './hostListeners'
-import {onMeetingEnd,onReceiveMeetingList,onMeetingError,onDisconnect,onConnectError,onReconnecting,onError} from './allRoleListeners'
+import {onMeetingEnd,onReceiveMeetingList,onMeetingError,onDisconnect,onConnectError,onReconnecting,onError,checkMeetingLockStatus} from './allRoleListeners'
 
 const socketIo = io(AppConfig.socketUrl)
 
@@ -22,10 +22,9 @@ onGetIsNeedPermission(socketIo)
 
 onParticipantJoinToWaitingList(socketIo)
 onParticipantJoinToParticipantList(socketIo)
-onGetAdmitStatus(socketIo)
 onGetIsNeedPermission(socketIo)
 
-
+checkMeetingLockStatus(socketIo)
 onReceiveMeetingList(socketIo)
 
 onNewWaitingList(socketIo)

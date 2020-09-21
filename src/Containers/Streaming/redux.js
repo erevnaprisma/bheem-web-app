@@ -13,6 +13,7 @@ const { Types, Creators } = createActions({
   doToggleAudio:['data'],
   doToggleVideo:['data'],
   getListParticipant:['data'],
+  removeFromJoiningList:['data'],
   putToJoiningList:['data'],
   doSearch:['data'],
   doLockMeeting:['data'],
@@ -28,20 +29,21 @@ export const INITIAL_STATE = Immutable({
     errors:[],
     status:0,
     needPermission:false,
+    isMeetingLocked:false,
     allowed:false,
     isLock:false,
     listWaitingRoom:[],
     listParticipant:[],
     listSearch:[],
     listOnJoining:[],
-    tooggleVideo:null,
-    tooggleAudio:null,
+    tooggleVideo:true,
+    tooggleAudio:true,
 })
 export const add = (state,{data}) =>{ return state.merge({...data}) }
 export const get_list = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const do_search = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const joining = (state,{data}) => state.merge({ isRequesting:false, ...data })
-export const remove = (state,{data}) => state.replace({ isRequesting:false, listWaitingRoom:data.list })
+export const remove = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const put = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const kick = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const lock_or_unlock_meeting = (state,{data}) => state.merge({ isRequesting:false, ...data })
@@ -55,6 +57,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ADD_PARTICIPANT]: add,
   [Types.REMOVE_PARTICIPANT]: remove,
   [Types.PUT_TO_WAITING_ROOM]: put,
+  [Types.REMOVE_FROM_JOINING_LIST]: remove,
   [Types.KICK_PARTICIPANT]: kick,
   [Types.DO_TOGGLE_VIDEO] : toogleVideo,
   [Types.DO_TOGGLE_AUDIO] : toogleAudio,

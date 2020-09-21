@@ -12,6 +12,9 @@ import {doCreateMeeting,} from '../../Containers/HostMeeting/sagas'
 import SocketActions from '../../Containers/Streaming/redux'
 import JoinActions from '../../Containers/JoinMeeting/redux'
 import socketIo from './socketListeners'
+import {do_mute_my_audio,do_mute_my_video} from '../../Pages/VideoStream/BheemVidStreamComponent'
+
+
 
 /////////////////CLIENT///////////////
 // Step 1 Join | listening meeting need permission
@@ -52,51 +55,80 @@ export const onGetAdmitStatus = (socketIo) =>{
     socketIo.on('userPermission', async(msg) => {
       console.log("SOOOOKKKEETTT userPermission>>>>", msg)
       const meetingData=getSession(AppConfig.sessionMeeting)
-
-      if(meetingData.userId === msg.userId){ 
-          const meetingData=getSession(AppConfig.sessionMeeting) 
-          // returend data {userId,fullName,meetingId,needRequestToJoin,role}
-          const meetingId = store.getState().streaming.meetingId
-      
-          if (msg.message === 'REJECT') {
-            await store.dispatch(JoinActions.joinMeetingDone({isNeedPermissionToJoin: false}))
-            await Swal.fire({
-              title: 'Failed to Join Meeting',
-              text: 'Sorry your request to join has been rejected by host',
-              icon: 'error',
-              confirmButtonText: 'Ok',
-            })
-          } 
-          else
-          {
+      if(msg.message.toLowerCase() === 'admit' || msg.message.toLowerCase() === 'reject'){
+        if(meetingData.userId === msg.userId){ 
             const meetingData=getSession(AppConfig.sessionMeeting) 
-            const userData = getSession(AppConfig.sessionUserData)
+            // returend data {userId,fullName,meetingId,needRequestToJoin,role}
+            const meetingId = store.getState().streaming.meetingId
+        
+            if (msg.message === 'REJECT') {
+              await store.dispatch(JoinActions.joinMeetingDone({isNeedPermissionToJoin: false}))
+              await Swal.fire({
+                title: 'Failed to Join Meeting',
+                text: 'Sorry your request to join has been rejected by host',
+                icon: 'error',
+                confirmButtonText: 'Ok',
+              })
+            } 
+            else
+            {
+              const meetingData=getSession(AppConfig.sessionMeeting) 
+              const userData = getSession(AppConfig.sessionUserData)
+              await setSession({
+                [AppConfig.sessionMeeting]: {
+                  userId:userData.id||msg.userId,
+                  fullName:userData.fullName||meetingData.fullName,
+                  meetingId: msg.meetingId,
+                  role: msg.role
+                }
+              })
+              window.location = '/concal/' + msg.meetingId
+            }
+        }
+        else if(msg.message === 'ADMIT'){
+          console.log('ON ADMITTT????');
+          if(_.isEmpty(getSession(AppConfig.sessionMeeting).meetingId)){
+            await store.dispatch(JoinActions.joinMeetingDone({isNeedPermissionToJoin: false}))
             await setSession({
               [AppConfig.sessionMeeting]: {
-                userId:userData.id||msg.userId,
-                fullName:userData.fullName||meetingData.fullName,
-                meetingId: msg.meetingId,
-                role: msg.role
+                title:msg.meetingTitle,
+                userId:getSession(AppConfig.sessionUserData).id||msg.userId, //get from session or 
+                role:'participant',
+                meetingId:msg.meetingId
               }
-            })
+            }) 
             window.location = '/concal/' + msg.meetingId
           }
-      }
-      else if(msg.message === 'ADMIT'){
-        console.log('ON ADMITTT????');
-        if(_.isEmpty(getSession(AppConfig.sessionMeeting).meetingId)){
-          await store.dispatch(JoinActions.joinMeetingDone({isNeedPermissionToJoin: false}))
-          await setSession({
-            [AppConfig.sessionMeeting]: {
-              title:msg.meetingTitle,
-              userId:getSession(AppConfig.sessionUserData).id||msg.userId, //get from session or 
-              role:'participant',
-              meetingId:msg.meetingId
-            }
-          }) 
-          window.location = '/concal/' + msg.meetingId
         }
-      } 
-    })
-      
+      }else{
+        
+        if(meetingData.userId === msg.userId){
+        
+          switch(msg.message){
+            case 'mute':
+                    // await store.dispatch(SocketActions.doToggleAudio({toogleAudio:false})) 
+                    do_mute_my_audio(true)
+                  break;
+            case 'unmute':
+                    // store.dispatch(SocketActions.doToggleAudio({toogleAudio:true}))
+                    do_mute_my_audio(false) 
+                  break;
+            case 'off video':
+                    // store.dispatch(SocketActions.doToggleVideo({toogleVideo:false})) 
+                    do_mute_my_video(true)
+                  break;
+            case 'on video':
+                    // store.dispatch(SocketActions.doToggleVideo({toogleVideo:true})) 
+                    do_mute_my_video(false)
+                  break;
+            default:
+                   console.log('Command Not Found');
+                  break;
+          }
+        }else{
+          console.log('meeting id false');
+        }
+      }
+
+    })  
 }
