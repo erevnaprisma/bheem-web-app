@@ -126,9 +126,9 @@ class index extends Component {
                                   <div className="dropdown-menu dropdown-menu-right">
                                       {/* <h6 className="dropdown-header">Dropdown header</h6> */}
                                       <a href="/me/profile" className="dropdown-item">Me ({userData.firstName})</a>
-                                      <a href="/me/manage-meeting" className="dropdown-item">My meetings</a>
-                                      <a href="/me/meeting-settings" className="dropdown-item">Meeting settings</a>
-                                      <a href="#" className="dropdown-item">Settings</a>
+                                      <a href="/me/manage-meeting" className="dropdown-item">My Meetings</a>
+                                      <a href="/me/meeting-settings" className="dropdown-item">Meeting Settings</a>
+                                      <a href="/me/account-settings" className="dropdown-item">Account Settings</a>
                                       <a  className="dropdown-item" data-toggle="modal"  data-target="#modal-logout">Logout</a>
                                   </div>
                               </li>

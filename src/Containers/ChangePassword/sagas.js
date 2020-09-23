@@ -8,22 +8,22 @@ import {isNullOrUndefined} from 'util'
 import Swal from 'sweetalert2'
 import ChangePasswordActions from './redux'
 import jwtDecode from 'jwt-decode'
+import $ from 'jquery'
 
 
 export function * doChangePassword (api, action) {
   const { data } = action
-  const response = yield call(api.doLogin, data)
+  const response = yield call(api.doChangePassword, data)
   console.log("Response changePassword>>>>>>>>>>>>",response) 
   
   let errors=[]
   if (!_.isEmpty(response.problem)) errors.push({ message: response.problem })
   // detect error from body
-  const status = parseInt(path(['data', 'data', 'bheemLogin', 'status'], response) || 0)
-  const errorbody = path(['data', 'data', 'bheemLogin', 'error','message'], response)||[]
-  const errorbody2 = path(['data', 'data', 'bheemLogin', 'error'], response)||[]
+  const status = parseInt(path(['data', 'data', 'bheemChangePassword', 'status'], response) || 0)
+  const errorbody = path(['data', 'data', 'bheemChangePassword', 'error','message'], response)||[]
+  const errorbody2 = path(['data', 'data', 'bheemChangePassword', 'error'], response)||[]
   const errorBackend = path(['data', 'errors'], response)||[]
   const token = path(['headers','authorization'], response)||null 
-  const userdata = path(['data', 'data', 'bheemLogin', 'user'], response)
   
   
   if(!_.isEmpty(errorbody)) errors.push({ message: errorbody })
@@ -34,13 +34,12 @@ export function * doChangePassword (api, action) {
   if (_.isEmpty(errors) && status) {
     
     yield put(
-      ChangePasswordActions.doLoginDone({
+      ChangePasswordActions.changePasswordDone({
         status,
-        errors,
-        userdata
+        errors
       })
     )
-    window.location="/"
+    
   } else {    
     let error=''
     let err=errors[0]

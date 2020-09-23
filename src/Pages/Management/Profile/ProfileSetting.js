@@ -16,7 +16,7 @@ class ProfileSetting extends Component {
   render() {
     const {data,fetchMeetings,cancelMeeting,startMeeting,editMeeting,isDoing} = this.props
       return (
-      <div className="section section-basic tab-pane" id="profile-settings" style={{padding:0}}>
+      <div className={`section section-basic tab-pane ${this.props.active}`} id="profile-settings" style={{padding:0}}>
             <div className="col-lg-3 col-md-4 col-sm-6">
             <div className="title">
               <h3>Checkboxes</h3>

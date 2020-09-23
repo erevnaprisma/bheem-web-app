@@ -3,10 +3,10 @@ import AppConfig from '../../Config/AppConfig'
 import {getSession,generateHmac, generateSha256 } from '../../Utils/Utils'
 
 export const create = api => ({
-  doLogin: ({newPassword,password}) => {
+  doChangePassword: ({newPassword,oldPassword}) => {
     const userId=getSession(AppConfig.sessionUserData).id
     const body = `mutation{
-      bheemChangePassword(userId:"${userId}",newPassword:"${newPassword}",password:"${password}")
+      bheemChangePassword(userId:"${userId}",newPassword:"${newPassword}",password:"${oldPassword}")
       {
         status
         error

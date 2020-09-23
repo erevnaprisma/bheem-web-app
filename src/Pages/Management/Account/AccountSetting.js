@@ -6,6 +6,7 @@ import { prop } from 'ramda'
 import MeetingActions from '../../../Containers/Management/SceduleMeeting/redux'
 import {getSession,formatDate} from '../../../Utils/Utils'
 import AppConfig from '../../../Config/AppConfig'
+import ModalChangePassword from './Modals/ChangePassword'
 
 class ManageMeeting extends Component {
   constructor(props)
@@ -16,48 +17,55 @@ class ManageMeeting extends Component {
   render() {
     const {data,fetchMeetings,cancelMeeting,startMeeting,editMeeting,isDoing} = this.props
       return (
-      <div className="section section-basic tab-pane" id="account-settings" style={{padding:0}}>
-            <div className="col-lg-3 col-md-4 col-sm-6">
-            <div className="title">
-              <h3>Checkboxes</h3>
-            </div>
-            <div className="form-check">
-              <label className="form-check-label">
-                <input className="form-check-input" type="checkbox" defaultValue />
-                Unchecked
-                <span className="form-check-sign">
-                  <span className="check" />
-                </span>
-              </label>
-            </div>
-            <div className="form-check">
-              <label className="form-check-label">
-                <input className="form-check-input" type="checkbox" defaultValue defaultChecked />
-                Checked
-                <span className="form-check-sign">
-                  <span className="check" />
-                </span>
-              </label>
-            </div>
-            <div className="form-check disabled">
-              <label className="form-check-label">
-                <input className="form-check-input" type="checkbox" defaultValue disabled />
-                Disabled unchecked
-                <span className="form-check-sign">
-                  <span className="check" />
-                </span>
-              </label>
-            </div>
-            <div className="form-check disabled">
-              <label className="form-check-label">
-                <input className="form-check-input" type="checkbox" defaultValue disabled defaultChecked />
-                Disabled checked
-                <span className="form-check-sign">
-                  <span className="check" />
-                </span>
-              </label>
-            </div>
+      <div className={`section section-basic tab-pane ${this.props.active}`} id="account-settings" style={{padding:0}}>
+        <ModalChangePassword/>
+          <div className="row col-6">
+            <button className="col-3 btn btn-block btn-primary" data-toggle="modal" data-target="#change-my-password">
+              Change Password
+            <div className="ripple-container"></div></button>
           </div>
+          {/* <div className="col-lg-3 col-md-4 col-sm-6">
+                <div className="title">
+                    <h3>Checkboxes</h3>
+                  </div>
+                <div className="form-check">
+                  <label className="form-check-label">
+                    <input className="form-check-input" type="checkbox" defaultValue />
+                    Unchecked
+                    <span className="form-check-sign">
+                      <span className="check" />
+                    </span>
+                  </label>
+                </div>
+                <div className="form-check">
+                  <label className="form-check-label">
+                    <input className="form-check-input" type="checkbox" defaultValue defaultChecked />
+                    Checked
+                    <span className="form-check-sign">
+                      <span className="check" />
+                    </span>
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                  <label className="form-check-label">
+                    <input className="form-check-input" type="checkbox" defaultValue disabled />
+                    Disabled unchecked
+                    <span className="form-check-sign">
+                      <span className="check" />
+                    </span>
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                <label className="form-check-label">
+                  <input className="form-check-input" type="checkbox" defaultValue disabled defaultChecked />
+                  Disabled checked
+                  <span className="form-check-sign">
+                    <span className="check" />
+                  </span>
+                </label>
+              </div>
+            </div>
+
           <div className="col-lg-3 col-md-4 col-sm-6">
             <div className="title">
               <h3>Radio Buttons</h3>
@@ -99,6 +107,7 @@ class ManageMeeting extends Component {
               </label>
             </div>
           </div>
+
           <div className="col-lg-3 col-md-4 col-sm-6">
             <div className="title">
               <h3>Toggle Buttons</h3>
@@ -117,7 +126,8 @@ class ManageMeeting extends Component {
                 Toggle is off
               </label>
             </div>
-          </div>
+          </div> */}
+
             <br/>
             <br/>
             <br/>

@@ -114,9 +114,9 @@ _preprocessData(dat)
                     </div>
       }]
       //init table columns 
-
+      const isActivePage = this.props.active
       return (
-      <div className="section section-basic tab-pane active" id="manage-meeting" style={{padding:0}}>
+      <div className={`section section-basic tab-pane ${isActivePage}`} id="manage-meeting" style={{padding:0}}>
             <Modal 
             dataForm={this.state.dataForm}
             cb={this.state.cb} 

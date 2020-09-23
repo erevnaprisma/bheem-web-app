@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 
 export default class SettingMeeting extends Component {
+  
   render() {
+    const isActivePage = this.props.active
         return (
-            <div className="section section-basic tab-pane " id="meeting-settings">
+            <div className={`section section-basic tab-pane ${isActivePage}`} id="meeting-settings">
                     
               <strong>Basic meeting settings</strong>
               <hr/>

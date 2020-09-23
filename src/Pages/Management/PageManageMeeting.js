@@ -17,12 +17,13 @@ import DateTimePicker from 'react-datetime-picker';
 import MeetingActions from '../../Containers/Management/SceduleMeeting/redux'
 
 //Menu
-import Manage from './Meeting/ManageMeeting'
+import ManageScheduleMeeting from './Meeting/ManageMeeting'
 import MeetingSetting from './Meeting/SettingMeeting'
 import AccountSetting from './Account/AccountSetting'
 import ProfileSetting from './Profile/ProfileSetting'
 //Modals
-import CreateMeeting from './Meeting/Modals/createScheduleMeeting'
+import ModalCreateMeeting from './Meeting/Modals/createScheduleMeeting'
+import ModalChangePassword from './Account/Modals/ChangePassword' 
 import { title } from 'process'
 
 
@@ -31,6 +32,9 @@ class PageManageMeeting extends PureComponent {
     super(props)
     this._onClickLink=this._onClickLink.bind(this)
     this._generateTitle=this._generateTitle.bind(this)
+    this.state={
+      activePage:this.props.match.params.page
+    }
   }
   _generateTitle(list){
     var title=null
@@ -52,13 +56,13 @@ class PageManageMeeting extends PureComponent {
   }
   render(){
     const {fetchMeetings} = this.props
+    const param=this.props.match.params.page
     const listPages=[
-      {name:'Manage Schedule Meeting',path:'manage-meeting',icon:'dashboard',comp:<Manage/>},
-      {name:'Metting Settings',path:'meeting-settings',icon:'build',comp:<MeetingSetting/>},
-      {name:'Account Settings',path:'account-settings',icon:'account_box',comp:<AccountSetting/>},
-      {name:'Profile Settings',path:'profile-settings',icon:'face',comp:<ProfileSetting/>},
+      {name:'Manage Schedule Meeting',path:'manage-meeting',icon:'dashboard',comp:<ManageScheduleMeeting active={param === 'manage-meeting' ? 'nav-link active show' : 'nav-link'}/>},
+      {name:'Metting Settings',path:'meeting-settings',icon:'build',comp:<MeetingSetting active={param === 'meeting-settings' ? 'nav-link active show' : 'nav-link'}/>},
+      {name:'Account Settings',path:'account-settings',icon:'account_box',comp:<AccountSetting active={param === 'account-settings' ? 'nav-link active show' : 'nav-link'}/>},
+      {name:'Profile Settings',path:'profile-settings',icon:'face',comp:<ProfileSetting active={param === 'profile-settings' ? 'nav-link active show' : 'nav-link'}/>},
     ]
-    const param=this.props.match.params.opt
     // if(param == null) window.location='/'
     // if(this._isInclude(listPages,param)) window.location='/'
     return (
@@ -67,7 +71,10 @@ class PageManageMeeting extends PureComponent {
            {this._generateTitle(listPages)}
         </Helmet>
         <Header/>
-        <CreateMeeting/>
+        {/* Modals */}
+        <ModalChangePassword/>
+        <ModalChangePassword/>
+        {/* Modals */}
         <br/>
         <br/>
         <br/>
@@ -79,7 +86,7 @@ class PageManageMeeting extends PureComponent {
                     <ul className="nav nav-tabs" data-tabs="tabs">
                       {listPages.map((r,i)=>(
                         <li className="nav-item" key={i}>
-                          <a className={param === r.path ? 'nav-link active' : 'nav-link' } href={'#'+r.path} data-toggle="tab" onClick={()=>this._onClickLink(r.path)}>
+                          <a className={ param === r.path ? 'nav-link active' : 'nav-link' } href={'#'+r.path} data-toggle="tab" onClick={()=>this._onClickLink(r.path)}>
                           <i className="material-icons">{r.icon}</i>
                           {r.name}
                           </a>
