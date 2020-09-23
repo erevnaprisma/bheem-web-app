@@ -68,7 +68,7 @@ export function * doJoinMeeting (api, action) {
     delete message.userId
     message.anonymous=true
     message.status='Anonymous'
-    setSession({[AppConfig.sessionMeeting]:{fullName:data.name}})
+    setSession({[AppConfig.sessionMeeting]:{fullName:data.name,isAudio:data.isAudio,isVideo:data.isVideo}})
     // console.log('anonymous obj. >>',message);
     socket.emit('requestToJoin',message)
   }
@@ -77,6 +77,8 @@ export function * doJoinMeeting (api, action) {
     setSession({[AppConfig.sessionMeeting]:{
         fullName:getSession(AppConfig.sessionUserData).fullName
        ,userId:getSession(AppConfig.sessionUserData).id
+       ,isAudio:data.isAudio
+       ,isVideo:data.isVideo
       }})
     socket.emit('requestToJoin',message)
   }

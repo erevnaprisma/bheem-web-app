@@ -30,12 +30,14 @@ export const BheemVidStreamComponent = ({ opt }) => {
     if (!window.JitsiMeetExternalAPI) {
       await loadBheemScript()
     }
+    console.log('config overwrite>>> ',opt.configOverwrite);
     const _jitsi = new window.JitsiMeetExternalAPI('bheem.erevnaraya.com', {
       roomName:opt.roomName,
       id:opt.roomId,
       onload:<Loader/>,
       parentNode: document.getElementById(opt.containerId),
-      userInfo:opt.userInfo
+      userInfo:opt.userInfo,
+      configOverwrite:opt.configOverwrite
     })
     _jitsi.addEventListener('videoConferenceLeft',u=>{
       console.log('JITSI EVENT vid. conference lef>>',u);

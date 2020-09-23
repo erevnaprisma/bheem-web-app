@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2'
 //utils
-import {isLoggedIn, getSession, setSession,isValuePropertyExist} from '../../Utils/Utils'
+import {isLoggedIn, removeSpecificSession,getSession, setSession,isValuePropertyExist} from '../../Utils/Utils'
 import AppConfig from '../../Config/AppConfig'
 //socket
 import io from 'socket.io-client'
@@ -27,6 +27,16 @@ export const muteUnmuteHandlerAll=  (socketIo) =>{
   })
 }
 
+//On participant left
+export const onUserLeeft = (socketIo) =>{
+  socketIo.on('successfullyRemovedUser', (msg) => {
+    console.log("SOOOOKKKEETTT participantMuteAndVideoHandler>>>>", msg)
+    const {listParticipant} = store.getState().streaming
+    let list = [...listParticipant]
+
+    store.dispatch(SocketActions.removeFromJoiningList({listParticipant:list.filter(e=> e.userId)}))  
+  }) 
+}
 
 //On first entermeeting
 export const checkMeetingLockStatus=  (socketIo) =>{
@@ -46,9 +56,16 @@ export const onReceiveMeetingList=  (socketIo) =>{
     })
 }
 //On end meeting
-export const onMeetingEnd = (socketIo) =>{
-    socketIo.on('endMeeting',msg=>{
-        console.log("SOOOOKKKEETTT endMeeting>>>>", msg)  
+export const onMeetingEnd =  (socketIo) =>{
+    socketIo.on('endMeeting',async (msg)=>{
+        console.log("SOOOOKKKEETTT endMeeting>>>>", msg)
+        await removeSpecificSession(AppConfig.sessionMeeting)
+        window.location.reload();
+        Swal.fire({
+          text: 'Meeting has been ended by host',
+          confirmButtonText: 'Ok',
+          onClose: () => window.location="/"
+        }) 
     })
 }
   // listening to meeting error

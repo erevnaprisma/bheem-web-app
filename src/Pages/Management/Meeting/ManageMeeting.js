@@ -40,7 +40,7 @@ class ManageMeeting extends Component {
       alert("Invitation copied")
     }
   }
-  _preprocessData(dat)
+_preprocessData(dat)
   {
     let arr =[]
     _.filter(_.orderBy(dat,['createdAt'],['desc']),(o)=>{

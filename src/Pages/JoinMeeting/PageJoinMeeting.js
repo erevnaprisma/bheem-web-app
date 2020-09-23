@@ -29,6 +29,8 @@ class JoinMeeting extends PureComponent {
       s_date:new Date(),
       e_date:new Date(),
       endless:false,
+      isAudio:true,
+      isVideo:true,
       isLogin:getSession(AppConfig.loginFlag)||false
     }
   }
@@ -39,12 +41,12 @@ class JoinMeeting extends PureComponent {
     const meetingId = this.refs.meeting_id.value
     if(getSession(AppConfig.sessionUserData))
     {
-      this.props.doJoinMeeting({meetingId})
+      this.props.doJoinMeeting({meetingId,isVideo:!this.state.isVideo,isAudio:!this.state.isAudio})
     }
     else
     {
       const name = this.refs.u_name.value
-      this.props.doJoinMeeting({meetingId,name})
+      this.props.doJoinMeeting({meetingId,name,isVideo:!this.state.isVideo,isAudio:!this.state.isAudio})
     }
 
   }
@@ -58,6 +60,7 @@ class JoinMeeting extends PureComponent {
   } 
   _waitingRoom()
   {
+    
     const userId=getSession(AppConfig.sessionUserData).id
     const nickname=getSession(AppConfig.sessionUserData).nickname    
     return (
@@ -111,6 +114,28 @@ class JoinMeeting extends PureComponent {
                         </div>
                       </div>
                     )}
+
+                   <div className="row">
+                    <div className="col" style={{marginLeft:20}}>
+                      Join with audio
+                        <div className="togglebutton">
+                          <label>
+                            <input type="checkbox" defaultChecked  onChange={e=>this.setState({isAudio:e.target.checked})}/>
+                            <span className="toggle" />
+                          </label>
+                        </div>
+                      </div> 
+                      <div className="col" style={{marginLeft:20}}>
+                      Join with video
+                        <div className="togglebutton">
+                          <label>
+                            <input type="checkbox" defaultChecked onChange={e=>this.setState({isVideo:e.target.checked})}/>
+                            <span className="toggle" />
+                          </label>
+                        </div>
+                      </div>
+                   </div>
+
                     <div className="footer text-center mt-5">
                       {!isRequesting && <button type="submit" className="btn btn-primary btn-link btn-wd btn-lg">Join meeting</button>}
                         {isRequesting &&(

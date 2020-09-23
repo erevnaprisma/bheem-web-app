@@ -20,7 +20,7 @@ import MeetingActions from '../../Containers/Management/SceduleMeeting/redux'
 import Manage from './Meeting/ManageMeeting'
 import MeetingSetting from './Meeting/SettingMeeting'
 import AccountSetting from './Account/AccountSetting'
-
+import ProfileSetting from './Profile/ProfileSetting'
 //Modals
 import CreateMeeting from './Meeting/Modals/createScheduleMeeting'
 import { title } from 'process'
@@ -55,7 +55,8 @@ class PageManageMeeting extends PureComponent {
     const listPages=[
       {name:'Manage Schedule Meeting',path:'manage-meeting',icon:'dashboard',comp:<Manage/>},
       {name:'Metting Settings',path:'meeting-settings',icon:'build',comp:<MeetingSetting/>},
-      {name:'Account Settings',path:'account-settings',icon:'account_box',comp:<AccountSetting/>}
+      {name:'Account Settings',path:'account-settings',icon:'account_box',comp:<AccountSetting/>},
+      {name:'Profile Settings',path:'profile-settings',icon:'face',comp:<ProfileSetting/>},
     ]
     const param=this.props.match.params.opt
     // if(param == null) window.location='/'

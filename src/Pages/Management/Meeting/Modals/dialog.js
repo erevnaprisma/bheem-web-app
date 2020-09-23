@@ -128,7 +128,7 @@ export default class dialog extends Component {
                                     <Loader className="mx-auto" color="#000"/>
                                     <p><strong>Fetching data</strong></p>
                                 </center>
-                            )}
+                        )}
                         </form>
                     </div>
                 </div>

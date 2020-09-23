@@ -55,6 +55,7 @@ export const onGetAdmitStatus = (socketIo) =>{
     socketIo.on('userPermission', async(msg) => {
       console.log("SOOOOKKKEETTT userPermission>>>>", msg)
       const meetingData=getSession(AppConfig.sessionMeeting)
+      console.log('SESSION MEETING>>> ',getSession(AppConfig.sessionMeeting));
       if(msg.message.toLowerCase() === 'admit' || msg.message.toLowerCase() === 'reject'){
         if(meetingData.userId === msg.userId){ 
             const meetingData=getSession(AppConfig.sessionMeeting) 
@@ -102,8 +103,7 @@ export const onGetAdmitStatus = (socketIo) =>{
         }
       }else{
         
-        if(meetingData.userId === msg.userId){
-        
+        if(meetingData.userId === msg.userId){ 
           switch(msg.message){
             case 'mute':
                     // await store.dispatch(SocketActions.doToggleAudio({toogleAudio:false})) 
@@ -115,11 +115,11 @@ export const onGetAdmitStatus = (socketIo) =>{
                   break;
             case 'off video':
                     // store.dispatch(SocketActions.doToggleVideo({toogleVideo:false})) 
-                    do_mute_my_video(true)
+                    do_mute_my_video(false)
                   break;
             case 'on video':
                     // store.dispatch(SocketActions.doToggleVideo({toogleVideo:true})) 
-                    do_mute_my_video(false)
+                    do_mute_my_video(true)
                   break;
             default:
                    console.log('Command Not Found');

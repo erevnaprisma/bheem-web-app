@@ -46,8 +46,8 @@ class PageBheem extends Component {
     const meetingId=this.props.match.params.room
     let joining=[]
     joining.push(data.userId)
-    joining.push(this.props.joiningList)
-    this.props.putToJoinList({listOnJoining:joining.filter(e=> e != null)})
+    joining.push(this.props.listJoining)
+    this.props.putToJoinList({listOnJoining:_.flatten(joining.filter(e=> e != null))})
     if(data.status == 'Anonymous'){
       console.log('emit admit anonymous>>>', { status:'Anonymous',meetingId, userId: data.userId, hostId:userData.id, socketId: data.socketId,username:data.username });
       socketIo.emit('admitUserToJoinHost', { status:'Anonymous',meetingId, userId: data.userId, hostId:userData.id, socketId: data.socketId,username:data.username })
@@ -69,7 +69,10 @@ class PageBheem extends Component {
       socketIo.emit('rejectUserToJoinHost', {socketId:data.socketId,meetingId, userId:data.userId, hostId:getSession(AppConfig.sessionData).id}) 
     }
   }  
-
+  _do_end_meeting(){
+    const meetingId=this.props.match.params.room
+    socketIo.emit('hostEndMeeting',{meetingId})
+  }
   _doMuteUnmuteVideo(data){
     const meetingId=this.props.match.params.room
     socketIo.emit('hostMuteAndVideoHandler', {meetingId,code:'off participant video',userId:data.userId})  
@@ -100,20 +103,23 @@ class PageBheem extends Component {
   _listParticipant()
   {
     const waitingRoom=this.props.listWaitingRoom||[]
-    const participants=_.isEmpty(this.props.listSearch) ? _.uniqBy(_.sortBy(this.props.listParticipant,['role']),'userId') : _.uniqBy(_.sortBy(this.props.listSearch,['role'],'userId'))
+    //TODO: Make sure every anonymous userId is unique
+    // const participants=_.isEmpty(this.props.listSearch) ? _.uniqBy(_.sortBy(this.props.listParticipant,['role']),'userId') : _.uniqBy(_.sortBy(this.props.listSearch,['role'],'userId'))
+    const participants=_.isEmpty(this.props.listSearch) ? _.sortBy(this.props.listParticipant,['role']) : _.sortBy(this.props.listSearch,['role'],'userId')
     const joiningList=this.props.listJoining||[]
     
-    console.log('onjoin list>>>',joiningList);
+    console.log('participants before>>>',this.props.listParticipant);
     const listJoinedDropdownMenu=[
                                         {name:'Rename',funct:()=>do_mute_everyone(),me:true},
                                         {name:'Put to waiting room',funct:()=>do_mute_everyone(),},
-                                        {name:'Mute video',funct:()=>do_mute_everyone(),}
+                                        {name:'Mute video',funct:(e)=>this._doMuteUnmuteVideo(e),}
                                   ]
     const footerDropdownSettings=[
                                       {name:'Lock meeting',funct:()=>this._doLockMeeting(),},
                                       {name:'Change meeting topic',funct:()=>do_mute_everyone(),},
-                                      {name:'End meeting',funct:()=>do_mute_everyone(),}
+                                      {name:'End meeting',funct:(e)=>this._do_end_meeting(e),}
                                   ]
+     console.log('participants list>>',participants);                                 
     let myMeetingData=getSession(AppConfig.sessionMeeting) //get meeting data
     
     return(
@@ -189,7 +195,7 @@ class PageBheem extends Component {
                                         </button>
                                         <div className="dropdown-menu">
                                           {listJoinedDropdownMenu.map((s,j)=>(
-                                              <span className="dropdown-item" onClick={s.funct} key={j}>{s.name}</span>
+                                              <span className="dropdown-item" onClick={()=>s.funct(r)} key={j}>{s.name}</span>
                                           ))}
                                         </div>
                                   </div>
@@ -296,18 +302,23 @@ class PageBheem extends Component {
     const { topic,allowed,needPermission,isExist,isRequesting} = this.props
     const meetingData=getSession(AppConfig.sessionMeeting)
     const userData=getSession(AppConfig.sessionUserData)
+    console.log('is empty meeting flag>>>',_.isNull(meetingData.isAudio));
+
     //init join meeting 
     const opt={
                  containerId:this.state.videoStreamerContainerId,
                  className:'bheem-video-stream',
                  roomName:getSession(AppConfig.sessionMeeting).title||'Bheeem meeting conference',
                  roomId:meetingId,
+                 configOverwrite: { 
+                   startWithAudioMuted: !_.isNull(meetingData.isAudio)?meetingData.isAudio:true,
+                   startWithVideoMuted: !_.isNull(meetingData.isVideo)?meetingData.isVideo:true
+                  },
                  userInfo:{
                   id:userData.id||meetingData.userId,
                   email:userData.email||'Anonymous@mail.com',
                   displayName:userData.fullName||meetingData.fullName
-                 },
-                 configOverwrite: { startWithAudioMuted: true,startWithVideoMuted:false },
+                 }
               }
 
     console.log('obj. bheem api >> ',opt);
