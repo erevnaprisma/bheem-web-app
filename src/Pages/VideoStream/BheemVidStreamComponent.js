@@ -4,8 +4,6 @@ import Loader from '../../Components/Loader'
 import AppConfig from '../../Config/AppConfig'
 import {setSession,getSession,isValuePropertyExist} from '../../Utils/Utils'
 import socketIo from '../../Containers/Socket/socketListeners'
-import { listeners } from 'process'
-import swal from 'sweetalert2'
 import StreamingActions from '../../Containers/Streaming/redux'
 
 var bheemApi=null
