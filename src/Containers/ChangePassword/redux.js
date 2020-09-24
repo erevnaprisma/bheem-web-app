@@ -18,11 +18,10 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
     isRequesting:false,
-    error:'',
-    
+    error:'', 
 })
 
-export const _do = (state,{data}) => state.merge({ isRequesting:false, ...data })
+export const _do = (state,{data}) => state.merge({ isRequesting:true, ...data })
 export const _failed = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const _done = (state,{data}) => state.merge({ isRequesting:false, ...data })
 export const _reset = state=> state.merge(INITIAL_STATE)

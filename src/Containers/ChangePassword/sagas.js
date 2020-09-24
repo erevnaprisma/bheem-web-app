@@ -32,13 +32,20 @@ export function * doChangePassword (api, action) {
 
   // success
   if (_.isEmpty(errors) && status) {
-    
     yield put(
       ChangePasswordActions.changePasswordDone({
         status,
         errors
       })
-    )
+      )
+      Swal.fire({
+        title: 'Success',
+        text: 'Successfully updated your password',
+        icon: 'success',
+        confirmButtonText: 'Ok'
+      })
+      var element = document.getElementById("change-my-password");
+      element.classList.remove("show"); 
     
   } else {    
     let error=''

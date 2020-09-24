@@ -42,7 +42,6 @@ class ChangePassword extends Component {
                     </div>
                     <form onSubmit={(e)=>this._onSubmitForm(e)}>
                         <div className="modal-body">
-
                             <div style={{width:'100%'}}>
                                 <div className="form-group">
                                     <label className="bmd-label-floating">Old Password</label>

@@ -19,8 +19,8 @@ class ManageMeeting extends Component {
       return (
       <div className={`section section-basic tab-pane ${this.props.active}`} id="account-settings" style={{padding:0}}>
         <ModalChangePassword/>
-          <div className="row col-6">
-            <button className="col-3 btn btn-block btn-primary" data-toggle="modal" data-target="#change-my-password">
+          <div className="row ">
+            <button className="col-3 col-1 btn btn-block btn-primary" data-toggle="modal" data-target="#change-my-password">
               Change Password
             <div className="ripple-container"></div></button>
           </div>

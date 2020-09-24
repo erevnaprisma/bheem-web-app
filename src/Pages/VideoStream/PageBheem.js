@@ -70,6 +70,7 @@ class PageBheem extends Component {
     }
   }  
   _do_end_meeting(){
+    console.log('do end meeting');
     const meetingId=this.props.match.params.room
     socketIo.emit('hostEndMeeting',{meetingId})
   }
@@ -127,9 +128,8 @@ class PageBheem extends Component {
           <div className="bheem-list" style={{background:'white'}} id={this.state.listParticipantContainerId}>
               <div className="main-header-list">
                 <div className="sub-main-header-list">
-                    Participants ({myMeetingData.role==='host' ? waitingRoom.length+participants.length : participants.length})
-                    <span className="material-icons">lock</span>
-                    <span className="material-icons">lock_open</span>
+                    Participants ({myMeetingData.role==='host' ? waitingRoom.length+participants.length : participants.length}) &nbsp;{this.props.isLock ? 'Locked' : '' } 
+                    
                 </div>
               </div>
               {getSession(AppConfig.sessionMeeting).role == 'host' && !_.isEmpty(waitingRoom) &&
@@ -404,6 +404,7 @@ const mapStateToProps = (state, ownProps) => {
     needPermission:state.streaming.needPermission,
     allowed:state.streaming.allowed,
     listSearch:state.streaming.listSearch,
+    isLock:state.streaming.isLock,
     isAudio:state.streaming.tooggleAudio,
     isVideo:state.streaming.tooggleVideo,
     listParticipant:state.streaming.listParticipant,

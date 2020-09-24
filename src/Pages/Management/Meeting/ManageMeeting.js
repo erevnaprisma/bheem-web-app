@@ -128,15 +128,25 @@ _preprocessData(dat)
             textHeader={this.state.textHeader}
             type={this.state.type}/>
 
-            <ul className="nav nav-pills nav-pills-icons" role="tablist">
-              
-              <li className="nav-item " style={{cursor:'pointer'}}>
-                <a className="nav-link "  data-toggle="modal" data-target="#create-meeting">
-                  <i className="material-icons">queue</i>
-                  New meeting
-                </a>
-              </li>
-            </ul>
+            <div className="row">
+              <ul className="nav nav-pills nav-pills-icons" role="tablist">
+                <li className="nav-item " style={{cursor:'pointer'}}>
+                  <a className="nav-link" data-toggle="modal" data-target="#create-meeting">
+                    <i className="material-icons">queue</i>
+                    New meeting
+                  </a>
+                </li>
+              </ul>
+              <ul className="nav nav-pills nav-pills-icons" role="tablist">
+                <li className="nav-item " style={{cursor:'pointer'}}>
+                  <a className="nav-link " data-toggle="modal" data-target="#meeting-history">
+                    <i className="material-icons">history</i>
+                    Meeting history
+                  </a>
+                </li>
+              </ul>
+            </div>
+
             {!this.props.isRequest && <Table column={column} data={this._preprocessData(data)}/>}
             {(this.props.isRequest && 
               <center>

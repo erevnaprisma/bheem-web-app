@@ -15,6 +15,7 @@ import { CreateMeetingTypes } from '../Containers/HostMeeting/redux'
 import { JoinMeetingTypes } from '../Containers/JoinMeeting/redux'
 import { ScheduleMeetingsTypes } from '../Containers/Management/SceduleMeeting/redux'
 import { ChangePasswordTypes } from '../Containers/ChangePassword/redux'
+import { MeetingHistoryTypes } from '../Containers/Management/MeetingHistory/redux'
 
 
 
@@ -25,6 +26,7 @@ import { doCreateMeeting} from '../Containers/HostMeeting/sagas'
 import { doJoinMeeting,checkIsexistMeeting } from '../Containers/JoinMeeting/sagas'
 import { fetchMeetings,createScheduleMeeting,cancelScheduleMeeting,startScheduleMeeting,editScheduleMeeting } from '../Containers/Management/SceduleMeeting/sagas'
 import { doChangePassword } from '../Containers/ChangePassword/sagas'
+import { fetchMeetingsHistory } from '../Containers/Management/MeetingHistory/sagas'
 
 /* ------------- API ------------- */
 
@@ -49,6 +51,7 @@ export default function * root () {
     takeLatest(ScheduleMeetingsTypes.CANCEL_SCHEDULE_MEETING, cancelScheduleMeeting, apiDashboard),
     takeLatest(ScheduleMeetingsTypes.START_SCHEDULE_MEETING, startScheduleMeeting, apiDashboard),
     takeLatest(ScheduleMeetingsTypes.EDIT_SCHEDULE_MEETING, editScheduleMeeting, apiDashboard),
-    takeLatest(ChangePasswordTypes.DO_CHANGE_PASSWORD, doChangePassword, apiDashboard)
+    takeLatest(ChangePasswordTypes.DO_CHANGE_PASSWORD, doChangePassword, apiDashboard),
+    takeLatest(MeetingHistoryTypes.DO_FETCH_MEETING_HISTORY, fetchMeetingsHistory, apiDashboard)
   ])
 }

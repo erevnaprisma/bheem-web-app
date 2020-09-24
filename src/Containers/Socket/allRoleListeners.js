@@ -41,9 +41,9 @@ export const onUserLeeft = (socketIo) =>{
 //On first entermeeting
 export const checkMeetingLockStatus=  (socketIo) =>{
   socketIo.on('meetingStatus',async msg=>{
-      console.log("SOOOOKKKEETTT meetingHasCreated>>>>", msg)
-      // await store.dispatch(SocketActions.doLockMeeting({isLock}))
-      // Swal.fire(msg.message)
+      console.log("SOOOOKKKEETTT lock meeting>>>>", msg)
+      await store.dispatch(SocketActions.doLockMeeting({isLock:true}))
+      Swal.fire(msg.message)
   })
 }
 

@@ -8,6 +8,7 @@ import { withRouter } from 'react-router-dom'
 import _ from 'lodash'
 import AppConfig from '../../Config/AppConfig'
 import {Images,Colors} from '../../Themes'
+
 // Components
 import Loader from '../../Components/Loader'
 import Swal from 'sweetalert2'
@@ -22,6 +23,7 @@ import MeetingSetting from './Meeting/SettingMeeting'
 import AccountSetting from './Account/AccountSetting'
 import ProfileSetting from './Profile/ProfileSetting'
 //Modals
+import ModalMeetingHistory from './Meeting/Modals/meetingHistory'
 import ModalCreateMeeting from './Meeting/Modals/createScheduleMeeting'
 import ModalChangePassword from './Account/Modals/ChangePassword' 
 import { title } from 'process'
@@ -58,10 +60,10 @@ class PageManageMeeting extends PureComponent {
     const {fetchMeetings} = this.props
     const param=this.props.match.params.page
     const listPages=[
-      {name:'Manage Schedule Meeting',path:'manage-meeting',icon:'dashboard',comp:<ManageScheduleMeeting active={param === 'manage-meeting' ? 'nav-link active show' : 'nav-link'}/>},
-      {name:'Metting Settings',path:'meeting-settings',icon:'build',comp:<MeetingSetting active={param === 'meeting-settings' ? 'nav-link active show' : 'nav-link'}/>},
-      {name:'Account Settings',path:'account-settings',icon:'account_box',comp:<AccountSetting active={param === 'account-settings' ? 'nav-link active show' : 'nav-link'}/>},
-      {name:'Profile Settings',path:'profile-settings',icon:'face',comp:<ProfileSetting active={param === 'profile-settings' ? 'nav-link active show' : 'nav-link'}/>},
+      {name:'My Meetings',path:'manage-meeting',icon:'dashboard',comp:e=><ManageScheduleMeeting key={e} active={param === 'manage-meeting' ? 'nav-link active show' : 'nav-link'}/>},
+      {name:'Metting Settings',path:'meeting-settings',icon:'build',comp:e=><MeetingSetting key={e} active={param === 'meeting-settings' ? 'nav-link active show' : 'nav-link'}/>},
+      {name:'Account Settings',path:'account-settings',icon:'account_box',comp:e=><AccountSetting key={e} active={param === 'account-settings' ? 'nav-link active show' : 'nav-link'}/>},
+      {name:'Profile Settings',path:'profile-settings',icon:'face',comp:e=><ProfileSetting key={e} active={param === 'profile-settings' ? 'nav-link active show' : 'nav-link'}/>},
     ]
     // if(param == null) window.location='/'
     // if(this._isInclude(listPages,param)) window.location='/'
@@ -72,7 +74,8 @@ class PageManageMeeting extends PureComponent {
         </Helmet>
         <Header/>
         {/* Modals */}
-        <ModalChangePassword/>
+        <ModalMeetingHistory/>
+        <ModalCreateMeeting/>
         <ModalChangePassword/>
         {/* Modals */}
         <br/>
@@ -100,7 +103,7 @@ class PageManageMeeting extends PureComponent {
               <div className="card-body ">
                 <div className="tab-content text-center">
                   {listPages.map((r,i)=>(
-                      r.comp
+                      r.comp(i)
                     ))
                   }
                 </div>
